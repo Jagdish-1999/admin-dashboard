@@ -5,12 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import productListSlice from "@/slices/product-list-slice";
 
 const rootReducer = combineReducers({
-	productList: productListSlice,
+  productList: productListSlice,
 });
 
 const store = configureStore({
-	reducer: rootReducer,
-	// Add middleware and other configurations here as needed
+  reducer: rootReducer,
+  // Add middleware and other configurations here as needed
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

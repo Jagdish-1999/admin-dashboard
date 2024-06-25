@@ -1,17 +1,17 @@
 export interface ProductImagesTypes {
-	file?: File;
-	url: string;
-	id?: string;
+  file?: File;
+  url: string;
+  id?: string;
 }
 
 interface EachInputNumberType {
-	value: number | null;
-	error: boolean;
+  value: number | null;
+  error: boolean;
 }
 
 interface EachInputStringType {
-	value: "";
-	error: boolean;
+  value: "";
+  error: boolean;
 }
 
 export const PRODUCT_NAME = "productName";
@@ -21,17 +21,17 @@ export const QUANTITY = "qty";
 export const PRODUCT_IMAGES = "productImages";
 
 export interface ProductInputDataProps {
-	[PRODUCT_NAME]: EachInputStringType;
-	[DESCRIPTION]: EachInputStringType;
-	[PRICE]: EachInputNumberType;
-	[QUANTITY]: EachInputNumberType;
+  [PRODUCT_NAME]: EachInputStringType;
+  [DESCRIPTION]: EachInputStringType;
+  [PRICE]: EachInputNumberType;
+  [QUANTITY]: EachInputNumberType;
 }
 
 export interface EditedProductTypes {
-	productName: string;
-	description: string;
-	images: string[];
-	price: number;
-	qty: number;
-	_id: string;
+  productName: string;
+  description: string;
+  images: string[];
+  price: number;
+  qty: number;
+  _id: string;
 }
