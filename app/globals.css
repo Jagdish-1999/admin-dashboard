@@ -16,8 +16,15 @@ body,
 }
 
 body {
-  background-color: #021536;
-  color: #fff;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 55px;
+  background-color: #fff;
+  color: #000;
+  font-weight: 600;
+  max-height: 93%;
 }
 
 @layer base {
@@ -64,8 +71,14 @@ body {
 }
 
 @layer utilities {
+  .animation-delay-20 {
+    animation-delay: 20ms;
+  }
   .animation-delay-75 {
     animation-delay: 75ms;
+  }
+  .animation-delay-100 {
+    animation-delay: 100ms;
   }
   .animation-delay-150 {
     animation-delay: 150ms;

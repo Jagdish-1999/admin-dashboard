@@ -68,10 +68,20 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "form-in": {
+          from: { opacity: "0", "backdrop-filter": "blur(4px)" },
+          to: { opacity: "1", "backdrop-filter": "blur(12px)" },
+        },
+        "form-out": {
+          from: { opacity: "1", "backdrop-filter": "blur(12px)" },
+          to: { opacity: "0", "backdrop-filter": "blur(0px)" },
+        },
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+        "accordion-down": "accordion-down 0.2s ease-linear",
+        "accordion-up": "accordion-up 0.2s ease-linear",
+        "form-in": "form-in 0.3s",
+        "form-out": "form-out 0.3s",
       },
     },
   },

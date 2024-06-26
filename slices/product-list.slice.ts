@@ -5,9 +5,12 @@ import { formatDate } from "@/lib/format-date";
 import { ApiResponseTypes } from "@/types/api-response.types";
 import { toast } from "sonner";
 import {
+  CreateUpdateProductTypes,
   ProductListItemTypes,
   ProductListTypes,
-} from "@/types/product-list-slice.types";
+} from "@/types/product-list.slice.types";
+import { formHeaders } from "@/lib/form.header";
+import { DESCRIPTION, PRICE, PRODUCT_NAME, QUANTITY } from "@/types";
 
 export const fetchProductList = createAsyncThunk(
   "fetchProductList",
@@ -18,29 +21,45 @@ export const fetchProductList = createAsyncThunk(
   }
 );
 
-export const createUpdateProductAction = createAsyncThunk(
+export const createUpdateProduct = createAsyncThunk(
   "createProduct",
-  async ({ formData, id }: { formData: FormData; id: string }) => {
-    const formHeader = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+  async ({
+    payload,
+    id,
+  }: {
+    payload: CreateUpdateProductTypes;
+    id: string;
+  }) => {
+    const formData = new FormData();
+    const existingImages: string[] = [];
+
+    payload.images.forEach((files) => {
+      if (files.file) formData.append("images", files.file);
+      else if (files.id) existingImages.push(files.id);
+    });
+    const body = {
+      [PRODUCT_NAME]: payload[PRODUCT_NAME],
+      [DESCRIPTION]: payload[DESCRIPTION],
+      [QUANTITY]: payload[QUANTITY],
+      [PRICE]: payload[PRICE],
     };
+
+    if (existingImages.length)
+      formData.append("images", JSON.stringify(existingImages));
+
+    formData.append("payload", JSON.stringify(body));
+
     let data = {} as ApiResponseTypes<null>;
     if (id) {
-      ({ data } = await axios.put(
-        `/api/v1/products/${id}`,
-        formData,
-        formHeader
-      ));
+      ({ data } = await axios.put(`/api/v1/products/${id}`, formData, {
+        headers: formHeaders,
+      }));
     } else {
-      ({ data } = await axios.post(
-        "/api/v1/products/create",
-        formData,
-        formHeader
-      ));
+      ({ data } = await axios.post("/api/v1/products/create", formData, {
+        headers: formHeaders,
+      }));
     }
-    console.log("Data", data);
+
     if (data.success) {
       toast.success(data.message);
     } else {
@@ -49,26 +68,6 @@ export const createUpdateProductAction = createAsyncThunk(
     return data;
   }
 );
-
-// export const updateProducts = createAsyncThunk(
-// 	"updateProducts",
-// 	async ({ id, formData }: { formData: FormData; id: string }) => {
-// 		//TODO need to handle errors
-// 		const { data }: { data: ApiResponseTypes<null> } = await axios.put(
-// 			`/api/v1/products/${id}`,
-// 			formData,
-// 			{
-// 				headers: {
-// 					"Content-Type": "multipart/form-data",
-// 				},
-// 			}
-// 		);
-// 		if (data.success) {
-// 			toast.success(data.message);
-// 		}
-// 		return data;
-// 	}
-// );
 
 export const deleteProductWithId = createAsyncThunk(
   "deleteProductWithId",
@@ -117,13 +116,13 @@ const productListSlice = createSlice({
       state.data = [];
       state.isLoading = false;
     });
-    builder.addCase(createUpdateProductAction.pending, (state) => {
+    builder.addCase(createUpdateProduct.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(createUpdateProductAction.fulfilled, (state) => {
+    builder.addCase(createUpdateProduct.fulfilled, (state) => {
       state.isLoading = false;
     });
-    builder.addCase(createUpdateProductAction.rejected, (state) => {
+    builder.addCase(createUpdateProduct.rejected, (state) => {
       state.isLoading = false;
     });
   },

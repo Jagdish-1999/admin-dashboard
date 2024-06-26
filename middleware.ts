@@ -18,4 +18,4 @@
 // 	matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)", "/(.*)"],
 // };
 
-export default function () {}
+export default function middleware() {}

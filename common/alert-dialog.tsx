@@ -10,9 +10,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { PopOverProps } from "./popover";
+import { MdDeleteOutline } from "react-icons/md";
 
 interface AlertDialogProps extends PopOverProps {
-  dialogTitle: string;
+  dialogTitle: React.ReactNode | string;
   onCancel?(evt: React.MouseEvent<HTMLButtonElement>): void;
   onContinue(evt: React.MouseEvent<HTMLButtonElement>): void;
 }
@@ -27,7 +28,7 @@ const CustomAlertDialog = ({
   return (
     <AlertDialog>
       <AlertDialogTrigger>{triggerChildren}</AlertDialogTrigger>
-      <AlertDialogContent className="bg-slate-900 border border-neutral-700">
+      <AlertDialogContent className="bg-neutral-100 border border-neutral-300">
         <AlertDialogHeader>
           <AlertDialogTitle>{dialogTitle}</AlertDialogTitle>
           <AlertDialogDescription>{children}</AlertDialogDescription>
@@ -35,15 +36,16 @@ const CustomAlertDialog = ({
         <AlertDialogFooter>
           <AlertDialogCancel
             onClick={onCancel ? onCancel : () => {}}
-            className="border border-neutral-700"
+            className="border border-neutral-500"
           >
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={onContinue}
-            className="border border-red-500 text-red-500"
+            className="border text-red-600 flex gap-2 border-red-800"
           >
-            Continue
+            <MdDeleteOutline />
+            Delete
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

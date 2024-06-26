@@ -1,6 +1,10 @@
 "use client";
 import { cn } from "@/lib/utils";
+import { ProductImagesTypes } from "@/types";
+import Image from "next/image";
+import React from "react";
 import { MdOutlineFileUpload } from "react-icons/md";
+import { RxCross2 } from "react-icons/rx";
 
 interface InputProps {
   type: string;
@@ -12,6 +16,8 @@ interface InputProps {
   required?: boolean;
   value: string | number;
   onChange(evt: React.ChangeEvent<HTMLInputElement>): void;
+  productImages?: ProductImagesTypes[];
+  setProductImages?: React.Dispatch<React.SetStateAction<ProductImagesTypes[]>>;
 }
 
 function Input({
@@ -24,26 +30,80 @@ function Input({
   required,
   onChange,
   placeholder,
+  productImages,
+  setProductImages,
 }: InputProps) {
   if (type === "file") {
     return (
-      <div className="flex justify-center gap-0.5 flex-col border border-neutral-500 rounded-sm w-28 h-28 hover:border-neutral-400 transition-all duration-200">
-        <label
-          htmlFor={id}
-          className="flex flex-col gap-2 items-center justify-center p-2 cursor-pointer w-full h-full text-neutral-400 text-xs hover:text-neutral-300 delay-200"
+      <div className="w-full">
+        <h4
+          className={cn(
+            "text-slate-900/70 text-xs -mb-1 w-fit",
+            productImages?.length && "text-slate-900/90"
+          )}
         >
-          <MdOutlineFileUpload className="w-6 h-6" />
-          {label}
-        </label>
-        <input
-          id={id}
-          multiple
-          accept="image/*"
-          type={type}
-          name={name}
-          className="hidden"
-          onChange={onChange}
-        />
+          {label}{" "}
+          {
+            <span className={cn(!productImages?.length && "text-red-500")}>
+              *
+            </span>
+          }
+        </h4>
+        <div className="flex items-end gap-2 w-full">
+          <div className="flex flex-col min-w-28 h-28 rounded-sm border border-neutral-400 hover:border-neutral-500 transition-all duration-150">
+            <label
+              htmlFor={id}
+              className="flex flex-col gap-2 items-center justify-center p-2 cursor-pointer w-full h-full text-neutral-900/50 text-xs hover:text-neutral-900/70 duration-150"
+            >
+              <MdOutlineFileUpload className="w-6 h-6" />
+              {label}
+            </label>
+            <input
+              id={id}
+              multiple
+              accept="image/*"
+              type={type}
+              name={name}
+              value={""}
+              className="hidden"
+              onChange={onChange}
+            />
+          </div>
+          <div className="no-scrollbar flex items-end h-[120px] w-full max-w-full overflow-x-auto rounded-sm gap-2">
+            {productImages?.map((file) => (
+              <div
+                key={file.url}
+                className="group/image border border-neutral-500 min-w-28 min-h-28 max-w-28 max-h-28 rounded-sm relative"
+              >
+                <div
+                  className="absolute cursor-pointer -right-2 -top-2 z-[2] opacity-0 group-hover/image:opacity-100 transition-all duration-150 bg-red-500/30 backdrop-blur-sm  rounded-full"
+                  onClick={() => {
+                    setProductImages &&
+                      setProductImages((prevUrls) =>
+                        prevUrls.filter((f) => {
+                          if (f.id) {
+                            return f.id !== file.id;
+                          } else {
+                            return f.url !== file.url;
+                          }
+                        })
+                      );
+                  }}
+                >
+                  <RxCross2 className="w-4 h-4 font-semibold text-red-800 p-0.5" />
+                </div>
+                <Image
+                  src={file.url}
+                  alt="img"
+                  priority
+                  width={100}
+                  height={100}
+                  className="w-full h-full object-cover rounded-sm absolute top-0 left-0 z-[1]"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
@@ -52,8 +112,8 @@ function Input({
       <label
         htmlFor={id}
         className={cn(
-          "select-none text-neutral-400 transition-all duration-200 text-xs",
-          value && "text-neutral-200"
+          "select-none text-neutral-900/50 transition-all duration-150 text-xs",
+          value && "text-neutral-900/90"
         )}
       >
         {label}
@@ -67,8 +127,9 @@ function Input({
         placeholder={placeholder}
         onChange={onChange}
         className={cn(
-          "w-full h-full p-3 bg-transparent outline-none border rounded-sm transition-all duration-200 ease-linear focus-visible:border-neutral-300 border-neutral-500 placeholder:text-[12px] placeholder:text-neutral-500 text-sm text-neutral-200",
-          value && "border-neutral-300"
+          "w-full h-full p-3 bg-transparent outline-none border rounded-sm transition-all duration-150 ease-linear focus-visible:border-neutral-500 border-neutral-400 placeholder:text-[12px] placeholder:text-neutral-900/50 text-sm text-neutral-900/90 font-semibold",
+          value &&
+            "border-neutral-900/90 text-neutral-900/90 text-sm bg-[#e7f0fe]"
         )}
       />
     </div>

@@ -1,10 +1,12 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
+import Register from "@/components/register";
 
 export default function Home() {
   const initialRef = useRef(false);
+  const [isUserAuthendicated, setIsUserAuthendicated] = useState(false);
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -16,16 +18,23 @@ export default function Home() {
     }
   }, [session]);
 
-  if (!session) {
+  // TODO need to add actual Authenticated logic
+  if (!isUserAuthendicated) {
     return (
-      <div className="flex items-center justify-center p-2">
+      <div className="flex flex-col items-center justify-center p-2">
         Please login to access dashboard
+        <div className="w-full h-full rounded-md overflow-hidden">
+          <Register
+            isUserAuthendicated={isUserAuthendicated}
+            onBackDropClick={() => setIsUserAuthendicated(true)}
+          />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex items-center justify-center p-2">
+    <div className="flex flex-col gap-2 items-center w-full h-full">
       <div>Hello, {session?.user?.name}</div>
     </div>
   );

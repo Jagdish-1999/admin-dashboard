@@ -7,15 +7,20 @@ import {
 export interface PopOverProps {
   children: React.ReactNode;
   triggerChildren: any;
+  side?: "left" | "right" | "top" | "bottom";
 }
 
-export const CustomPopover = ({ children, triggerChildren }: PopOverProps) => {
+export const CustomPopover = ({
+  children,
+  triggerChildren,
+  side,
+}: PopOverProps) => {
   return (
     <Popover>
       <PopoverTrigger>{triggerChildren}</PopoverTrigger>
       <PopoverContent
-        side="left"
-        className="backdrop-blur-lg bg-slate-900 p-3 w-fit border border-neutral-700"
+        side={side || "left"}
+        className="bg-neutral-500/5 w-fit h-fit backdrop-blur-md p-2 border rounded-sm border-neutral-500/20"
       >
         {children}
       </PopoverContent>

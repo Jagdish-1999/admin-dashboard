@@ -7,7 +7,6 @@ import { RxUpdate } from "react-icons/rx";
 import { Button } from "@/components/ui/button";
 import Input from "./Input";
 import TextArea from "./text-area";
-import { RxCross2 } from "react-icons/rx";
 
 import { useAppSelector } from "@/stores/store";
 import {
@@ -67,7 +66,7 @@ export const AddEditProduct = ({
           if (isErrorVisible) return;
           onSubmit(evt);
         }}
-        className="custom-scrollbar flex flex-col w-full h-full gap-6 border border-neutral-700 rounded-sm p-8 overflow-y-auto bg-slate-900/50"
+        className="custom-scrollbar flex flex-col w-full h-full gap-6 border border-neutral-500/50 rounded-sm p-8 overflow-y-auto bg-neutral-100/90 backdrop-blur-md"
       >
         <div className="flex gap-8">
           <Input
@@ -106,7 +105,7 @@ export const AddEditProduct = ({
             value={productData[QUANTITY].value || ""}
           />
         </div>
-        <div className="flex flex-col h-fit">
+        <div className="flex flex-col">
           <TextArea
             required
             id="description"
@@ -118,62 +117,20 @@ export const AddEditProduct = ({
             value={productData[DESCRIPTION].value}
           />
         </div>
-        {/* Upload Image section */}
-        <div className="flex gap-2 items-end overflow-hidden">
-          <div className="flex flex-col gap-1 text-sm select-none">
-            {/* //TODO need to provide images array here */}
-            <h4
-              className={cn(
-                "text-neutral-400 text-xs",
-                productImages.length && "text-neutral-50"
-              )}
-            >
-              Upload image{" "}
-              {
-                <span className={cn(!productImages.length && "text-red-500")}>
-                  *
-                </span>
-              }
-            </h4>
-            <Input
-              required
-              id="file"
-              type="file"
-              name={PRODUCT_IMAGES}
-              label="Upload image"
-              placeholder="Upload image"
-              onChange={onChange}
-              error={!productImages.length}
-              value={""}
-            />
-          </div>
-          <div className="no-scrollbar flex items-end w-full max-w-full overflow-x-auto h-full rounded-sm gap-2">
-            {productImages.map((file) => (
-              <div
-                key={file.url}
-                className="group border border-neutral-600 min-w-28 min-h-28 max-w-28 max-h-28 rounded-sm cursor-pointer relative"
-              >
-                <div
-                  className="absolute -right-2 -top-2 z-[2] hidden group-hover:block"
-                  onClick={() => {
-                    setProductImages((prevUrls) =>
-                      prevUrls.filter((f) => f.id !== file.id)
-                    );
-                  }}
-                >
-                  <RxCross2 className="w-4 h-4 font-semibold bg-red-800 p-0.5 rounded-full text-slate-100" />
-                </div>
-                <Image
-                  src={file.url}
-                  alt="img"
-                  priority
-                  width={100}
-                  height={100}
-                  className="w-full h-full object-cover rounded-sm absolute top-0 left-0 z-[1]"
-                />
-              </div>
-            ))}
-          </div>
+        <div className="flex gap-2 items-end">
+          <Input
+            required
+            id="file"
+            type="file"
+            name={PRODUCT_IMAGES}
+            label="Upload image"
+            placeholder="Upload image"
+            onChange={onChange}
+            productImages={productImages}
+            setProductImages={setProductImages}
+            error={!productImages.length}
+            value={""}
+          />
         </div>
         <h6
           className={cn(
@@ -186,9 +143,9 @@ export const AddEditProduct = ({
         </h6>
         <Button
           className={cn(
-            "select-none border flex gap-1.5 font-semibold text-neutral-400 hover:border-neutral-400 hover:text-neutral-400 border-neutral-400  transition-all duration-200 text-sm w-44 rounded-sm",
+            "select-none border flex justify-center items-center gap-1.5 font-semibold text-neutral-900/80 hover:border-neutral-500/25 hover:text-neutral-900/90 border-neutral-500/15  transition-all duration-150 text-sm w-44 rounded-sm bg-neutral-500/15 hover:bg-neutral-500/25",
             isErrorVisible &&
-              " border-neutral-600 text-neutral-600 hover:text-neutral-600 hover:border-neutral-600 cursor-not-allowed"
+              " border-neutral-500/10 text-neutral-600 hover:text-neutral-600 hover:border-neutral-500/10 hover:bg-neutral-500/15 cursor-not-allowed"
           )}
           type="submit"
         >
@@ -198,7 +155,7 @@ export const AddEditProduct = ({
                 <RxUpdate
                   className={cn(
                     "w-5 h-5",
-                    isLoading && "animate-spin repeat-infinite delay-0"
+                    isLoading && "animate-spin repeat-infinite"
                   )}
                 />
               ) : (
@@ -211,7 +168,7 @@ export const AddEditProduct = ({
               <RxUpdate
                 className={cn(
                   "w-5 h-5",
-                  isLoading && "animate-spin repeat-infinite delay-0"
+                  isLoading && "animate-spin repeat-infinite"
                 )}
               />
               Update

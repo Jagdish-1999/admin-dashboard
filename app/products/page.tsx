@@ -4,9 +4,9 @@ import { memo, useEffect, useRef, useState } from "react";
 import DataTable from "./_components/table/data-table";
 import { GetColumns } from "./_components/table/colums";
 import { MdAdd } from "react-icons/md";
-import { fetchProductList } from "@/slices/product-list-slice";
+import { fetchProductList } from "@/slices/product-list.slice";
 import { RootState, useAppSelector, useAppDispatch } from "@/stores/store";
-import { ProductListItemTypes } from "@/types/product-list-slice.types";
+import { ProductListItemTypes } from "@/types/product-list.slice.types";
 
 export interface ProductListProps {
   _id: string;
@@ -22,6 +22,7 @@ const Products = () => {
     (state: RootState) => state.productList
   );
   const [productList, setProductList] = useState<ProductListItemTypes[]>([]);
+
   useEffect(() => {
     if (initialRef.current) {
       dispatch(fetchProductList());
@@ -39,14 +40,13 @@ const Products = () => {
         {/* TODO  need to add search and filters in product list*/}
         <div className="underline italic"></div>
         <Link href="/products/new" className="">
-          <div className="flex gap-2 items-center bg-slate-900/40 border border-neutral-500 rounded-sm p-2 w-fit hover:border-neutral-400 transition-all duration-150 text-[14px] hover:text-neutral-300 text-neutral-400">
+          <div className="flex gap-2 items-center bg-neutral-500/10 hover:bg-neutral-500/20 border border-neutral-500/20 rounded-sm p-2 w-fit hover:border-neutral-500/20 transition-all duration-150 text-[14px] hover:text-slate-900/90 text-slate-900/80">
             <MdAdd className="w-5 h-5" />
             Add product
           </div>
         </Link>
       </div>
-      {/* Products list */}
-      <div className="overflow-hidden h-full rounded-sm rounded-ee-[3px] border border-[#021536]">
+      <div className="overflow-hidden h-full rounded-sm rounded-ee-[3px] border border-neutral-500/50">
         <DataTable
           columns={GetColumns()}
           data={productList}
@@ -57,4 +57,4 @@ const Products = () => {
   );
 };
 
-export default memo(Products);
+export default Products;

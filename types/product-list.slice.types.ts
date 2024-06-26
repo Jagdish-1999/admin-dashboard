@@ -1,3 +1,5 @@
+import { ProductImagesTypes } from ".";
+
 export interface UpdateProductTypes {
   productName: "";
   description: "";
@@ -5,10 +7,12 @@ export interface UpdateProductTypes {
   qty: number | null;
 }
 
-export interface CreateProductTypes {
+export interface CreateUpdateProductTypes {
   productName: string;
   description: string;
-  price: string;
+  price: number | null;
+  qty: number | null;
+  images: ProductImagesTypes[];
 }
 
 export interface ProductListItemTypes {
