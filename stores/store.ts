@@ -7,7 +7,7 @@ import user from "@/slices/user.slice";
 
 const rootReducer = combineReducers({
   productList: productListSlice,
-  user: user,
+  userDetails: user,
 });
 
 const store = configureStore({

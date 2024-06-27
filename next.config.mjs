@@ -8,7 +8,7 @@ const nextConfig = {
       },
       {
         source: "/api/v1/:path*",
-        destination: "http://localhost:8000/api/v1/:path*",
+        destination: `${process.env.APP_URL}/api/v1/:path*`,
       },
     ];
   },

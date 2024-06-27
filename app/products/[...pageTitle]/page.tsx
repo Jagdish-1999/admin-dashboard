@@ -4,7 +4,6 @@ import { useParams, useRouter } from "next/navigation";
 import { AddEditProduct } from "../_components/add-edit-product";
 import { useAppDispatch } from "@/stores/store";
 import { createUpdateProduct } from "@/slices/product-list.slice";
-import { ApiResponseTypes } from "@/types/api-response.types";
 
 import {
   DESCRIPTION,

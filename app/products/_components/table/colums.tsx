@@ -131,9 +131,9 @@ export const GetColumns = () => {
             <hr />
             <CustomAlertDialog
               dialogTitle={
-                <h4 className="text-slate-900/90 font-semibold">
+                <div className="text-slate-900/90 font-semibold">
                   Are you absolutely sure?
-                </h4>
+                </div>
               }
               onContinue={async () => {
                 //TODO need to make code clean  - need to debug this
@@ -145,14 +145,14 @@ export const GetColumns = () => {
               triggerChildren={
                 <div className="flex items-center gap-2 cursor-pointer">
                   <MdOutlineDelete />
-                  <h4>Delete</h4>
+                  <div>Delete</div>
                 </div>
               }
             >
-              <h4 className="text-slate-900/70">
+              <span className="text-slate-900/70">
                 This action cannot be undone. This will permanently delete your
                 item and remove your data from our servers.
-              </h4>
+              </span>
             </CustomAlertDialog>
           </div>
         </CustomPopover>

@@ -43,7 +43,6 @@ export const SideLink = () => {
   const url = header.get("referer") || header.get("host");
   const pathname = new URL(url || "").pathname;
 
-  console.log(pathname);
   return (
     <div className="w-[200px] h-full flex flex-col gap-2 rounded-e-sm pt-2 px-2 bg-neutral-500/20">
       {LINKS.map((link) => (

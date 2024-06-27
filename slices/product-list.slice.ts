@@ -96,8 +96,8 @@ const productListSlice = createSlice({
   name: "productList",
   initialState,
   reducers: {
-    updateProductList(state, payload: PayloadAction<ProductListItemTypes[]>) {
-      state.data = payload.payload;
+    updateProductList(state, action: PayloadAction<ProductListItemTypes[]>) {
+      state.data = action.payload;
     },
   },
   extraReducers: (builder) => {
