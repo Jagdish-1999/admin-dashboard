@@ -2,16 +2,24 @@
 
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { RiListSettingsLine } from "react-icons/ri";
-import { CustomPopover } from "@/common/popover";
 import { CiEdit } from "react-icons/ci";
-import { MdOutlineDelete } from "react-icons/md";
 import CustomAlertDialog from "@/common/alert-dialog";
 import { useAppDispatch } from "@/stores/store";
-import { deleteProductWithId } from "@/slices/product-list.slice";
-import { HiDotsVertical } from "react-icons/hi";
+import { deleteProductWithId } from "@/slices/products.slice";
+import { MdDeleteForever } from "react-icons/md";
+import { TbReload } from "react-icons/tb";
 
+interface EachColumnType {
+  id: string;
+  header: string;
+  accessorKey: string;
+  classes: string;
+  headerClasses: string;
+  headerIcon: React.ReactNode;
+  icon: React.ReactNode;
+}
 export interface CellProps {
+  id?: string;
   headerIcon?: React.ReactNode | undefined;
   icon?: React.ReactNode | undefined;
   label: string;
@@ -19,9 +27,11 @@ export interface CellProps {
   headerClasses?: string;
   onClick?(): void;
   showDate?: boolean;
+  isDeleting?: boolean;
 }
 
 export function Cell({
+  id,
   icon,
   label,
   classes,
@@ -29,12 +39,15 @@ export function Cell({
   headerIcon,
   headerClasses,
   showDate,
+  isDeleting,
 }: CellProps) {
   let date, time;
   if (showDate) [date, time] = label?.split?.(" ");
   return (
     <td className={cn("p-2", classes, headerClasses)} onClick={onClick}>
-      {showDate ? (
+      {isDeleting && id === "delete" ? (
+        <TbReload className="min-w-8 min-h-8 w-8 h-8 text-red-700 animate-spin duration-700 hover:bg-neutral-500/30 transition-all ease-in p-2 rounded-full  font-extrabold" />
+      ) : showDate ? (
         <div className="w-fit self-center justify-self-center m-auto">
           <h4 className="text-[10px] text-neutral-900/80 w-fit">{time}</h4>
           <h4 className="text-[11px] ">{date}</h4>
@@ -56,17 +69,17 @@ export const GetColumns = () => {
       header: "Product Name",
       accessorKey: "productName",
       classes:
-        "w-[20%] px-2 flex items-center line-clamp-2 py-1 text-ellipsis self-center text-[12px]",
+        "w-[18%] px-2 flex items-center line-clamp-2 py-1 text-ellipsis self-center text-[12px]",
       headerClasses:
-        "w-[20%] px-2  flex items-center text-[13px] font-semibold",
+        "w-[18%] px-2  flex items-center text-[13px] font-semibold",
     },
     {
       id: "description",
       header: "Description",
       accessorKey: "description",
       classes:
-        "w-[25%] px-2 py-1 line-clamp-3 text-ellipsis self-center text-justify text-[12px]",
-      headerClasses: "w-[25%] px-2 flex items-center text-[13x] font-semibold",
+        "w-[23%] px-2 py-1 line-clamp-3 text-ellipsis self-center text-justify text-[12px]",
+      headerClasses: "w-[23%] px-2 flex items-center text-[13px] font-semibold",
     },
     {
       id: "qty",
@@ -103,64 +116,56 @@ export const GetColumns = () => {
         "w-[15%] px-2 flex items-center justify-center text-[13px] font-semibold",
     },
     {
-      id: "actions",
-      header: "Actions",
-      headerIcon: (
-        <RiListSettingsLine
+      id: "edit",
+      header: "",
+      accessorKey: "edit",
+      headerIcon: "",
+      icon: (
+        <CiEdit
+          fill="black"
           strokeWidth={1}
-          className="min-w-4 min-h-4 h-4 w-4 font-semibold"
+          onClick={() => {
+            router.push("/products/edit");
+          }}
+          className="min-w-8 min-h-8 w-8 h-8 hover:bg-neutral-500/30 transition-all duration-150 ease-in p-2 rounded-full  font-semibold"
         />
       ),
+      classes:
+        "min-w-8 min-h-8 w-[5%] px-2 flex items-center justify-center text-[12px]",
+      headerClasses:
+        "min-w-8 min-h-8 w-[5%] px-2 flex items-center justify-center text-[13px] font-semibold",
+    },
+    {
+      id: "delete",
+      header: "",
+      accessorKey: "delete",
       icon: (
-        <CustomPopover
+        <CustomAlertDialog
+          dialogTitle={
+            <div className="text-slate-900/90 font-semibold">
+              Are you absolutely sure?
+            </div>
+          }
+          onContinue={async () => {
+            const { id } = JSON.parse(
+              localStorage.getItem("edited-product") || "{}"
+            );
+            await dispatch(deleteProductWithId({ _id: id }));
+          }}
           triggerChildren={
-            <HiDotsVertical className="hover:bg-neutral-500/30 transition-all duration-150 ease-in p-2 rounded-full h-8 w-8 font-semibold" />
+            <MdDeleteForever className="min-w-8 min-h-8 w-8 h-8 text-red-700 hover:bg-neutral-500/30 transition-all duration-150 ease-in p-2 rounded-full font-semibold" />
           }
         >
-          <div className="flex flex-col gap-2 w-fit text-[12px]">
-            <div
-              className="flex items-center gap-2 cursor-pointer"
-              onClick={(evt) => {
-                evt.stopPropagation();
-                router.push("/products/edit");
-              }}
-            >
-              <CiEdit />
-              <h4>Edit</h4>
-            </div>
-            <hr />
-            <CustomAlertDialog
-              dialogTitle={
-                <div className="text-slate-900/90 font-semibold">
-                  Are you absolutely sure?
-                </div>
-              }
-              onContinue={async () => {
-                //TODO need to make code clean  - need to debug this
-                const { id } = JSON.parse(
-                  localStorage.getItem("edited-product") || "{}"
-                );
-                await dispatch(deleteProductWithId({ _id: id }));
-              }}
-              triggerChildren={
-                <div className="flex items-center gap-2 cursor-pointer">
-                  <MdOutlineDelete />
-                  <div>Delete</div>
-                </div>
-              }
-            >
-              <span className="text-slate-900/70">
-                This action cannot be undone. This will permanently delete your
-                item and remove your data from our servers.
-              </span>
-            </CustomAlertDialog>
-          </div>
-        </CustomPopover>
+          <span className="text-slate-900/70">
+            This action cannot be undone. This will permanently delete your
+            product and remove your data from our servers.
+          </span>
+        </CustomAlertDialog>
       ),
-      accessorKey: "action",
-      classes: "w-[5%] px-2 text-[12px] flex items-center justify-center",
+      classes:
+        "min-w-8 min-h-8 w-[5%] px-2 flex items-center justify-center text-[12px]-l",
       headerClasses:
-        "w-[5%] px-2 flex items-center justify-center mr-1 text-[13px] font-semibold",
+        "min-w-8 min-h-8 w-[5%] px-2 flex items-center justify-center text-[13px] font-semibold",
     },
-  ];
+  ] as EachColumnType[];
 };

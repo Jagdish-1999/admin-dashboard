@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { AddEditProduct } from "../_components/add-edit-product";
 import { useAppDispatch } from "@/stores/store";
-import { createUpdateProduct } from "@/slices/product-list.slice";
+import { createUpdateProduct } from "@/slices/products.slice";
 
 import {
   DESCRIPTION,
@@ -14,9 +14,9 @@ import {
   ProductInputDataProps,
   QUANTITY,
 } from "@/types";
-import { CreateUpdateProductTypes } from "@/types/product-list.slice.types";
+import { CreateUpdateProductTypes } from "@/types/products.slice.types";
 
-export const initialProductInputData: ProductInputDataProps = {
+const initialProductInputData: ProductInputDataProps = {
   [PRODUCT_NAME]: {
     value: "",
     error: true,

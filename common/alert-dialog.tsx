@@ -10,7 +10,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { PopOverProps } from "./popover";
-import { MdDeleteOutline } from "react-icons/md";
+import { MdDeleteForever } from "react-icons/md";
 
 interface AlertDialogProps extends PopOverProps {
   dialogTitle: React.ReactNode | string;
@@ -44,7 +44,7 @@ const CustomAlertDialog = ({
             onClick={onContinue}
             className="border text-red-600 flex gap-2 border-red-800"
           >
-            <MdDeleteOutline />
+            <MdDeleteForever />
             Delete
           </AlertDialogAction>
         </AlertDialogFooter>

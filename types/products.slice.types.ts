@@ -15,7 +15,7 @@ export interface CreateUpdateProductTypes {
   images: ProductImagesTypes[];
 }
 
-export interface ProductListItemTypes {
+export interface ProductsItemTypes {
   _id: string;
   qty: number;
   productName: string;
@@ -24,9 +24,10 @@ export interface ProductListItemTypes {
   createdAt: string;
   updatedAt: string;
   images: string[];
+  isDeleting: boolean;
 }
 
-export interface ProductListTypes {
-  data: ProductListItemTypes[];
+export interface ProductsTypes {
+  data: ProductsItemTypes[];
   isLoading: boolean;
 }

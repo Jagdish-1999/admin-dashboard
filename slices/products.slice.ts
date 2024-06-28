@@ -6,30 +6,37 @@ import { ApiResponseTypes } from "@/types/api-response.types";
 import { toast } from "sonner";
 import {
   CreateUpdateProductTypes,
-  ProductListItemTypes,
-  ProductListTypes,
-} from "@/types/product-list.slice.types";
+  ProductsItemTypes,
+  ProductsTypes,
+} from "@/types/products.slice.types";
 import { formHeaders } from "@/lib/form.header";
 import { DESCRIPTION, PRICE, PRODUCT_NAME, QUANTITY } from "@/types";
 
-export const fetchProductList = createAsyncThunk(
-  "fetchProductList",
-  async () => {
-    //TODO need to handle errors
-    const { data } = await axios.get("/api/v1/products");
-    return data;
-  }
-);
+export const fetchProducts = createAsyncThunk("fetchProducts", async () => {
+  //TODO need to handle errors
+  const { data } = await axios.get("/api/v1/products");
+
+  const modifiedProducts = data.data.map((product: ProductsItemTypes) => {
+    const createdAt = formatDate(product.createdAt);
+    const updatedAt = formatDate(product.updatedAt);
+    return { ...product, createdAt, updatedAt, isDeleting: false };
+  });
+  return modifiedProducts;
+});
 
 export const createUpdateProduct = createAsyncThunk(
-  "createProduct",
-  async ({
-    payload,
-    id,
-  }: {
-    payload: CreateUpdateProductTypes;
-    id: string;
-  }) => {
+  "createUpdateProduct",
+  async (
+    {
+      payload,
+      id,
+    }: {
+      payload: CreateUpdateProductTypes;
+      id: string;
+    },
+    { getState }
+  ) => {
+    //TODO need to handle errors
     const formData = new FormData();
     const existingImages: string[] = [];
 
@@ -60,12 +67,22 @@ export const createUpdateProduct = createAsyncThunk(
       }));
     }
 
+    const productResult = data.data! as ProductsItemTypes;
+
     if (data.success) {
       toast.success(data.message);
     } else {
       toast.error(data.message);
     }
-    return data;
+
+    const list = (getState() as RootState).products.data;
+
+    const createdAt = formatDate(productResult.createdAt);
+    const updatedAt = formatDate(productResult.updatedAt);
+    return [
+      { ...productResult, isDeleting: false, createdAt, updatedAt },
+      ...list,
+    ];
   }
 );
 
@@ -73,13 +90,25 @@ export const deleteProductWithId = createAsyncThunk(
   "deleteProductWithId",
   async ({ _id }: { _id: string }, { dispatch, getState }) => {
     //TODO need to handle errors
+    const productList = (getState() as RootState).products.data;
+    dispatch(
+      updateProducts(
+        productList.map((product: ProductsItemTypes) =>
+          product._id == _id ? { ...product, isDeleting: true } : product
+        )
+      )
+    );
     const { data }: { data: ApiResponseTypes<null> } = await axios.delete(
       `/api/v1/products/${_id}`
     );
     if (data.success) {
-      const productList = (getState() as RootState).productList.data;
+      const productList = (getState() as RootState).products.data;
       dispatch(
-        updateProductList(productList.filter((product) => product._id !== _id))
+        updateProducts(
+          productList.filter(
+            (product: ProductsItemTypes) => product._id !== _id
+          )
+        )
       );
       toast.success(data.message);
     }
@@ -87,39 +116,39 @@ export const deleteProductWithId = createAsyncThunk(
   }
 );
 
-const initialState: ProductListTypes = {
+const initialState: ProductsTypes = {
   data: [],
   isLoading: false,
 };
 
-const productListSlice = createSlice({
-  name: "productList",
+const productsSlice = createSlice({
+  name: "products",
   initialState,
   reducers: {
-    updateProductList(state, action: PayloadAction<ProductListItemTypes[]>) {
+    updateProducts(state, action: PayloadAction<ProductsItemTypes[]>) {
+      state.data = action.payload;
+    },
+    updateProductIsLoading(state, action: PayloadAction<ProductsItemTypes[]>) {
       state.data = action.payload;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchProductList.pending, (state) => {
+    builder.addCase(fetchProducts.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(fetchProductList.fulfilled, (state, action) => {
-      state.data = action.payload.data.map((product: ProductListItemTypes) => {
-        const createdAt = formatDate(product.createdAt);
-        const updatedAt = formatDate(product.updatedAt);
-        return { ...product, createdAt, updatedAt };
-      });
+    builder.addCase(fetchProducts.fulfilled, (state, action) => {
+      state.data = action.payload;
       state.isLoading = false;
     });
-    builder.addCase(fetchProductList.rejected, (state) => {
+    builder.addCase(fetchProducts.rejected, (state) => {
       state.data = [];
       state.isLoading = false;
     });
     builder.addCase(createUpdateProduct.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(createUpdateProduct.fulfilled, (state) => {
+    builder.addCase(createUpdateProduct.fulfilled, (state, action) => {
+      state.data = action.payload;
       state.isLoading = false;
     });
     builder.addCase(createUpdateProduct.rejected, (state) => {
@@ -128,5 +157,5 @@ const productListSlice = createSlice({
   },
 });
 
-export const { updateProductList } = productListSlice.actions;
-export default productListSlice.reducer;
+export const { updateProducts, updateProductIsLoading } = productsSlice.actions;
+export default productsSlice.reducer;

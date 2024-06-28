@@ -2,12 +2,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import { useDispatch, useSelector } from "react-redux";
 
-import productListSlice from "@/slices/product-list.slice";
+import productsSlice from "@/slices/products.slice";
 import user from "@/slices/user.slice";
 
 const rootReducer = combineReducers({
-  productList: productListSlice,
   userDetails: user,
+  products: productsSlice,
 });
 
 const store = configureStore({

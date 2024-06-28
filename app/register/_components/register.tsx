@@ -32,7 +32,6 @@ export const emptyFormValues: FormValuesTypes = {
 };
 
 interface RegiserPropTypes {
-  isUserAuthendicated?: boolean;
   onBackDropClick: React.MouseEventHandler<HTMLDivElement>;
 }
 
@@ -83,8 +82,13 @@ const Register = ({ onBackDropClick }: RegiserPropTypes) => {
 
   const handleLoginUser = useCallback(async () => {
     const { email, password } = formValues;
-    await dispatch(loginUser({ email: email.value, password: password.value }));
-  }, [dispatch, formValues]);
+    const res = await dispatch(
+      loginUser({ email: email.value, password: password.value })
+    );
+    if (res.meta.requestStatus === "fulfilled") {
+      router.push("/");
+    }
+  }, [dispatch, formValues, router]);
 
   const handleInput = useCallback(
     (evt: React.ChangeEvent<HTMLInputElement>) => {

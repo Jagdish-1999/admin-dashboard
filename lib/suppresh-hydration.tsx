@@ -8,7 +8,11 @@ const SuppressHydration = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   if (!isHydrated) {
-    return null;
+    return (
+      <div className="w-full h-full flex justify-center items-center">
+        Loading...
+      </div>
+    );
   }
 
   return children;

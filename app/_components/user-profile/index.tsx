@@ -1,23 +1,24 @@
 "use client";
-import { signIn, useSession } from "next-auth/react";
 import { CustomPopover } from "@/common/popover";
-import ProfileInfo, { ProfileAvatar } from "./prodile-info";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import ProfileInfo from "./prodile-info";
+import { useAppSelector } from "@/stores/store";
+import ProfileAvatar from "./profile-avatar";
+import { useImagePreloader } from "@/lib/preload-image";
 
 export const UserProfile = () => {
-  const pathname = usePathname();
-  // return (
-  //   <Link
-  //     href={"/register"}
-  //     className="border-neutral-500/10 border bg-neutral-500/15 text-sm font-semibold hover:bg-neutral-500/25 transition-all duration-100 text-slate-900/90 px-3 py-2 rounded-sm"
-  //   >
-  //     Login
-  //   </Link>
-  // );
+  const user = useAppSelector((state) => state.userDetails.user);
+  const { imageSrc, isLoading } = useImagePreloader(user?.avatar.url || "");
 
   return (
-    <CustomPopover triggerChildren={<ProfileAvatar />}>
+    <CustomPopover
+      triggerChildren={
+        <ProfileAvatar
+          isLoading={isLoading}
+          url={imageSrc ? imageSrc : ""}
+          fallback={user?.name[0]}
+        />
+      }
+    >
       <ProfileInfo />
     </CustomPopover>
   );

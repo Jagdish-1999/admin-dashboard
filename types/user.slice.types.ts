@@ -1,9 +1,13 @@
+export interface AvatarType {
+  url: string;
+  id: string;
+}
 export interface User {
   createdAt: string;
   updatedAt: string;
   name: string;
   email: string;
-  avatar: string;
+  avatar: AvatarType;
 }
 export interface UserType {
   isLogin: boolean;

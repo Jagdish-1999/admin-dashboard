@@ -2,7 +2,7 @@
 import { cookies } from "next/headers";
 import axios from "axios";
 
-export async function fetchUser() {
+const fetchUser = async () => {
   const accessToken = cookies().get("accessToken")?.value;
   try {
     if (!accessToken) {
@@ -18,4 +18,5 @@ export async function fetchUser() {
     console.log("[Error] when fetch user on server: ", error);
     return null;
   }
-}
+};
+export { fetchUser };

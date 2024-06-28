@@ -1,12 +1,12 @@
 "use client";
-import React, { useMemo, useState } from "react";
-import Image from "next/image";
+import React, { useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { MdAdd } from "react-icons/md";
-import { RxUpdate } from "react-icons/rx";
 import { Button } from "@/components/ui/button";
 import Input from "./Input";
 import TextArea from "./text-area";
+import { BiArrowBack } from "react-icons/bi";
 
 import { useAppSelector } from "@/stores/store";
 import {
@@ -18,6 +18,8 @@ import {
   ProductInputDataProps,
   QUANTITY,
 } from "@/types";
+import { IoReload, IoReloadOutline } from "react-icons/io5";
+import { TbReload } from "react-icons/tb";
 
 interface AddEditProductProps {
   isCreating: boolean;
@@ -38,7 +40,8 @@ export const AddEditProduct = ({
   productImages,
   setProductImages,
 }: AddEditProductProps) => {
-  const isLoading = useAppSelector((state) => state.productList.isLoading);
+  const router = useRouter();
+  const isLoading = useAppSelector((state) => state.products.isLoading);
   const isErrorVisible = useMemo(() => {
     if (
       productData[PRODUCT_NAME].error ||
@@ -56,10 +59,24 @@ export const AddEditProduct = ({
   }, [productData, productImages.length]);
 
   return (
-    <div className="flex flex-col justify-center items-center h-full w-full px-8 py-1 gap-4 rounded-sm">
-      <h2 className="font-semibold text-center">
-        {isCreating ? "Add new product" : "Edit product"}
-      </h2>
+    <div
+      className={cn(
+        "flex flex-col justify-center items-center h-full w-full px-8 py-1 gap-2 rounded-sm",
+        isLoading && "pointer-events-none opacity-85"
+      )}
+    >
+      <div className="flex justify-between w-full h-fit items-center">
+        <button
+          onClick={() => router.back()}
+          className="rounded-full border-neutral-500/20 border p-1 cursor-pointer"
+        >
+          <BiArrowBack className="w-5 h-5" />
+        </button>
+        <h2 className="font-semibold text-center">
+          {isCreating ? "Add new product" : "Edit product"}
+        </h2>
+        <div className=""></div>
+      </div>
       <form
         onSubmit={(evt) => {
           evt.preventDefault();
@@ -152,26 +169,27 @@ export const AddEditProduct = ({
           {isCreating ? (
             <>
               {isLoading ? (
-                <RxUpdate
-                  className={cn(
-                    "w-5 h-5",
-                    isLoading && "animate-spin repeat-infinite"
-                  )}
-                />
+                <TbReload className="min-w-10 min-h-10 w-10 h-10 animate-spin duration-700 hover:bg-neutral-500/30 transition-all ease-in p-2 rounded-full  font-semibold" />
               ) : (
-                <MdAdd className="w-5 h-5" />
+                <>
+                  <MdAdd className="w-5 h-5" />
+                  Add
+                </>
               )}
-              Add
             </>
           ) : (
             <>
-              <RxUpdate
-                className={cn(
-                  "w-5 h-5",
-                  isLoading && "animate-spin repeat-infinite"
-                )}
-              />
-              Update
+              {isLoading ? (
+                <TbReload
+                  strokeWidth={2}
+                  className={cn(
+                    "min-w-10 min-h-10 w-10 h-10 duration-700 hover:bg-neutral-500/30 transition-all ease-in p-2 rounded-full  font-semibold",
+                    isLoading && "animate-spin"
+                  )}
+                />
+              ) : (
+                <>Update</>
+              )}
             </>
           )}
         </Button>

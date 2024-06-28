@@ -1,12 +1,11 @@
 "use client";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { memo, useEffect, useRef, useState } from "react";
 import DataTable from "./_components/table/data-table";
 import { GetColumns } from "./_components/table/colums";
 import { MdAdd } from "react-icons/md";
-import { fetchProductList } from "@/slices/product-list.slice";
 import { RootState, useAppSelector, useAppDispatch } from "@/stores/store";
-import { ProductListItemTypes } from "@/types/product-list.slice.types";
+import { fetchProducts } from "@/slices/products.slice";
 
 export interface ProductListProps {
   _id: string;
@@ -16,43 +15,37 @@ export interface ProductListProps {
 }
 
 const Products = () => {
-  const initialRef = useRef(true);
+  const initialRef = useRef(false);
   const dispatch = useAppDispatch();
-  const { data, isLoading } = useAppSelector(
-    (state: RootState) => state.productList
+  const { data: productList, isLoading } = useAppSelector(
+    (state: RootState) => state.products
   );
-  const [productList, setProductList] = useState<ProductListItemTypes[]>([]);
 
   useEffect(() => {
-    if (initialRef.current) {
-      dispatch(fetchProductList());
-      initialRef.current = false;
+    if (productList.length === 0 && !initialRef.current) {
+      console.log("Fetched Product ?");
+      dispatch(fetchProducts());
+      initialRef.current = true;
     }
-  }, [dispatch]);
-
-  useEffect(() => {
-    setProductList(data);
-  }, [data]);
+  }, [dispatch, productList, productList.length]);
 
   return (
     <div className="flex flex-col gap-2 w-full h-full">
       <div className="flex justify-between items-center mb-1">
-        {/* TODO  need to add search and filters in product list*/}
+        {/* //TODO  need to add search and filters in product list*/}
         <div className="underline italic"></div>
         <Link href="/products/new" className="">
-          <div className="flex gap-2 items-center bg-neutral-500/10 hover:bg-neutral-500/20 border border-neutral-500/20 rounded-sm p-2 w-fit hover:border-neutral-500/20 transition-all duration-150 text-[14px] hover:text-slate-900/90 text-slate-900/80">
+          <div className="flex gap-1 items-center bg-neutral-500/10 hover:bg-neutral-500/20 border border-neutral-500/20 rounded-sm p-2 w-fit hover:border-neutral-500/20 transition-all duration-150 text-[14px] hover:text-slate-900/90 text-slate-900/80">
             <MdAdd className="w-5 h-5" />
             Add product
           </div>
         </Link>
       </div>
-      <div className="overflow-hidden h-full rounded-sm rounded-ee-[3px] border border-neutral-500/50">
-        <DataTable
-          columns={GetColumns()}
-          data={productList}
-          isLoading={isLoading}
-        />
-      </div>
+      <DataTable
+        columns={GetColumns()}
+        data={productList}
+        isLoading={isLoading}
+      />
     </div>
   );
 };
