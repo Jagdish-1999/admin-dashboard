@@ -1,21 +1,13 @@
 "use client";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Cell } from "./colums";
+import React, { useCallback } from "react";
+import { Cell, EachColumnType } from "./colums";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { ProductsItemTypes } from "@/types/products.slice.types";
 import SuppressHydration from "@/lib/suppresh-hydration";
 
 interface DataTableProps {
-  columns: {
-    id: string;
-    headerIcon?: React.ReactNode | undefined;
-    icon?: React.ReactNode | undefined;
-    classes: string;
-    headerClasses: string;
-    header: string;
-    accessorKey: string;
-  }[];
+  columns: EachColumnType[];
   data: ProductsItemTypes[];
   isLoading: boolean;
   onSelect(
@@ -130,8 +122,8 @@ const DataTable = ({
                         <Cell
                           id={column.id}
                           showDate={
-                            column.accessorKey === "createdAt" ||
-                            column.accessorKey === "updatedAt"
+                            column.accessKey === "createdAt" ||
+                            column.accessKey === "updatedAt"
                           }
                           hideIcon={
                             selectedProducts.includes(item._id) &&
@@ -146,7 +138,7 @@ const DataTable = ({
                           key={column.id + Date.now()}
                           label={`${
                             item[
-                              column.accessorKey as keyof Omit<
+                              column.accessKey as keyof Omit<
                                 ProductsItemTypes,
                                 "images"
                               >

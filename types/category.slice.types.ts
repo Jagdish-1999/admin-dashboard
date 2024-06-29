@@ -1,4 +1,5 @@
 export interface EachCategoryType {
+  _id: string;
   id: string;
   name: string;
   createdAt: string;

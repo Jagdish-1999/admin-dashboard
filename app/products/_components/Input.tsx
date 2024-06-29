@@ -112,7 +112,7 @@ function Input({
     );
   }
   return (
-    <div className="flex w-full justify-center gap-0.5 flex-col relative">
+    <span className="flex w-full justify-center gap-0.5 flex-col relative">
       <label
         htmlFor={id}
         className={cn(
@@ -151,7 +151,7 @@ function Input({
           )
         )}
       </span>
-    </div>
+    </span>
   );
 }
 

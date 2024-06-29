@@ -10,10 +10,12 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { PopOverProps } from "./popover";
-import { MdDeleteForever } from "react-icons/md";
+import { cn } from "@/lib/utils";
 
 interface AlertDialogProps extends PopOverProps {
-  dialogTitle: React.ReactNode | string;
+  continueButtonText(): string | React.ReactNode;
+  cancelButtonText?: string | React.ReactNode;
+  dialogTitle: string | React.ReactNode;
   onCancel?(evt: React.MouseEvent<HTMLButtonElement>): void;
   onContinue(evt: React.MouseEvent<HTMLButtonElement>): void;
 }
@@ -24,6 +26,8 @@ const CustomAlertDialog = ({
   dialogTitle,
   onCancel,
   onContinue,
+  cancelButtonText = "Cancel",
+  continueButtonText,
 }: AlertDialogProps) => {
   return (
     <AlertDialog>
@@ -38,14 +42,13 @@ const CustomAlertDialog = ({
             onClick={onCancel ? onCancel : () => {}}
             className="border border-neutral-500"
           >
-            Cancel
+            {cancelButtonText}
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={onContinue}
-            className="text-red-600 flex gap-2 border border-red-800"
+            className={cn("p-0 m-0 w-[73px] h-full")}
           >
-            <MdDeleteForever />
-            Delete
+            {continueButtonText?.() || "Continue"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

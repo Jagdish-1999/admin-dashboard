@@ -9,15 +9,16 @@ import { deleteProductWithIds } from "@/slices/products.slice";
 import { MdDeleteForever } from "react-icons/md";
 import { ImSpinner8 } from "react-icons/im";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ProductsItemTypes } from "@/types/products.slice.types";
 
-interface EachColumnType {
+export interface EachColumnType {
   id: string;
   header: string;
-  accessorKey: string;
-  classes: string;
-  headerClasses: string;
-  headerIcon: React.ReactNode;
-  icon: React.ReactNode;
+  accessKey: string;
+  classes?: string;
+  headerClasses?: string;
+  headerIcon?: React.ReactNode;
+  icon?: React.ReactNode;
 }
 export interface CellProps {
   id?: string;
@@ -52,8 +53,6 @@ export function Cell({
 }: CellProps) {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  let date, time;
-  if (showDate) [date, time] = label?.split?.(" ");
 
   if (id === "checkbox") {
     return (
@@ -118,6 +117,12 @@ export function Cell({
           <ImSpinner8 className="min-w-8 min-h-8 w-8 h-8 text-red-700 animate-spin duration-700 hover:bg-neutral-500/30 transition-all ease-in p-2 rounded-full  font-extrabold" />
         ) : (
           <CustomAlertDialog
+            continueButtonText={() => (
+              <div className="flex gap-1 items-center justify-center text-red-600 w-full h-full p-2 rounded-sm border border-red-800">
+                <MdDeleteForever />
+                Delete
+              </div>
+            )}
             dialogTitle={
               <div className="text-slate-900/90 font-semibold">
                 Are you absolutely sure?
@@ -149,6 +154,9 @@ export function Cell({
   }
 
   if (showDate) {
+    let date, time;
+    if (showDate) [date, time] = label?.split?.(" ");
+
     return (
       <td
         className={cn(
@@ -187,14 +195,14 @@ export const GetColumns = () => {
     {
       id: "checkbox",
       header: "Chechbox",
-      accessorKey: "checkbox",
+      accessKey: "checkbox",
       classes: "w-[3%] px-2 flex items-center  justify-center py-1",
       headerClasses: "w-[3%] px-2 flex items-center justify-center",
     },
     {
       id: "product-name",
       header: "Product Name",
-      accessorKey: "productName",
+      accessKey: "productName",
       classes:
         "w-[18%] px-2 flex items-center line-clamp-2 py-1 text-ellipsis self-center text-[12px]",
       headerClasses:
@@ -203,7 +211,7 @@ export const GetColumns = () => {
     {
       id: "description",
       header: "Description",
-      accessorKey: "description",
+      accessKey: "description",
       classes:
         "w-[23%] px-2 py-1 line-clamp-3 text-ellipsis self-center text-justify text-[12px]",
       headerClasses: "w-[23%] px-2 flex items-center text-[14px] font-semibold",
@@ -211,7 +219,7 @@ export const GetColumns = () => {
     {
       id: "qty",
       header: "Quantity",
-      accessorKey: "qty",
+      accessKey: "qty",
       classes: "w-[11%] px-2 py-1 flex items-center justify-center text-[12px]",
       headerClasses:
         "w-[11%] px-2 flex items-center  justify-center text-[14px] font-semibold",
@@ -219,7 +227,7 @@ export const GetColumns = () => {
     {
       id: "createdAt",
       header: "Created At",
-      accessorKey: "createdAt",
+      accessKey: "createdAt",
       classes:
         "w-[11%] px-2 py-1 line-clamp-3 text-ellipsis self-center justify-center text-center text-[12px]",
       headerClasses:
@@ -228,7 +236,7 @@ export const GetColumns = () => {
     {
       id: "updatedAt",
       header: "Updated At",
-      accessorKey: "updatedAt",
+      accessKey: "updatedAt",
       classes:
         "w-[11%] px-2 py-1 line-clamp-3 text-ellipsis self-center justify-center text-center text-[12px]",
       headerClasses:
@@ -237,7 +245,7 @@ export const GetColumns = () => {
     {
       id: "price",
       header: "Price",
-      accessorKey: "price",
+      accessKey: "price",
       classes: "w-[13%] px-2 flex items-center justify-center text-[12px]",
       headerClasses:
         "w-[13%] px-2 flex items-center justify-center text-[14px] font-semibold",
@@ -245,7 +253,7 @@ export const GetColumns = () => {
     {
       id: "edit",
       header: "",
-      accessorKey: "edit",
+      accessKey: "edit",
       headerIcon: "",
       classes:
         "min-w-8 min-h-8 w-[5%] px-2 flex items-center justify-center text-[12px]",
@@ -255,7 +263,7 @@ export const GetColumns = () => {
     {
       id: "delete",
       header: "",
-      accessorKey: "delete",
+      accessKey: "delete",
       classes: "min-w-8 min-h-8 w-[5%] px-2 flex items-center justify-center",
       headerClasses:
         "min-w-8 min-h-8 w-[5%] px-2 flex items-center justify-center mr-1",

@@ -21,7 +21,13 @@ export const fetchProducts = createAsyncThunk(
     const modifiedProducts = data.data.map((product: ProductsItemTypes) => {
       const createdAt = formatDate(product.createdAt);
       const updatedAt = formatDate(product.updatedAt);
-      return { ...product, createdAt, updatedAt, isDeleting: false };
+      return {
+        ...product,
+        createdAt,
+        updatedAt,
+        isDeleting: false,
+        id: product._id,
+      };
     });
     return modifiedProducts;
   }
@@ -59,7 +65,7 @@ export const createUpdateProduct = createAsyncThunk(
 
     formData.append("payload", JSON.stringify(body));
 
-    let data = {} as ApiResponseTypes<null>;
+    let data = {} as ApiResponseTypes<ProductsItemTypes>;
     if (id) {
       ({ data } = await axios.put(`/api/v1/products/${id}`, formData, {
         headers: formHeaders,
@@ -70,7 +76,7 @@ export const createUpdateProduct = createAsyncThunk(
       }));
     }
 
-    const productResult = data.data! as ProductsItemTypes;
+    const productResult: ProductsItemTypes | null = data.data;
 
     if (data.success) {
       toast.success(data.message);
@@ -81,10 +87,17 @@ export const createUpdateProduct = createAsyncThunk(
     const list = (getState() as RootState).products.data.filter(
       (p) => p._id !== id
     );
+
     const createdAt = formatDate(productResult.createdAt);
     const updatedAt = formatDate(productResult.updatedAt);
     return [
-      { ...productResult, isDeleting: false, createdAt, updatedAt },
+      {
+        ...productResult,
+        isDeleting: false,
+        createdAt,
+        updatedAt,
+        id: productResult._id,
+      },
       ...list,
     ];
   }

@@ -30,7 +30,6 @@ const Products = () => {
 
   useEffect(() => {
     if (productList.length === 0 && !initialRef.current) {
-      console.log("Fetched Product ?");
       dispatch(fetchProducts());
       initialRef.current = true;
     }
@@ -62,13 +61,34 @@ const Products = () => {
       });
   }, [dispatch, selectedProducts]);
 
+  const onCellClick = useCallback((item: ProductsItemTypes) => {
+    const { productName, description, price, _id, images, qty } = item;
+    localStorage.setItem(
+      "edited-product",
+      JSON.stringify({
+        productName,
+        description,
+        images,
+        price,
+        qty,
+        id: _id,
+      })
+    );
+  }, []);
+
   return (
-    <div className="flex flex-col gap-2 w-full h-full">
+    <div className="flex flex-col gap-2 p-2 pt-0 w-full h-full">
       <div className="flex justify-between items-center mb-1">
         {/* //TODO  need to add search and filters in product list*/}
         <div className="underline italic"></div>
         <div className="flex gap-2">
           <CustomAlertDialog
+            continueButtonText={() => (
+              <div className="flex gap-1 items-center justify-center text-red-600 w-full h-full p-2 rounded-sm border border-red-800">
+                <MdDeleteForever />
+                Delete
+              </div>
+            )}
             dialogTitle={
               <div className="text-slate-900/90 font-semibold">
                 Are you absolutely sure?
@@ -77,7 +97,6 @@ const Products = () => {
             onContinue={deleteProducts}
             triggerChildren={
               <div
-                // onClick={deleteProducts}
                 className={cn(
                   "w-fit h-full border opacity-100 text-sm text-red-700 border-red-500/25 hover:bg-red-500/20 bg-red-500/10 rounded-sm transition-all duration-150 ease-linear cursor-pointer",
                   selectedProducts.length == 0 &&
