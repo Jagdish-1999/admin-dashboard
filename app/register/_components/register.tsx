@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import Input from "@/app/products/_components/Input";
 import { FcGoogle } from "react-icons/fc";
 import { ProductImagesTypes } from "@/types";
@@ -8,7 +7,8 @@ import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/stores/store";
 import { loginUser, registerUser } from "@/slices/user.slice";
 import { RegisterUserPayload } from "@/types/user.slice.types";
-import { RxCross2, RxUpdate } from "react-icons/rx";
+import { RxCross2 } from "react-icons/rx";
+import { ImSpinner8 } from "react-icons/im";
 
 const LOGIN = "Login";
 const REGISTER = "Register";
@@ -38,9 +38,7 @@ interface RegiserPropTypes {
 const Register = ({ onBackDropClick }: RegiserPropTypes) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { isLoading, isLogin, user } = useAppSelector(
-    (state) => state.userDetails
-  );
+  const { isLoading } = useAppSelector((state) => state.userDetails);
   const [backDropAnimate, setBackDropAnimate] = useState(false);
   const [isLoginPage, setIsLoginPage] = useState<boolean>(true);
   const [avatarLogo, setAvatarLogo] = useState<ProductImagesTypes[]>([]);
@@ -77,7 +75,12 @@ const Register = ({ onBackDropClick }: RegiserPropTypes) => {
       password: formValues[PASSWORD].value,
       avatar: avatarLogo[0]?.file,
     };
-    await dispatch(registerUser(payload));
+    await dispatch(registerUser(payload)).then((res) => {
+      console.log("Res", res);
+      if (res.meta.requestStatus === "fulfilled") {
+        setIsLoginPage(true);
+      }
+    });
   }, [avatarLogo, dispatch, formValues]);
 
   const handleLoginUser = useCallback(async () => {
@@ -129,7 +132,7 @@ const Register = ({ onBackDropClick }: RegiserPropTypes) => {
   return (
     <div
       className={cn(
-        "flex pointer-events-none group/form-container items-center animate-form-in repeat-1 justify-center w-screen h-screen fixed -top-0 left-0 bg-neutral-500/80 backdrop-blur-md overflow-hidden z-[99999999]",
+        "flex pointer-events-none group/form-container items-center animate-form-in repeat-1 justify-center w-screen h-screen fixed -top-0 left-0 bg-neutral-500/80 backdrop-blur-md overflow-hidden z-[99999]",
         backDropAnimate && "animate-form-out repeat-1"
       )}
     >
@@ -147,16 +150,16 @@ const Register = ({ onBackDropClick }: RegiserPropTypes) => {
         }}
       >
         <div
-          className="absolute cursor-pointer -right-4 -top-4 z-[2] opacity-0 group-hover/form-container:opacity-100 transition-all duration-150 bg-red-500/40 backdrop-blur-md  rounded-full"
+          className="absolute cursor-pointer -right-4 -top-4 z-[2] opacity-0 group-hover/form-container:opacity-100 transition-all duration-300 bg-red-500/40 backdrop-blur-md  rounded-full"
           onClick={() => {
             setBackDropAnimate(true);
             setTimeout((evt) => {
               onBackDropClick(evt);
               router.push("/");
-            }, 300);
+            }, 230);
           }}
         >
-          <RxCross2 className="w-8 h-8 font-semibold text-red-800 p-0.5" />
+          <RxCross2 className="w-8 h-8 font-semibold text-red-800 p-1" />
         </div>
         <div className="flex flex-col w-full gap-6">
           <h1 className="text-center text-lg">
@@ -227,7 +230,7 @@ const Register = ({ onBackDropClick }: RegiserPropTypes) => {
             disabled={isLoading}
           >
             {isLoading ? (
-              <RxUpdate
+              <ImSpinner8
                 className={cn(
                   "w-5 h-5",
                   isLoading && "animate-spin repeat-infinite"

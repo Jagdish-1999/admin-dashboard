@@ -12,33 +12,53 @@ import { toast } from "sonner";
 export const registerUser = createAsyncThunk(
   "registerUser",
   async (payload: RegisterUserPayload) => {
-    await axios.post("/api/v1/user/register", payload, {
-      headers: formHeaders,
-    });
+    //! need to handle error
+    try {
+      const response = await axios.post("/api/v1/user/register", payload, {
+        headers: formHeaders,
+      });
+      if (response.status === 201) {
+        toast.success(response.data.message);
+      } else {
+        toast.warning(response.data.message);
+      }
+    } catch (error: any) {
+      console.log(error);
+      toast.warning("User not created");
+      throw new Error("User not created");
+    }
   }
 );
 
 export const loginUser = createAsyncThunk(
   "loginUser",
-  async (payload: LoginUserTypes) => {
+  async (payload: LoginUserTypes, { dispatch }) => {
     const response = await axios.post("/api/v1/user/login", payload);
 
-    if (response.statusText === "OK") {
+    if (response.status === 200) {
+      dispatch(updateUserIsLogin(true));
+      dispatch(updateUserLoading(false));
       toast.success(response.data.message);
       return response.data.data;
     } else {
+      toast.warning(response.data.message);
       return null;
     }
   }
 );
 
-export const logoutUser = createAsyncThunk("logoutUser", async () => {
-  const res = await axios.get("/api/v1/user/logout");
-  if (res.statusText !== "OK") {
-    throw new Error("User not logged out");
+export const logoutUser = createAsyncThunk(
+  "logoutUser",
+  async (_, { dispatch }) => {
+    const res = await axios.get("/api/v1/user/logout");
+    if (res.statusText !== "OK") {
+      throw new Error("User not logged out");
+    }
+    dispatch(updateUser(null));
+    dispatch(updateUserIsLogin(false));
+    toast.success(res.data.message);
   }
-  toast.success(res.data.message);
-});
+);
 
 const initialState: UserType = {
   isLogin: false,
@@ -50,9 +70,14 @@ const userSlice = createSlice({
   name: "authentication",
   initialState: initialState,
   reducers: {
-    updateUser: (state, action: PayloadAction<User>) => {
+    updateUser: (state, action: PayloadAction<User | null>) => {
       state.user = action.payload;
-      state.isLogin = true;
+    },
+    updateUserLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
+    },
+    updateUserIsLogin: (state, action: PayloadAction<boolean>) => {
+      state.isLogin = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -61,10 +86,10 @@ const userSlice = createSlice({
     });
     builder.addCase(loginUser.pending, (state) => {
       state.isLoading = true;
-      state.isLogin = true;
     });
     builder.addCase(loginUser.fulfilled, (state, action) => {
       state.isLoading = false;
+      state.isLogin = true;
       state.user = action.payload;
     });
     builder.addCase(loginUser.rejected, (state) => {
@@ -92,5 +117,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { updateUser } = userSlice.actions;
+export const { updateUser, updateUserLoading, updateUserIsLogin } =
+  userSlice.actions;
 export default userSlice.reducer;

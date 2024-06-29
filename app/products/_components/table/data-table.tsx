@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Cell } from "./colums";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -18,9 +18,23 @@ interface DataTableProps {
   }[];
   data: ProductsItemTypes[];
   isLoading: boolean;
+  onSelect(
+    products: ProductsItemTypes[],
+    checked: boolean,
+    selectAll?: boolean
+  ): void;
+  selectedProducts: string[];
+  isDeletingProducts: boolean;
 }
 
-const DataTable = ({ columns, data, isLoading }: DataTableProps) => {
+const DataTable = ({
+  columns,
+  data,
+  isLoading,
+  onSelect,
+  selectedProducts,
+  isDeletingProducts,
+}: DataTableProps) => {
   const onCellClick = useCallback((item: ProductsItemTypes) => {
     const { productName, description, price, _id, images, qty } = item;
     localStorage.setItem(
@@ -35,15 +49,20 @@ const DataTable = ({ columns, data, isLoading }: DataTableProps) => {
       })
     );
   }, []);
+
   return (
     <SuppressHydration>
       <div className="overflow-hidden h-full rounded-sm rounded-ee-[3px] border border-neutral-500/30">
-        <table className="table w-full h-full overflow-hidden cursor-pointer bg-transparent">
-          <thead className="w-full flex bg-neutral-900/10 cursor-default select-none backdrop-blur-sm">
+        <table className="table w-full h-full overflow-hidden bg-neutral-100/90">
+          <thead className="w-full flex bg-neutral-800/10 cursor-default select-none backdrop-blur-sm h-9">
             <tr className="border-b border-neutral-500/50 w-full flex">
               {columns.map((column, idx) => {
                 return (
                   <Cell
+                    isHeader={column.id === "checkbox" ? !data.length : true}
+                    id={column.id}
+                    hideIcon={column.id === "edit" || column.id === "delete"}
+                    onCheckedChange={(check) => onSelect(data, check, true)}
                     key={column.id + idx}
                     label={column.header}
                     headerIcon={column.headerIcon}
@@ -53,7 +72,11 @@ const DataTable = ({ columns, data, isLoading }: DataTableProps) => {
               })}
             </tr>
           </thead>
-          <tbody className="relative w-full h-[calc(100%-38px)] overflow-y-auto bg-transparent block scroll-smooth custom-scrollbar">
+          <tbody
+            className={
+              "relative w-full h-[calc(100%-36px)] overflow-y-auto bg-transparent block scroll-smooth custom-scrollbar scroll-m-0 font-dm-sans"
+            }
+          >
             {/* //- LOADING SKELETON */}
             {isLoading && data.length === 0 && (
               <tr className="bg-neutral-500/10 w-full gap-1 flex flex-col mt-1">
@@ -69,14 +92,14 @@ const DataTable = ({ columns, data, isLoading }: DataTableProps) => {
                       <Skeleton
                         key={col.id}
                         className={cn(
-                          "w-full h-[50px] p-4 rounded-sm flex items-center justify-center bg-neutral-500/20 gap-1",
+                          "w-full h-[50px] p-4 rounded-sm flex items-center justify-center bg-neutral-500/15 gap-1",
                           col.headerClasses,
                           idx % 2 === 0 && ""
                         )}
                       >
                         <Skeleton
                           className={cn(
-                            "w-full h-[20px] rounded-sm bg-neutral-500/40",
+                            "w-full h-[20px] rounded-sm bg-neutral-500/25",
                             idx % 2 === 0 && "animate-pulse"
                           )}
                         />
@@ -93,9 +116,12 @@ const DataTable = ({ columns, data, isLoading }: DataTableProps) => {
                 return (
                   <tr
                     className={cn(
-                      "border-b border-neutral-500/15 bg-neutral-500/5 w-full flex hover:bg-slate-500/20 transition-all duration-150 h-fit",
+                      "border-b border-neutral-500/15 bg-neutral-500/5 w-full min-h-[49px] flex hover:bg-blue-900/15 transition-all duration-150 h-fit",
                       idx % 2 !== 0 && "bg-neutral-500/15",
-                      item.isDeleting && "bg-neutral-500/20"
+                      (item.isDeleting || isDeletingProducts) &&
+                        "pointer-events-none select-none",
+                      selectedProducts.includes(item._id) &&
+                        "text-red-700 hover:bg-inherit"
                     )}
                     key={item._id}
                   >
@@ -107,7 +133,13 @@ const DataTable = ({ columns, data, isLoading }: DataTableProps) => {
                             column.accessorKey === "createdAt" ||
                             column.accessorKey === "updatedAt"
                           }
+                          hideIcon={
+                            selectedProducts.includes(item._id) &&
+                            !item.isDeleting
+                          }
                           onClick={() => onCellClick(item)}
+                          onCheckedChange={(check) => onSelect([item], check)}
+                          isChecked={selectedProducts.includes(item._id)}
                           icon={column.icon}
                           classes={column.classes}
                           isDeleting={item.isDeleting}
@@ -135,12 +167,13 @@ const DataTable = ({ columns, data, isLoading }: DataTableProps) => {
                 </td>
               </tr>
             )}
-
-            {/* //- TOTAL COUNT CONTAINER */}
+          </tbody>
+          {/* //- TOTAL COUNT CONTAINER */}
+          <tbody className="relative bg-transparent group font-afacad">
             {!isLoading && data.length > 0 && (
-              <tr className="sticky bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center z-50 backdrop-blur-[8px] bg-neutral-500/10 pointer-events-none min-w-36 w-fit h-fit px-5 py-3 rounded-full text-xs">
-                <td className="">
-                  <span className="text-[12px] font-semibold text-slate-900/80">
+              <tr className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center z-50 backdrop-blur-[8px] bg-neutral-500/10 min-w-36 w-fit h-fit px-5 py-3 rounded-full text-xs  hover:opacity-0 transition-all duration-200">
+                <td>
+                  <span className="text-[12px] font-bold text-slate-900/80">
                     {data.length}
                   </span>
                   <span className="px-1">/</span>

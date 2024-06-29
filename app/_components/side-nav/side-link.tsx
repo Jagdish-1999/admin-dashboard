@@ -3,7 +3,9 @@ import { FaBoxOpen } from "react-icons/fa";
 import { HiOutlineCog } from "react-icons/hi";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { AiFillProduct } from "react-icons/ai";
+import { MdCategory, MdOutlineCategory } from "react-icons/md";
 import { Links } from "./links";
+import { TbCategoryPlus } from "react-icons/tb";
 
 export interface LinksTypes {
   id: string;
@@ -18,6 +20,12 @@ const LINKS: LinksTypes[] = [
     href: "/",
     label: "Dashboard",
     icon: <LuLayoutDashboard strokeWidth={3} />,
+  },
+  {
+    id: "category",
+    href: "/category",
+    label: "Category",
+    icon: <MdCategory />,
   },
   {
     id: "products",

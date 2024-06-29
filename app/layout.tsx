@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Afacad } from "next/font/google";
 import "./globals.css";
 
 import { Toaster } from "@/components/ui/sonner";
@@ -9,7 +9,11 @@ import ReduxStoreProvider from "@/providers/redux-store-provider";
 import { cn } from "@/lib/utils";
 import UserProvider from "@/providers/server-calls-provider";
 
-const inter = Inter({ subsets: ["latin"] });
+const afacad = Afacad({
+  weight: ["400", "600", "700"],
+  display: "swap",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Admin dashboard",
@@ -23,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn("no-scrollbar")}>
-      <body className={inter.className} suppressHydrationWarning>
+      <body className={afacad.className} suppressHydrationWarning>
         <ReduxStoreProvider>
           <UserProvider>
             <Navbar />

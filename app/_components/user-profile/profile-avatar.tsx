@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { useAppSelector } from "@/stores/store";
 import { memo } from "react";
 import { CiUser } from "react-icons/ci";
 
@@ -9,6 +10,8 @@ interface ProfileAvatarType {
   fallback: string | undefined;
 }
 const ProfileAvatar = ({ isLoading, url, fallback }: ProfileAvatarType) => {
+  const isLogin = useAppSelector((state) => state.userDetails.isLogin);
+
   return (
     <Avatar
       className={cn(
@@ -19,7 +22,7 @@ const ProfileAvatar = ({ isLoading, url, fallback }: ProfileAvatarType) => {
       <AvatarImage
         loading="eager"
         className="object-cover object-top"
-        src={url}
+        src={isLogin ? url : ""}
       />
       <AvatarFallback
         className={cn("capitalize", isLoading && "animate-pulse")}

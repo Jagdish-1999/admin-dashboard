@@ -27,11 +27,11 @@ const ProfileInfo = () => {
           fallback={user?.name[0]}
           isLoading={isLoading}
         />
-        <div className="font-Poppins text-[11px] flex  flex-col justify-center">
-          <div className="font-semibold capitalize">
+        <div className="font-Poppins text-[11px] flex flex-col justify-center text-sm leading-4">
+          <div className="font-semibold capitalize font-dm-sans">
             {user?.name || "User name"}
           </div>
-          <div className="font-extrabold text-[12px] ">
+          <div className="font-extrabold text-[12px]">
             {user?.email || "User Email"}
           </div>
         </div>
@@ -45,14 +45,14 @@ const ProfileInfo = () => {
                 router.push("/register");
               }, 300);
             }}
-            className="bg-neutral-500/15 hover:bg-neutral-500/25 gap-2 w-full text-sm rounded-sm"
+            className="bg-neutral-500/15 hover:bg-neutral-500/25 gap-2 w-full text-sm rounded-sm font-semibold"
           >
             Login
           </Button>
         ) : (
           <Button
             onClick={logoutUserFun}
-            className="bg-neutral-500/15 hover:bg-neutral-500/25 gap-2 w-full text-sm rounded-sm"
+            className="bg-neutral-500/15 hover:bg-neutral-500/25 gap-2 w-full text-sm rounded-sm font-semibold"
           >
             <IoLogOutOutline className="w-5 h-5" />
             Sign out

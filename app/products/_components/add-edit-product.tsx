@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import Input from "./Input";
 import TextArea from "./text-area";
 import { BiArrowBack } from "react-icons/bi";
-
+import { RxUpdate } from "react-icons/rx";
+import { ImSpinner8 } from "react-icons/im";
 import { useAppSelector } from "@/stores/store";
 import {
   DESCRIPTION,
@@ -18,8 +19,6 @@ import {
   ProductInputDataProps,
   QUANTITY,
 } from "@/types";
-import { IoReload, IoReloadOutline } from "react-icons/io5";
-import { TbReload } from "react-icons/tb";
 
 interface AddEditProductProps {
   isCreating: boolean;
@@ -83,7 +82,7 @@ export const AddEditProduct = ({
           if (isErrorVisible) return;
           onSubmit(evt);
         }}
-        className="custom-scrollbar flex flex-col w-full h-full gap-6 border border-neutral-500/50 rounded-sm p-8 overflow-y-auto bg-neutral-100/90 backdrop-blur-md"
+        className="custom-scrollbar font-dm-sans flex flex-col w-full h-full gap-6 border border-neutral-500/50 rounded-sm p-8 overflow-y-auto bg-neutral-100/90 backdrop-blur-md"
       >
         <div className="flex gap-8">
           <Input
@@ -149,46 +148,61 @@ export const AddEditProduct = ({
             value={""}
           />
         </div>
-        <h6
-          className={cn(
-            "text-[10px] indent-0.5 mt-2 text-red-500",
-            !isErrorVisible && "invisible"
-          )}
-        >
-          All fields marked with{" "}
-          <span className="text-red-600 text-[14px]">*</span> are required!
-        </h6>
+        {isErrorVisible && (
+          <h6 className={cn("text-[10px] indent-0.5 mt-2 text-red-500")}>
+            All fields marked with{" "}
+            <span className="text-red-600 text-[14px]">*</span> are required!
+          </h6>
+        )}
         <Button
           className={cn(
             "select-none border flex justify-center items-center gap-1.5 font-semibold text-neutral-900/80 hover:border-neutral-500/25 hover:text-neutral-900/90 border-neutral-500/15  transition-all duration-150 text-sm w-44 rounded-sm bg-neutral-500/15 hover:bg-neutral-500/25",
             isErrorVisible &&
-              " border-neutral-500/10 text-neutral-600 hover:text-neutral-600 hover:border-neutral-500/10 hover:bg-neutral-500/15 cursor-not-allowed"
+              " border-neutral-500/10 text-neutral-600/70 hover:text-neutral-600 hover:border-neutral-500/10 hover:bg-neutral-500/15 cursor-not-allowed",
+            isLoading && "bg-green-400/30"
           )}
           type="submit"
         >
           {isCreating ? (
             <>
               {isLoading ? (
-                <TbReload className="min-w-10 min-h-10 w-10 h-10 animate-spin duration-700 hover:bg-neutral-500/30 transition-all ease-in p-2 rounded-full  font-semibold" />
+                <div className="flex items-center justify-center w-full h-full text-green-700">
+                  <ImSpinner8 className="min-w-6 min-h-6 w-6 h-6 animate-spin duration-700 hover:bg-neutral-500/30 transition-all ease-in p-1 rounded-full  font-semibold text-green-700" />
+                  <div className="flex pr-2">Creating...</div>
+                </div>
               ) : (
-                <>
-                  <MdAdd className="w-5 h-5" />
-                  Add
-                </>
+                <div className="flex items-center justify-center w-full h-full ">
+                  <MdAdd
+                    className={cn(
+                      "min-w-7 min-h-7 w-7 h-7 p-1 font-semibold opacity-100"
+                    )}
+                  />
+                  <div className="flex pr-2">Create</div>
+                </div>
               )}
             </>
           ) : (
             <>
               {isLoading ? (
-                <TbReload
-                  strokeWidth={2}
-                  className={cn(
-                    "min-w-10 min-h-10 w-10 h-10 duration-700 hover:bg-neutral-500/30 transition-all ease-in p-2 rounded-full  font-semibold",
-                    isLoading && "animate-spin"
-                  )}
-                />
+                <div className="flex items-center justify-center w-full h-full gap-1 text-green-700">
+                  <ImSpinner8
+                    strokeWidth={0.5}
+                    className={
+                      "min-w-6 min-h-6 w-6 h-6 hover:bg-neutral-500/30 transition-all ease-linear p-1 rounded-full animate-spin duration-1000"
+                    }
+                  />
+                  <div className="flex pr-2">Updating...</div>
+                </div>
               ) : (
-                <>Update</>
+                <div className="flex items-center justify-center w-full h-full gap-1 text-inherit">
+                  <RxUpdate
+                    strokeWidth={0.5}
+                    className={cn(
+                      "min-w-6 min-h-6 w-6 h-6 p-1 font-semibold opacity-100"
+                    )}
+                  />
+                  <div className="flex pr-2">Update</div>
+                </div>
               )}
             </>
           )}

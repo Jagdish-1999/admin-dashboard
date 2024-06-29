@@ -21,7 +21,7 @@ export const useImagePreloader = (initialUrl: string) => {
     if (!imageSrc && initialUrl) {
       preloadImage(initialUrl);
     }
-  }, [initialUrl, imageSrc]);
+  }, [initialUrl, imageSrc, isLoading]);
 
   return { imageSrc, isLoading };
 };

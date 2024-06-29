@@ -42,7 +42,7 @@ const CustomAlertDialog = ({
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={onContinue}
-            className="border text-red-600 flex gap-2 border-red-800"
+            className="text-red-600 flex gap-2 border border-red-800"
           >
             <MdDeleteForever />
             Delete

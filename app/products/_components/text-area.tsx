@@ -41,7 +41,7 @@ const TextArea = ({
         placeholder={placeholder}
         className={cn(
           "custom-scrollbar w-full h-full bg-transparent outline-none border rounded-sm transition-all duration-150 ease-linear focus-visible:border-neutral-900/50 border-neutral-400 placeholder:text-[12px] placeholder:text-neutral-900/50 p-3 min-h-[140px] max-h-[330px] overflow-y-auto text-sm text-neutral-900/90 font-semibold",
-          value && "border-neutral-900/90 text-sm bg-[#e7f0fe]"
+          value && "border-neutral-900/70 text-sm bg-[#e7f0fe]"
         )}
       />
     </div>

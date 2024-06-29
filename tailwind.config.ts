@@ -18,6 +18,10 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        "dm-sans": ["DM Sans"],
+        afacad: ["Afacad"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

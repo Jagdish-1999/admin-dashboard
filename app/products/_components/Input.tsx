@@ -2,9 +2,12 @@
 import { cn } from "@/lib/utils";
 import { ProductImagesTypes } from "@/types";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { MdOutlineFileUpload } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
+import { AiTwotoneEyeInvisible } from "react-icons/ai";
+import { IoIosEye } from "react-icons/io";
+import { LiaEyeSlash } from "react-icons/lia";
 
 interface InputProps {
   type: string;
@@ -33,6 +36,7 @@ function Input({
   productImages,
   setProductImages,
 }: InputProps) {
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   if (type === "file") {
     return (
       <div className="w-full">
@@ -108,7 +112,7 @@ function Input({
     );
   }
   return (
-    <div className="flex w-full justify-center gap-0.5 flex-col">
+    <div className="flex w-full justify-center gap-0.5 flex-col relative">
       <label
         htmlFor={id}
         className={cn(
@@ -123,15 +127,30 @@ function Input({
         id={id}
         name={name}
         value={value ?? ""}
-        type={type || "text"}
+        type={showPassword ? "text" : type || "text"}
         placeholder={placeholder}
         onChange={onChange}
         className={cn(
-          "w-full h-full p-3 bg-transparent outline-none border rounded-sm transition-all duration-150 ease-linear focus-visible:border-neutral-500 border-neutral-400 placeholder:text-[12px] placeholder:text-neutral-900/50 text-sm text-neutral-900/90 font-semibold",
+          "w-full h-full p-3 bg-transparent outline-none border rounded-sm transition-all duration-150 ease-linear focus-visible:border-neutral-500 border-neutral-400 placeholder:text-[12px] placeholder:text-neutral-900/50 text-sm text-neutral-900/90",
           value &&
-            "border-neutral-900/90 text-neutral-900/90 text-sm bg-[#e7f0fe]"
+            "border-neutral-900/90 text-neutral-900/70 text-sm bg-[#e7f0fe]"
         )}
       />
+      <span className="absolute right-1 top-1/2 -translate-x-1/2 opacity-75 cursor-pointer">
+        {showPassword && type === "password" ? (
+          <IoIosEye
+            className="opacity-60"
+            onClick={() => setShowPassword((prev) => !prev)}
+          />
+        ) : (
+          type === "password" && (
+            <LiaEyeSlash
+              className="opacity-50"
+              onClick={() => setShowPassword((prev) => !prev)}
+            />
+          )
+        )}
+      </span>
     </div>
   );
 }

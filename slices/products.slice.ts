@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "@/stores/store";
 import { formatDate } from "@/lib/format-date";
@@ -12,17 +12,20 @@ import {
 import { formHeaders } from "@/lib/form.header";
 import { DESCRIPTION, PRICE, PRODUCT_NAME, QUANTITY } from "@/types";
 
-export const fetchProducts = createAsyncThunk("fetchProducts", async () => {
-  //TODO need to handle errors
-  const { data } = await axios.get("/api/v1/products");
+export const fetchProducts = createAsyncThunk(
+  "fetchProducts",
+  async (): Promise<any> => {
+    //TODO need to handle errors
+    const { data } = await axios.get("/api/v1/products");
 
-  const modifiedProducts = data.data.map((product: ProductsItemTypes) => {
-    const createdAt = formatDate(product.createdAt);
-    const updatedAt = formatDate(product.updatedAt);
-    return { ...product, createdAt, updatedAt, isDeleting: false };
-  });
-  return modifiedProducts;
-});
+    const modifiedProducts = data.data.map((product: ProductsItemTypes) => {
+      const createdAt = formatDate(product.createdAt);
+      const updatedAt = formatDate(product.updatedAt);
+      return { ...product, createdAt, updatedAt, isDeleting: false };
+    });
+    return modifiedProducts;
+  }
+);
 
 export const createUpdateProduct = createAsyncThunk(
   "createUpdateProduct",
@@ -35,7 +38,7 @@ export const createUpdateProduct = createAsyncThunk(
       id: string;
     },
     { getState }
-  ) => {
+  ): Promise<any> => {
     //TODO need to handle errors
     const formData = new FormData();
     const existingImages: string[] = [];
@@ -75,8 +78,9 @@ export const createUpdateProduct = createAsyncThunk(
       toast.error(data.message);
     }
 
-    const list = (getState() as RootState).products.data;
-
+    const list = (getState() as RootState).products.data.filter(
+      (p) => p._id !== id
+    );
     const createdAt = formatDate(productResult.createdAt);
     const updatedAt = formatDate(productResult.updatedAt);
     return [
@@ -86,33 +90,67 @@ export const createUpdateProduct = createAsyncThunk(
   }
 );
 
-export const deleteProductWithId = createAsyncThunk(
-  "deleteProductWithId",
-  async ({ _id }: { _id: string }, { dispatch, getState }) => {
-    //TODO need to handle errors
+export const deleteProductWithIds = createAsyncThunk(
+  "deleteProductWithIds",
+  async (productsIds: string[], { dispatch, getState }): Promise<any> => {
     const productList = (getState() as RootState).products.data;
-    dispatch(
-      updateProducts(
-        productList.map((product: ProductsItemTypes) =>
-          product._id == _id ? { ...product, isDeleting: true } : product
-        )
-      )
-    );
-    const { data }: { data: ApiResponseTypes<null> } = await axios.delete(
-      `/api/v1/products/${_id}`
-    );
-    if (data.success) {
-      const productList = (getState() as RootState).products.data;
+    try {
+      console.log("productsIds", productsIds);
       dispatch(
         updateProducts(
-          productList.filter(
-            (product: ProductsItemTypes) => product._id !== _id
+          productList.map((product: ProductsItemTypes) =>
+            productsIds.includes(product._id)
+              ? {
+                  ...product,
+                  isDeleting: true,
+                }
+              : product
           )
         )
       );
-      toast.success(data.message);
+      const response = await axios.delete(`/api/v1/products/delete`, {
+        data: productsIds,
+      });
+      if (response.data.success) {
+        dispatch(
+          updateProducts(
+            productList.filter(
+              (product: ProductsItemTypes) => !productsIds.includes(product._id)
+            )
+          )
+        );
+        toast.success(response.data.message);
+      } else {
+        dispatch(
+          updateProducts(
+            productList.map((product: ProductsItemTypes) =>
+              productsIds.includes(product._id)
+                ? {
+                    ...product,
+                    isDeleting: false,
+                  }
+                : product
+            )
+          )
+        );
+      }
+      return response.data;
+    } catch (error) {
+      dispatch(
+        updateProducts(
+          productList.map((product: ProductsItemTypes) =>
+            productsIds.includes(product._id)
+              ? {
+                  ...product,
+                  isDeleting: false,
+                }
+              : product
+          )
+        )
+      );
+      console.error("[Error]: ", error);
+      toast.error("Product not deleted some error occur");
     }
-    return data;
   }
 );
 
