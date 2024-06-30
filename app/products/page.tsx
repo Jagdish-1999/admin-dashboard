@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import DataTable from "./_components/table/data-table";
-import { GetColumns } from "./_components/table/colums";
+import { COLUMNS } from "./_components/table/colums";
 import { MdAdd, MdDeleteForever } from "react-icons/md";
 import { RootState, useAppSelector, useAppDispatch } from "@/stores/store";
 import { deleteProductWithIds, fetchProducts } from "@/slices/products.slice";
@@ -10,6 +10,9 @@ import { ProductsItemTypes } from "@/types/products.slice.types";
 import { cn } from "@/lib/utils";
 import CustomAlertDialog from "@/common/alert-dialog";
 import { ImSpinner8 } from "react-icons/im";
+import { Table } from "@/common/table";
+import { ContextType } from "@/lib/column-cell-label-wrapper";
+import { useRouter } from "next/navigation";
 
 export interface ProductListProps {
   _id: string;
@@ -20,6 +23,7 @@ export interface ProductListProps {
 
 const Products = () => {
   const initialRef = useRef(false);
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [isDeletingProducts, setIsDeletingProducts] = useState<boolean>(false);
@@ -75,6 +79,23 @@ const Products = () => {
       })
     );
   }, []);
+
+  const onCellLabelClick = useCallback(
+    (context: ContextType<ProductsItemTypes>) => {
+      switch (context.id) {
+        case "edit": {
+          onCellClick(context.item);
+          router.push("/products/edit");
+        }
+        case "delete": {
+          (async () => {
+            await dispatch(deleteProductWithIds([context.item.id]));
+          })();
+        }
+      }
+    },
+    [dispatch, onCellClick, router]
+  );
 
   return (
     <div className="flex flex-col gap-2 p-2 pt-0 w-full h-full">
@@ -138,13 +159,19 @@ const Products = () => {
           </Link>
         </div>
       </div>
-      <DataTable
+      {/* <DataTable
         isDeletingProducts={isDeletingProducts}
         selectedProducts={selectedProducts}
         onSelect={onSelect}
         columns={GetColumns()}
         data={productList}
         isLoading={isLoading}
+      /> */}
+      <Table<ProductsItemTypes>
+        data={productList}
+        isLoading={isLoading}
+        columns={COLUMNS}
+        onCellLabelClick={onCellLabelClick}
       />
     </div>
   );

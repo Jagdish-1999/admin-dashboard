@@ -4,10 +4,11 @@ import Input from "../products/_components/Input";
 import { IoCreateOutline } from "react-icons/io5";
 import { useAppDispatch, useAppSelector } from "@/stores/store";
 import { createCategory, fetchCategories } from "@/slices/category.slice";
-import DataTable from "../products/_components/table/data-table";
 import CustomAlertDialog from "@/common/alert-dialog";
 import SuppressHydration from "@/lib/suppresh-hydration";
 import { COLUMNS } from "./_components/columns";
+import { Table } from "@/common/table";
+import { EachCategoryType } from "@/types/category.slice.types";
 
 export interface CategporyInputType {
   name: string;
@@ -36,6 +37,7 @@ const Category = () => {
       const payload = categoryInput;
       dispatch(createCategory(payload)).then(() => {
         setCategoryInput(initialCategoryInput);
+        return true;
       });
     })();
   }, [categoryInput, dispatch]);
@@ -83,11 +85,11 @@ const Category = () => {
         </div>
 
         <div className="w-full h-full relative">
-          {/* <DataTable
-            columns={COLUMNS}
+          <Table<EachCategoryType>
             data={data || []}
+            columns={COLUMNS}
             isLoading={isLoading}
-          /> */}
+          />
         </div>
       </div>
     </SuppressHydration>

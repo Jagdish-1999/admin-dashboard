@@ -17,6 +17,7 @@ export interface CreateUpdateProductTypes {
 
 export interface ProductsItemTypes {
   _id: string;
+  id: string;
   qty: number;
   productName: string;
   description: string;
