@@ -17,7 +17,7 @@ export const COLUMNS = [
   {
     id: "checkbox",
     accessKey: "checkbox",
-    headClasses: "flex items-center justify-center",
+    headClasses: "flex items-center justify-center cursor-default",
     className: "w-[5%] min-w-[40px] flex items-center justify-center",
     headCellLabel: tableLabelTextWrapper.call(
       { id: "checkbox", accessKey: "checkbox" },
@@ -56,7 +56,8 @@ export const COLUMNS = [
   {
     id: "product-name",
     accessKey: "productName",
-    headClasses: "py-1 text-sm text-[15px] text-slate-900/80 font-semibold",
+    headClasses:
+      "py-1 text-sm text-[15px] text-slate-900/80 font-semibold cursor-default",
     className: "w-[20%] min-w-[120px] text-[13px] text-slate-900/75",
     headCellLabel: function () {
       return "Product Name";
@@ -72,7 +73,8 @@ export const COLUMNS = [
   {
     id: "description",
     accessKey: "description",
-    headClasses: "py-1 text-[15px] text-slate-900/80 font-semibold",
+    headClasses:
+      "py-1 text-[15px] text-slate-900/80 font-semibold cursor-default",
     className: "w-[30%] min-w-[150px] text-[13px] text-slate-900/75",
     headCellLabel: () => "Description",
     bodyCellLabel: function ({ item }) {
@@ -86,7 +88,8 @@ export const COLUMNS = [
   {
     id: "qty",
     accessKey: "qty",
-    headClasses: "py-1 text-[15px] text-slate-900/80 font-semibold",
+    headClasses:
+      "py-1 text-[15px] text-slate-900/80 font-semibold cursor-default",
     className:
       "w-[10%] min-w-[80px] flex items-center justify-center text-[13px] text-slate-900/75",
     headCellLabel: () => "Qty",
@@ -97,7 +100,8 @@ export const COLUMNS = [
   {
     id: "createdAt",
     accessKey: "createdAt",
-    headClasses: "py-1 pr-0 text-[15px] text-slate-900/80 font-semibold",
+    headClasses:
+      "py-1 pr-0 text-[15px] text-slate-900/80 font-semibold cursor-default",
     className:
       "w-[10%] min-w-[80px] flex items-center justify-center text-[13px] text-slate-900/75",
     bodyCellLabel: function ({ item }) {
@@ -119,7 +123,8 @@ export const COLUMNS = [
   {
     id: "price",
     accessKey: "price",
-    headClasses: "py-1 text-[15px] text-slate-900/80 font-semibold",
+    headClasses:
+      "py-1 text-[15px] text-slate-900/80 font-semibold cursor-default",
     className:
       "w-[11%] min-w-[80px] flex items-center justify-center text-[13px] text-slate-900/75",
     bodyCellLabel: function ({ item }) {
@@ -130,8 +135,7 @@ export const COLUMNS = [
   {
     id: "edit",
     accessKey: "edit",
-    headClasses: "py-1",
-    disableOnWarn: true,
+    headClasses: "py-1 cursor-default",
     className:
       "flex items-center justify-center w-[5%] min-w-[5%] text-[13px] text-slate-900/90",
     bodyCellLabel: tableLabelTextWrapper.call(
@@ -157,7 +161,7 @@ export const COLUMNS = [
   {
     id: "delete",
     accessKey: "delete",
-    headClasses: "py-1 mr-1.5",
+    headClasses: "py-1 mr-1.5 cursor-default",
     disableOnWarn: true,
     className:
       "flex items-center justify-center w-[5%] min-w-[5%] text-[13px] text-slate-900/90",

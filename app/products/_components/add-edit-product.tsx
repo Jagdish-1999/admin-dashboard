@@ -82,7 +82,10 @@ export const AddEditProduct = ({
           if (isErrorVisible) return;
           onSubmit(evt);
         }}
-        className="custom-scrollbar font-dm-sans flex flex-col w-full h-full gap-6 border border-neutral-500/50 rounded-sm p-8 overflow-y-auto bg-neutral-100/90 backdrop-blur-md"
+        className={cn(
+          "custom-scrollbar font-dm-sans flex flex-col gap-6 border border-neutral-500/50 rounded-sm p-8 overflow-y-auto bg-neutral-100/90 backdrop-blur-md  w-full h-full "
+        )}
+        style={{ width: "100%", height: "100%" }}
       >
         <div className="flex gap-8">
           <Input

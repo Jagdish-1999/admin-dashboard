@@ -36,7 +36,7 @@ const Table = <T extends TableItem>({
       >
         <TableHead
           columns={columns}
-          className="bg-neutral-500/55 text-[18px] absolute backdrop-blur-md w-full h-fit z-10"
+          className="bg-neutral-500/10 text-[18px] absolute backdrop-blur-md w-full h-fit z-10"
           onCellLabelClick={onCellLabelClick}
         />
         <TableBody
@@ -77,11 +77,10 @@ const Table = <T extends TableItem>({
               );
             })}
           {!data.length && !isLoading && <NoDataAvalable />}
-          <TableCounter totalCount={data.length} currentCount={data.length} />
+          {data.length > 0 && !isLoading && (
+            <TableCounter totalCount={data.length} currentCount={data.length} />
+          )}
         </TableBody>
-        {/* {data.length > 0 && !isLoading && (
-          <TableCounter totalCount={data.length} currentCount={data.length} />
-        )} */}
       </table>
     </div>
   );
