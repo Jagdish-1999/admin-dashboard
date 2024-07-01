@@ -148,7 +148,7 @@ export const COLUMNS = [
               context.onCellLabelClick(context);
             }}
             className={cn(
-              "min-w-8 min-h-8 w-8 h-8 hover:bg-neutral-500/20 transition-all duration-150 ease-linear p-2 rounded-full font-semibold opacity-100"
+              "min-w-8 min-h-8 w-8 h-8 hover:bg-green-500/20 text-green-700 transition-all duration-150 ease-linear p-2 rounded-full font-semibold opacity-100"
             )}
           />
         );

@@ -19,7 +19,13 @@ export const fetchCategories = createAsyncThunk("fetchCategories", async () => {
       return response.data.data.map((category: EachCategoryType) => {
         const createdAt = formatDate(category.createdAt);
         const updatedAt = formatDate(category.updatedAt);
-        return { ...category, createdAt, updatedAt };
+        return {
+          ...category,
+          createdAt,
+          updatedAt,
+          isDeleting: false,
+          isUpdating: false,
+        };
       });
     } else {
     }
@@ -31,37 +37,97 @@ export const fetchCategories = createAsyncThunk("fetchCategories", async () => {
 
 export const createUpdateCategory = createAsyncThunk(
   "createUpdateCategory",
-  async (payload: CreateCategoryPayload, { getState }) => {
-    let data = {} as ApiResponseTypes<EachCategoryType>;
-    if (payload?.id) {
-      ({ data } = await axios.post("/api/v1/category/update", payload));
-    } else {
-      ({ data } = await axios.post("/api/v1/category/create", payload));
-    }
+  async (payload: CreateCategoryPayload, { getState, dispatch }) => {
+    const categories = (getState() as RootState).categories.data;
+    try {
+      if (payload?.id) {
+        dispatch(
+          updateCategories(
+            categories.map((cat) =>
+              cat.id === payload.id ? { ...cat, isUpdating: true } : cat
+            )
+          )
+        );
+      }
 
-    let categoryResult: EachCategoryType | null = data.data;
-    if (data.success) {
-      toast.success(data.message);
-    } else {
-      toast.error(data.message);
-    }
+      let data = {} as ApiResponseTypes<EachCategoryType>;
+      if (payload?.id) {
+        ({ data } = await axios.post("/api/v1/category/update", payload));
+      } else {
+        ({ data } = await axios.post("/api/v1/category/create", payload));
+      }
 
-    const list = (getState() as RootState).categories.data.filter(
-      (c) => c._id !== payload?.id
+      let categoryResult: EachCategoryType | null = data.data;
+      if (data.success) {
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+
+      const list = categories.filter((c) => c.id !== payload?.id);
+
+      const createdAt = formatDate(categoryResult.createdAt);
+      const updatedAt = formatDate(categoryResult.updatedAt);
+      return [
+        {
+          ...categoryResult,
+          isDeleting: false,
+          isUpdating: false,
+          createdAt,
+          updatedAt,
+          id: categoryResult._id,
+        },
+        ...list,
+      ];
+    } catch (error: any) {
+      if (error.response.status === 400) {
+        toast.error("Category name is required");
+      }
+      const list = categories.map((c) =>
+        c.id === payload?.id ? { ...c, isUpdating: false } : c
+      );
+      return list;
+    }
+  }
+);
+
+export const deleteCategoryWithIds = createAsyncThunk(
+  "deleteCategoriesWithIds",
+  async (categoryIds: string[], { dispatch, getState }) => {
+    const categories = (getState() as RootState).categories.data;
+
+    dispatch(
+      updateCategories(
+        categories.map((cat) =>
+          categoryIds.includes(cat.id) ? { ...cat, isDeleting: true } : cat
+        )
+      )
     );
 
-    const createdAt = formatDate(categoryResult.createdAt);
-    const updatedAt = formatDate(categoryResult.updatedAt);
-    return [
-      {
-        ...categoryResult,
-        isDeleting: false,
-        createdAt,
-        updatedAt,
-        id: categoryResult._id,
-      },
-      ...list,
-    ];
+    try {
+      const response = await axios.delete("/api/v1/category/delete", {
+        data: categoryIds,
+      });
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+        dispatch(
+          updateCategories(
+            categories.filter((cat) => !categoryIds.includes(cat.id))
+          )
+        );
+      } else {
+        dispatch(
+          updateCategories(
+            categories.map((cat) =>
+              categoryIds.includes(cat.id) ? { ...cat, isDeleting: false } : cat
+            )
+          )
+        );
+      }
+    } catch (error) {
+      console.log("Error when deleting  category", error);
+    }
   }
 );
 
@@ -72,7 +138,11 @@ const initialState: Category = {
 const categorySlice = createSlice({
   name: "category",
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    updateCategories: (state, action) => {
+      state.data = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchCategories.pending, (state) => {
       state.isLoading = true;
@@ -103,6 +173,6 @@ const categorySlice = createSlice({
   },
 });
 
-export const {} = categorySlice.actions;
+export const { updateCategories } = categorySlice.actions;
 
 export default categorySlice.reducer;

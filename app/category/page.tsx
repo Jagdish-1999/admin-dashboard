@@ -3,7 +3,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Input from "../products/_components/Input";
 import { IoCreateOutline } from "react-icons/io5";
 import { useAppDispatch, useAppSelector } from "@/stores/store";
-import { createUpdateCategory, fetchCategories } from "@/slices/category.slice";
+import {
+  createUpdateCategory,
+  deleteCategoryWithIds,
+  fetchCategories,
+} from "@/slices/category.slice";
 import CustomAlertDialog from "@/common/alert-dialog";
 import SuppressHydration from "@/lib/suppresh-hydration";
 import { Table } from "@/common/table";
@@ -53,7 +57,14 @@ const Category = () => {
   }, [categoryInput, dispatch]);
 
   // todo need to add delete functionality
-  const deleteCategories = useCallback(() => {}, []);
+  const deleteCategories = useCallback(() => {
+    try {
+      dispatch(deleteCategoryWithIds(selectedCategories));
+      setSelectedCategories([]);
+    } catch (error) {
+      console.log("Error when deleting many categories ", selectedCategories);
+    }
+  }, [dispatch, selectedCategories]);
 
   const onSelect = useCallback(
     (
@@ -97,11 +108,17 @@ const Category = () => {
           }
           break;
         }
-        case "edit": {
-          console.log("Context", context);
-          break;
-        }
         case "delete": {
+          try {
+            dispatch(
+              deleteCategoryWithIds([(context.item as EachCategoryType).id])
+            );
+          } catch (error) {
+            console.log(
+              "Error when deleting category",
+              (context.item as EachCategoryType).name
+            );
+          }
           break;
         }
         default: {
@@ -111,7 +128,7 @@ const Category = () => {
         }
       }
     },
-    [categoriesList, onSelect]
+    [categoriesList, dispatch, onSelect]
   );
 
   useEffect(() => {

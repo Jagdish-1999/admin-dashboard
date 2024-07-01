@@ -5,6 +5,7 @@ export interface EachCategoryType {
   createdAt: string;
   updatedAt: string;
   isDeleting: boolean;
+  isUpdating: boolean;
   isSelected?: boolean;
 }
 

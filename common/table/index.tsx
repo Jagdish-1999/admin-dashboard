@@ -50,7 +50,6 @@ const Table = <T extends TableItem>({
           </TableRow>
           {isLoading && !data.length && <TableSkeleton columns={columns} />}
           {data.length > 0 &&
-            !isLoading &&
             data.map((item: T, idx) => {
               return (
                 <TableRow

@@ -9,7 +9,7 @@ import {
 import SuppressHydration from "@/lib/suppresh-hydration";
 import { cn } from "@/lib/utils";
 import { createUpdateCategory } from "@/slices/category.slice";
-import { useAppDispatch } from "@/stores/store";
+import { useAppDispatch, useAppSelector } from "@/stores/store";
 import { EachCategoryType } from "@/types/category.slice.types";
 import { TableColumnTypes } from "@/types/table.types";
 import { ReactNode, useCallback, useState } from "react";
@@ -48,21 +48,31 @@ const EditCell = ({
         continueButtonText={() => (
           <div className="flex gap-1 items-center justify-center text-neutral-900/90 hover:text-slaate-900/80 w-full h-full p-2 text-sm rounded-sm border border-neutral-500/50 bg-neutral-500/10 hover:bg-neutral-500/15 transition-all duration-150">
             <IoCreateOutline strokeWidth={2} className="w-4 h-4" />
-            Create
+            Update
           </div>
         )}
         dialogTitle="Create new category"
         onContinue={handleUpdate}
         triggerChildren={
-          <CiEdit
-            strokeWidth={1}
-            onClick={() => {
-              context.onCellLabelClick(context);
-            }}
-            className={cn(
-              "min-w-8 min-h-8 w-8 h-8 hover:bg-neutral-500/20 transition-all duration-150 ease-linear p-2 rounded-full font-semibold opacity-100"
+          <div className="text-green-700">
+            {(context.item as EachCategoryType).isUpdating ? (
+              <ImSpinner8
+                className={cn(
+                  "min-w-8 min-h-8 w-8 h-8 text-green-700 transition-all animate-spin duration-700 ease-in p-2 font-semibold opacity-100"
+                )}
+              />
+            ) : (
+              <CiEdit
+                strokeWidth={1}
+                onClick={() => {
+                  context.onCellLabelClick(context);
+                }}
+                className={cn(
+                  "min-w-8 min-h-8 w-8 h-8 hover:bg-green-500/15 transition-all duration-150 ease-linear p-2 rounded-full font-semibold opacity-100"
+                )}
+              />
             )}
-          />
+          </div>
         }
       >
         <Input
@@ -168,7 +178,7 @@ export const COLUMNS = [
     accessKey: "edit",
     headClasses: "py-1 cursor-default",
     className:
-      "flex items-center justify-center w-[5%] min-w-[5%] text-[13px] text-slate-900/90",
+      "flex items-center justify-center w-[5%] min-w-[40px] text-[13px] text-slate-900/90",
     bodyCellLabel: tableLabelTextWrapper.call(
       { id: "edit", accessKey: "edit" },
       function (context: ContextType<EachCategoryType | unknown>): ReactNode {
@@ -185,7 +195,7 @@ export const COLUMNS = [
     headClasses: "py-1 mr-1.5 cursor-default",
     disableOnWarn: true,
     className:
-      "flex items-center justify-center w-[5%] min-w-[5%] text-[13px] text-slate-900/90",
+      "flex items-center justify-center w-[5%] min-w-[40px] text-[13px] text-slate-900/90",
     bodyCellLabel: tableLabelTextWrapper.call(
       { id: "delete", accessKey: "delete" },
       function (context: ContextType<EachCategoryType | unknown>) {
@@ -207,17 +217,20 @@ export const COLUMNS = [
                   </div>
                 }
                 onContinue={async () => {
-                  const { id } = JSON.parse(
-                    localStorage.getItem("edited-product") || "{}"
-                  );
                   context.onCellLabelClick(context);
                 }}
                 triggerChildren={
-                  <MdDeleteForever
-                    className={cn(
-                      "min-w-8 min-h-8 w-8 h-8 text-red-600 hover:bg-red-500/20 transition-all duration-150 ease-in p-2 rounded-full font-semibold opacity-100"
+                  <>
+                    {(context.item as EachCategoryType).isDeleting ? (
+                      <ImSpinner8 className="min-w-8 min-h-8 w-8 h-8 text-red-700 animate-spin duration-700 hover:bg-neutral-500/30 transition-all ease-in p-2 rounded-full  font-extrabold" />
+                    ) : (
+                      <MdDeleteForever
+                        className={cn(
+                          "min-w-8 min-h-8 w-8 h-8 text-red-600 hover:bg-red-500/20 transition-all duration-150 ease-in p-2 rounded-full font-semibold opacity-100"
+                        )}
+                      />
                     )}
-                  />
+                  </>
                 }
               >
                 <span className="text-slate-900/70 font-dm-sans">
