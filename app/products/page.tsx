@@ -110,14 +110,18 @@ const Products = () => {
           break;
         }
         case "delete": {
-          dispatch(deleteProductWithIds([context.item.id])).then((res) => {
-            if (res.meta.requestStatus === "fulfilled") {
-              setSelectedProducts((prevIds) =>
-                prevIds.filter((sid) => sid !== context.item.id)
+          try {
+            (async () => {
+              const res = await dispatch(
+                deleteProductWithIds([context.item.id])
               );
-            }
-            return true;
-          });
+              if (res.meta.requestStatus === "fulfilled") {
+                setSelectedProducts((prevIds) =>
+                  prevIds.filter((sid) => sid !== context.item.id)
+                );
+              }
+            })();
+          } catch (error) {}
           break;
         }
         default: {
@@ -130,7 +134,9 @@ const Products = () => {
 
   useEffect(() => {
     if (productList.length === 0 && !initialRef.current) {
-      dispatch(fetchProducts());
+      try {
+        dispatch(fetchProducts());
+      } catch (error) {}
       initialRef.current = true;
     }
   }, [dispatch, productList, productList.length]);
@@ -146,61 +152,72 @@ const Products = () => {
     [productList, selectedProducts]
   );
 
+  console.log("Selected", selectedProducts);
   return (
     <SuppressHydration>
       <div className="flex flex-col gap-2 p-2 pt-0 w-full h-full">
         <div className="flex justify-between items-center mb-1">
           {/* //TODO  need to add search and filters in product list*/}
           <div className="underline italic"></div>
-          <div className="flex gap-2">
-            <CustomAlertDialog
-              continueButtonText={() => (
-                <div className="flex gap-1 items-center justify-center text-red-600 w-full h-full p-2 rounded-sm border border-red-800">
-                  <MdDeleteForever />
-                  Delete
-                </div>
+          <div className="flex w-fit h-full gap-2 items-center">
+            <div
+              className={cn(
+                "w-fit h-full flex transition-all duration-150 ease-linear cursor-pointer",
+                !selectedProducts.length &&
+                  "pointer-events-none cursor-not-allowed select-none opacity-0"
               )}
-              dialogTitle={
-                <div className="text-slate-900/90 font-semibold">
-                  Are you absolutely sure?
-                </div>
-              }
-              onContinue={deleteProducts}
-              triggerChildren={
-                <div
-                  className={cn(
-                    "w-fit h-full border opacity-100 text-sm text-red-700 border-red-500/25 hover:bg-red-500/20 bg-red-500/10 rounded-sm transition-all duration-150 ease-linear cursor-pointer",
-                    selectedProducts.length === 0 &&
-                      "opacity-0 pointer-events-none select-none"
-                  )}
-                >
-                  {isDeletingProducts ? (
-                    <div className="flex items-center justify-center w-full h-full">
-                      <ImSpinner8
-                        className={cn(
-                          "min-w-8 min-h-8 w-8 h-8 text-red-700 transition-all animate-spin duration-700 ease-in p-2 font-semibold opacity-100"
-                        )}
-                      />
-                      <div className="flex pr-2">Deleting...</div>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center w-full h-full">
-                      <MdDeleteForever
-                        className={cn(
-                          "min-w-8 min-h-8 w-8 h-8 text-red-700 transition-all duration-150 ease-in p-2 font-semibold opacity-100"
-                        )}
-                      />
-                      <div className="flex pr-2 -ml-0.5">Delete all</div>
-                    </div>
-                  )}
-                </div>
-              }
             >
-              <span className="text-slate-900/70 font-dm-sans">
-                This action cannot be undone. This will permanently delete your
-                product and remove your data from our servers.
-              </span>
-            </CustomAlertDialog>
+              <CustomAlertDialog
+                continueButtonText={() => (
+                  <div className="flex gap-1 items-center justify-center text-red-600 w-full h-full p-2 rounded-sm border border-red-800">
+                    <MdDeleteForever />
+                    Delete
+                  </div>
+                )}
+                dialogTitle={
+                  <div className="text-slate-900/90 font-semibold">
+                    Are you absolutely sure?
+                  </div>
+                }
+                onContinue={deleteProducts}
+                triggerChildren={
+                  <div
+                    className={cn(
+                      "w-full h-full border opacity-100 text-sm text-red-700 border-red-500/25 hover:bg-red-500/15 bg-red-500/10 rounded-sm"
+                    )}
+                  >
+                    {isDeletingProducts ? (
+                      <div className="flex items-center justify-center w-full h-full">
+                        <ImSpinner8
+                          className={cn(
+                            "min-w-8 min-h-8 w-8 h-8 text-red-700 transition-all animate-spin duration-700 ease-in p-2 font-semibold opacity-100"
+                          )}
+                        />
+                        <div className="flex pr-2">Deleting...</div>
+                      </div>
+                    ) : (
+                      <div
+                        className={cn(
+                          "flex items-center justify-center w-full h-full"
+                        )}
+                      >
+                        <MdDeleteForever
+                          className={cn(
+                            "min-w-8 min-h-8 w-8 h-8 text-red-700 transition-all duration-150 ease-in p-2 font-semibold opacity-100"
+                          )}
+                        />
+                        <div className="flex pr-2 -ml-0.5">Delete all</div>
+                      </div>
+                    )}
+                  </div>
+                }
+              >
+                <span className="text-slate-900/70 font-dm-sans">
+                  This action cannot be undone. This will permanently delete
+                  your product and remove your data from our servers.
+                </span>
+              </CustomAlertDialog>
+            </div>
             <Link href="/products/new">
               <div className="flex gap-1 items-center bg-neutral-500/10 hover:bg-neutral-500/20 border border-neutral-500/20 rounded-sm p-2 w-fit hover:border-neutral-500/20 transition-all duration-150 text-sm hover:text-slate-900/90 text-slate-900/80">
                 <MdAdd className="w-5 h-5" />
