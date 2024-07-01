@@ -1,3 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&family=Onest:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Onest:wght@100..900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -35,14 +38,17 @@ body {
 .custom-scrollbar::-webkit-scrollbar {
   background-color: transparent;
   width: 4px;
+  height: 4px;
 }
 
 .custom-scrollbar {
   scrollbar-width: 4px;
+  height: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
   width: 8px;
+  height: 4px;
   border-radius: 8px;
   background-color: #afafaf;
 }

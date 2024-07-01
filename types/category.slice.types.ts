@@ -4,13 +4,16 @@ export interface EachCategoryType {
   name: string;
   createdAt: string;
   updatedAt: string;
+  isDeleting: boolean;
+  isSelected?: boolean;
 }
 
 export interface Category {
-  data: EachCategoryType[] | null;
+  data: EachCategoryType[];
   isLoading: boolean;
 }
 
 export interface CreateCategoryPayload {
   name: string;
+  id?: string;
 }

@@ -21,6 +21,7 @@ const config = {
       fontFamily: {
         "dm-sans": ["DM Sans"],
         afacad: ["Afacad"],
+        onest: ["Onest"],
       },
       colors: {
         border: "hsl(var(--border))",

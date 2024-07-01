@@ -121,7 +121,8 @@ function Input({
         )}
       >
         {label}
-        {required && <span className={cn(error && "text-red-500")}> *</span>}
+        {/* //! todo need to fix this !value with error */}
+        {required && <span className={cn(!value && "text-red-500")}> *</span>}
       </label>
       <input
         id={id}

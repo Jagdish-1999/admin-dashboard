@@ -1,19 +1,19 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import DataTable from "./_components/table/data-table";
-import { COLUMNS } from "./_components/table/colums";
+import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import { ImSpinner8 } from "react-icons/im";
 import { MdAdd, MdDeleteForever } from "react-icons/md";
+
 import { RootState, useAppSelector, useAppDispatch } from "@/stores/store";
 import { deleteProductWithIds, fetchProducts } from "@/slices/products.slice";
 import { ProductsItemTypes } from "@/types/products.slice.types";
-import { cn } from "@/lib/utils";
 import CustomAlertDialog from "@/common/alert-dialog";
-import { ImSpinner8 } from "react-icons/im";
 import { Table } from "@/common/table";
 import { ContextType } from "@/lib/column-cell-label-wrapper";
-import { useRouter } from "next/navigation";
 import SuppressHydration from "@/lib/suppresh-hydration";
+import { COLUMNS } from "./_components/columns";
 
 export interface ProductListProps {
   _id: string;
@@ -26,7 +26,6 @@ const Products = () => {
   const initialRef = useRef(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const [isNavigaringRoute, setIsNavigaringRoute] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [isDeletingProducts, setIsDeletingProducts] = useState<boolean>(false);
 
@@ -152,7 +151,6 @@ const Products = () => {
     [productList, selectedProducts]
   );
 
-  console.log("Selected", selectedProducts);
   return (
     <SuppressHydration>
       <div className="flex flex-col gap-2 p-2 pt-0 w-full h-full">
@@ -226,14 +224,6 @@ const Products = () => {
             </Link>
           </div>
         </div>
-        {/* <DataTable
-        isDeletingProducts={isDeletingProducts}
-        selectedProducts={selectedProducts}
-        onSelect={onSelect}
-        columns={GetColumns()}
-        data={productList}
-        isLoading={isLoading}
-      /> */}
         <Table<ProductsItemTypes>
           data={data}
           isLoading={isLoading}

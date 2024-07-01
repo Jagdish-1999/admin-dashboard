@@ -30,19 +30,25 @@ const Table = <T extends TableItem>({
 
   return (
     <div className="overflow-hidden h-full w-full rounded-sm rounded-ee-[3px] border border-neutral-500/20  bg-slate-300">
-      <table className="table relative w-full h-full">
+      <table
+        className="table overflow-auto relative w-full h-full"
+        style={{ width: "100%", height: "100%" }}
+      >
         <TableHead
           columns={columns}
-          className="bg-neutral-500/15 text-[18px]"
+          className="bg-neutral-500/55 text-[18px] absolute backdrop-blur-md w-full h-fit z-10"
           onCellLabelClick={onCellLabelClick}
         />
         <TableBody
-          className="custom-scrollbar block w-full h-full overflow-y-auto font-dm-sans text-xs"
-          style={{ height: "100%" }}
+          className="custom-scrollbar block w-full h-full overflow-auto font-dm-sans text-xs top-10"
+          style={{ height: "100%", display: "block", overflow: "auto" }}
         >
-          {isLoading && data.length === 0 && (
-            <TableSkeleton columns={columns} />
-          )}
+          <TableRow className="p-4">
+            <TableCell>
+              <p></p>
+            </TableCell>
+          </TableRow>
+          {isLoading && !data.length && <TableSkeleton columns={columns} />}
           {data.length > 0 &&
             !isLoading &&
             data.map((item: T, idx) => {
@@ -71,10 +77,11 @@ const Table = <T extends TableItem>({
               );
             })}
           {!data.length && !isLoading && <NoDataAvalable />}
-        </TableBody>
-        {data.length > 0 && !isLoading && (
           <TableCounter totalCount={data.length} currentCount={data.length} />
-        )}
+        </TableBody>
+        {/* {data.length > 0 && !isLoading && (
+          <TableCounter totalCount={data.length} currentCount={data.length} />
+        )} */}
       </table>
     </div>
   );

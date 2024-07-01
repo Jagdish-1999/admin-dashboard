@@ -1,5 +1,6 @@
 import { formatDate } from "@/lib/format-date";
 import { RootState } from "@/stores/store";
+import { ApiResponseTypes } from "@/types/api-response.types";
 import {
   Category,
   CreateCategoryPayload,
@@ -28,37 +29,44 @@ export const fetchCategories = createAsyncThunk("fetchCategories", async () => {
   }
 });
 
-export const createCategory = createAsyncThunk<
-  EachCategoryType[] | null,
-  CreateCategoryPayload,
-  { state: RootState }
->("createCategory", async (payload, { getState }) => {
-  const response = await axios.post("/api/v1/category/create", payload);
-
-  if (response.status === 201) {
-    const category: EachCategoryType = response.data.data;
-    const createdAt = formatDate(category.createdAt);
-    const updatedAt = formatDate(category.updatedAt);
-    const updatedCategory = {
-      ...category,
-      createdAt,
-      updatedAt,
-      id: category._id,
-    };
-    const state = getState();
-    if (state.categories.data) {
-      return [...state.categories.data, updatedCategory];
+export const createUpdateCategory = createAsyncThunk(
+  "createUpdateCategory",
+  async (payload: CreateCategoryPayload, { getState }) => {
+    let data = {} as ApiResponseTypes<EachCategoryType>;
+    if (payload?.id) {
+      ({ data } = await axios.post("/api/v1/category/update", payload));
     } else {
-      return [updatedCategory];
+      ({ data } = await axios.post("/api/v1/category/create", payload));
     }
-  } else {
-    toast.error("Category not created");
-    return null;
+
+    let categoryResult: EachCategoryType | null = data.data;
+    if (data.success) {
+      toast.success(data.message);
+    } else {
+      toast.error(data.message);
+    }
+
+    const list = (getState() as RootState).categories.data.filter(
+      (c) => c._id !== payload?.id
+    );
+
+    const createdAt = formatDate(categoryResult.createdAt);
+    const updatedAt = formatDate(categoryResult.updatedAt);
+    return [
+      {
+        ...categoryResult,
+        isDeleting: false,
+        createdAt,
+        updatedAt,
+        id: categoryResult._id,
+      },
+      ...list,
+    ];
   }
-});
+);
 
 const initialState: Category = {
-  data: null,
+  data: [],
   isLoading: false,
 };
 const categorySlice = createSlice({
@@ -79,17 +87,17 @@ const categorySlice = createSlice({
     builder.addCase(fetchCategories.rejected, (state) => {
       state.isLoading = false;
     });
-    builder.addCase(createCategory.pending, (state) => {
+    builder.addCase(createUpdateCategory.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(
-      createCategory.fulfilled,
-      (state, action: PayloadAction<EachCategoryType[] | null>) => {
+      createUpdateCategory.fulfilled,
+      (state, action: PayloadAction<EachCategoryType[]>) => {
         state.data = action.payload;
         state.isLoading = false;
       }
     );
-    builder.addCase(createCategory.rejected, (state) => {
+    builder.addCase(createUpdateCategory.rejected, (state) => {
       state.isLoading = false;
     });
   },

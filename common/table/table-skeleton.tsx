@@ -8,8 +8,8 @@ const TableSkeleton = <T,>({ columns }: TableSkeletonProps<T>) => {
   return (
     <TableRow>
       {new Array().fill(12).map((_, idx) =>
-        columns.map((column) => (
-          <TableCell colId={column.id} key={idx}>
+        columns.map(() => (
+          <TableCell key={idx}>
             <Skeleton
               className={cn(
                 "w-full h-[50px] p-4 rounded-sm flex items-center justify-center bg-neutral-500/15 gap-1"
