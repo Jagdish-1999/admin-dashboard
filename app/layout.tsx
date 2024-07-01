@@ -8,6 +8,8 @@ import { SideNav } from "./_components/side-nav";
 import ReduxStoreProvider from "@/providers/redux-store-provider";
 import { cn } from "@/lib/utils";
 import UserProvider from "@/providers/server-calls-provider";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 const afacad = Afacad({
   weight: ["400", "600", "700"],

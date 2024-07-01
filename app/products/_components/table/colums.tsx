@@ -139,7 +139,7 @@ export function Cell({
               const { id } = JSON.parse(
                 localStorage.getItem("edited-product") || "{}"
               );
-              await dispatch(deleteProductWithIds([id]));
+              dispatch(deleteProductWithIds([id]));
             }}
             triggerChildren={
               <MdDeleteForever
@@ -292,28 +292,39 @@ export const COLUMNS = [
     accessKey: "checkbox",
     headClasses: "flex items-center justify-center",
     className: "w-[5%] flex items-center justify-center",
-    headCellLabel: function ({ item, isChecked, onCheckedChange }) {
-      return (
-        <Checkbox
-          checked={isChecked}
-          className={cn("")}
-          onCheckedChange={(check: boolean) =>
-            onCheckedChange && onCheckedChange(check)
-          }
-        />
-      );
-    },
-    bodyCellLabel: function ({ item, isChecked, onCheckedChange }) {
-      return (
-        <Checkbox
-          checked={isChecked}
-          className={cn("")}
-          onCheckedChange={(check: boolean) =>
-            onCheckedChange && onCheckedChange(check)
-          }
-        />
-      );
-    },
+    headCellLabel: tableLabelTextWrapper.call(
+      { id: "checkbox", accessKey: "checkbox" },
+      function (context: ContextType<ProductsItemTypes | unknown>): ReactNode {
+        return (
+          <Checkbox
+            checked={(context.item as ProductsItemTypes)?.isSelected}
+            onCheckedChange={(checked: boolean) => {
+              (context.methods.isChecked = function () {
+                return { ...this, ...context, checked };
+              }),
+                context.onCellLabelClick(checked);
+            }}
+          />
+        );
+      }
+    ),
+    bodyCellLabel: tableLabelTextWrapper.call(
+      { id: "checkbox", accessKey: "checkbox" },
+      function (context: ContextType<ProductsItemTypes | unknown>): ReactNode {
+        return (
+          <Checkbox
+            checked={(context.item as ProductsItemTypes)?.isSelected}
+            className={cn()}
+            onCheckedChange={(checked: boolean) => {
+              (context.methods.isChecked = function () {
+                return { ...this, ...context, checked };
+              }),
+                context.onCellLabelClick(checked);
+            }}
+          />
+        );
+      }
+    ),
   },
   {
     id: "product-name",
@@ -324,7 +335,11 @@ export const COLUMNS = [
       return "Product Name";
     },
     bodyCellLabel: function ({ item }) {
-      return item[this.accessKey];
+      return (
+        <div className="line-clamp-2 py-1 overflow-hidden leading-[18px]">
+          {item[this.accessKey]}
+        </div>
+      );
     },
   },
   {
@@ -334,7 +349,11 @@ export const COLUMNS = [
     className: "w-[30%] text-[13px] text-slate-900/75",
     headCellLabel: () => "Description",
     bodyCellLabel: function ({ item }) {
-      return item[this.accessKey];
+      return (
+        <div className="line-clamp-3 py-1 overflow-hidden leading-[18px]">
+          {item[this.accessKey]}
+        </div>
+      );
     },
   },
   {
@@ -343,7 +362,7 @@ export const COLUMNS = [
     headClasses: "py-1 text-[15px] text-slate-900/80 font-semibold",
     className:
       "w-[10%] flex items-center justify-center text-[13px] text-slate-900/75",
-    headCellLabel: () => "Quantity",
+    headCellLabel: () => "Qty",
     bodyCellLabel: function ({ item }) {
       return item[this.accessKey];
     },
@@ -385,6 +404,7 @@ export const COLUMNS = [
     id: "edit",
     accessKey: "edit",
     headClasses: "py-1",
+    disableOnWarn: true,
     className:
       "flex items-center justify-center w-[5%] min-w-[5%] text-[13px] text-slate-900/90",
     bodyCellLabel: tableLabelTextWrapper.call(
@@ -393,7 +413,9 @@ export const COLUMNS = [
         return (
           <CiEdit
             strokeWidth={1}
-            onClick={() => context.onCellLabelClick(context)}
+            onClick={() => {
+              context.onCellLabelClick(context);
+            }}
             className={cn(
               "min-w-8 min-h-8 w-8 h-8 hover:bg-neutral-500/20 transition-all duration-150 ease-linear p-2 rounded-full font-semibold opacity-100"
             )}
@@ -401,22 +423,6 @@ export const COLUMNS = [
         );
       }
     ),
-    // bodyCellLabel: function ({ item, onCellLabelClick }) {
-    //   const context = { ...this, item };
-    //   return (
-    //     <>
-    //       <CiEdit
-    //         strokeWidth={1}
-    //         onClick={function () {
-    //           onCellLabelClick?.(context);
-    //         }}
-    //         className={cn(
-    //           "min-w-8 min-h-8 w-8 h-8 hover:bg-neutral-500/20 transition-all duration-150 ease-linear p-2 rounded-full  font-semibold opacity-100"
-    //         )}
-    //       />
-    //     </>
-    //   );
-    // },
     headCellLabel: function () {
       return "";
     },
@@ -425,6 +431,7 @@ export const COLUMNS = [
     id: "delete",
     accessKey: "delete",
     headClasses: "py-1 mr-1.5",
+    disableOnWarn: true,
     className:
       "flex items-center justify-center w-[5%] min-w-[5%] text-[13px] text-slate-900/90",
     bodyCellLabel: tableLabelTextWrapper.call(
@@ -452,13 +459,11 @@ export const COLUMNS = [
                     localStorage.getItem("edited-product") || "{}"
                   );
                   context.onCellLabelClick(context);
-                  // await dispatch(deleteProductWithIds([id]));
                 }}
                 triggerChildren={
                   <MdDeleteForever
                     className={cn(
-                      "min-w-8 min-h-8 w-8 h-8 text-red-700 hover:bg-red-500/20 transition-all duration-150 ease-in p-2 rounded-full font-semibold opacity-100"
-                      // hideIcon && "opacity-0 pointer-events-none select-none"
+                      "min-w-8 min-h-8 w-8 h-8 text-red-600 hover:bg-red-500/20 transition-all duration-150 ease-in p-2 rounded-full font-semibold opacity-100"
                     )}
                   />
                 }

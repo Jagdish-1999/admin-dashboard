@@ -84,14 +84,14 @@ const CreateNewProduct = () => {
     };
     const item = JSON.parse(localStorage.getItem("edited-product") || "{}");
 
-    const response = await dispatch(
-      createUpdateProduct({ payload, id: item.id })
-    );
-    if (response.meta.requestStatus === "fulfilled") {
-      setProductImages([]);
-      setProductInputData(initialProductInputData);
-      router.push("/products");
-    }
+    dispatch(createUpdateProduct({ payload, id: item.id })).then((res) => {
+      if (res.meta.requestStatus === "fulfilled") {
+        setProductImages([]);
+        setProductInputData(initialProductInputData);
+        router.push("/products");
+      }
+      return true;
+    });
   }, [productInputData, productImages, dispatch, router]);
 
   useEffect(() => {

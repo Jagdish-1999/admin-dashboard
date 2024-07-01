@@ -108,7 +108,6 @@ export const deleteProductWithIds = createAsyncThunk(
   async (productsIds: string[], { dispatch, getState }): Promise<any> => {
     const productList = (getState() as RootState).products.data;
     try {
-      console.log("productsIds", productsIds);
       dispatch(
         updateProducts(
           productList.map((product: ProductsItemTypes) =>

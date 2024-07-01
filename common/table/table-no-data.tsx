@@ -4,7 +4,7 @@ import { TableRow } from "./table-row";
 const NoDataAvalable = () => {
   return (
     <TableRow>
-      <TableCell colId="no-data-avaialble">
+      <TableCell>
         <h4 className="text-center p-2">No data available</h4>
       </TableCell>
     </TableRow>

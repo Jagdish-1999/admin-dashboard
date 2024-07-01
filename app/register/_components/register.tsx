@@ -75,22 +75,24 @@ const Register = ({ onBackDropClick }: RegiserPropTypes) => {
       password: formValues[PASSWORD].value,
       avatar: avatarLogo[0]?.file,
     };
-    await dispatch(registerUser(payload)).then((res) => {
-      console.log("Res", res);
+    dispatch(registerUser(payload)).then((res) => {
       if (res.meta.requestStatus === "fulfilled") {
         setIsLoginPage(true);
       }
+      return true;
     });
   }, [avatarLogo, dispatch, formValues]);
 
   const handleLoginUser = useCallback(async () => {
     const { email, password } = formValues;
-    const res = await dispatch(
-      loginUser({ email: email.value, password: password.value })
+    dispatch(loginUser({ email: email.value, password: password.value })).then(
+      (res) => {
+        if (res.meta.requestStatus === "fulfilled") {
+          router.push("/");
+        }
+        return true;
+      }
     );
-    if (res.meta.requestStatus === "fulfilled") {
-      router.push("/");
-    }
   }, [dispatch, formValues, router]);
 
   const handleInput = useCallback(

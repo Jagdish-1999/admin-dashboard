@@ -46,7 +46,6 @@ export interface OnCellClickProps<T> {
 
 export interface TableCellProps<T>
   extends HTMLAttributes<HTMLTableCellElement> {
-  colId: string;
   children: ReactNode | ReactElement | string;
 }
 
@@ -62,11 +61,18 @@ export interface TableBodyProps
 export interface TableHeadProps<T>
   extends HTMLAttributes<HTMLTableSectionElement> {
   columns: TableColumnTypes<T>[];
+  onCellLabelClick?(context: ContextType<T>): void;
 }
 
-export interface TableProps<T extends { id: string }> {
+export interface TableProps<T> {
   data: T[];
   isLoading: boolean;
-  onCellLabelClick?(context: ContextType<T>): void;
   columns: TableColumnTypes<T>[];
+  warnRows?: string[];
+  onCellLabelClick?(context: ContextType<T>): void;
+}
+
+export interface TableItem {
+  id: string;
+  isDeleting: boolean;
 }

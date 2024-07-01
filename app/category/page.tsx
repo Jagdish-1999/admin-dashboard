@@ -11,11 +11,11 @@ import { Table } from "@/common/table";
 import { EachCategoryType } from "@/types/category.slice.types";
 
 export interface CategporyInputType {
-  name: string;
+  name: { value: string; isError: boolean };
 }
 
 const initialCategoryInput: CategporyInputType = {
-  name: "",
+  name: { value: "", isError: true },
 };
 
 const Category = () => {
@@ -27,7 +27,9 @@ const Category = () => {
 
   const handleChange = useCallback(
     (evt: React.ChangeEvent<HTMLInputElement>) => {
-      setCategoryInput({ name: evt.target.value });
+      setCategoryInput({
+        name: { value: evt.target.value, isError: !evt.target.value },
+      });
     },
     []
   );
@@ -35,7 +37,7 @@ const Category = () => {
   const handleCreate = useCallback(() => {
     (async () => {
       const payload = categoryInput;
-      dispatch(createCategory(payload)).then(() => {
+      dispatch(createCategory({ name: payload.name.value })).then(() => {
         setCategoryInput(initialCategoryInput);
         return true;
       });
@@ -56,15 +58,15 @@ const Category = () => {
           <div className="flex flex-grow"></div>
           <CustomAlertDialog
             continueButtonText={() => (
-              <div className="flex gap-1 items-center justify-center text-neutral-900/80 hover:text-slaate-900/80 w-full h-full p-2 text-sm rounded-sm border border-neutral-500/50 bg-neutral-500/10 hover:bg-neutral-500/15 transition-all duration-150">
-                <IoCreateOutline strokeWidth={2} className="w-4 h-4 " />
+              <div className="flex gap-1 items-center justify-center text-neutral-900/90 hover:text-slaate-900/80 w-full h-full p-2 text-sm rounded-sm border border-neutral-500/50 bg-neutral-500/10 hover:bg-neutral-500/15 transition-all duration-150">
+                <IoCreateOutline strokeWidth={2} className="w-4 h-4" />
                 Create
               </div>
             )}
             dialogTitle="Create new category"
             onContinue={handleCreate}
             triggerChildren={
-              <div className="flex items-center justify-center gap-1 p-2 text-sm border border-neutral-500/20 font-semibold rounded-sm h-full w-28 hover:bg-neutral-500/20 bg-neutral-500/15 text-neutral-900/70 hover:text-neutral-900/80 transition-all duration-150">
+              <div className="flex items-center justify-center gap-1 p-2 text-sm border border-neutral-500/20 font-semibold rounded-sm h-full w-28 hover:bg-neutral-500/20 bg-neutral-500/15 text-neutral-900/80 hover:text-neutral-900/80 transition-all duration-150 font-afacad">
                 <IoCreateOutline strokeWidth={2} className="w-5 h-5 " />
                 Create
               </div>
@@ -76,8 +78,8 @@ const Category = () => {
               id="category"
               label="Category"
               name="category"
-              error={!categoryInput.name}
-              value={categoryInput.name}
+              error={categoryInput.name.isError}
+              value={categoryInput.name.value}
               placeholder="Category name"
               onChange={handleChange}
             />

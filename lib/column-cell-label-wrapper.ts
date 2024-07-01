@@ -1,10 +1,15 @@
 import { RenderCellProps } from "@/types/table.types";
 import { ReactNode } from "react";
 
+export interface Methods {
+  [key: string]: Function;
+}
+
 export interface ContextType<T> {
   item: T;
   id: string;
   accessKey: string;
+  methods: Methods;
   onCellLabelClick(context: T): void;
 }
 
@@ -15,11 +20,13 @@ const tableLabelTextWrapper = function <
   const ctx = this;
   return function (param: RenderCellProps<T>) {
     const { item, onCellLabelClick, ...rest } = param;
+    const methods = {} as Methods;
 
     const createdContext: ContextType<T> = {
       id: ctx.id,
       accessKey: ctx.accessKey,
       item,
+      methods,
       onCellLabelClick: () => onCellLabelClick?.(createdContext),
     };
 

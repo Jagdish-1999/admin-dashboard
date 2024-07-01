@@ -26,6 +26,7 @@ export interface ProductsItemTypes {
   updatedAt: string;
   images: string[];
   isDeleting: boolean;
+  isSelected?: boolean;
 }
 
 export interface ProductsTypes {
