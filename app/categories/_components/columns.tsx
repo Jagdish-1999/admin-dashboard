@@ -1,6 +1,7 @@
 import Input from "@/app/products/_components/Input";
 import CustomAlertDialog from "@/common/alert-dialog";
 import { CreatedUpdatedAt } from "@/common/created-updated";
+import { CustomSelect } from "@/common/custom-select";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   ContextType,
@@ -10,7 +11,10 @@ import SuppressHydration from "@/lib/suppresh-hydration";
 import { cn } from "@/lib/utils";
 import { createUpdateCategory } from "@/slices/category.slice";
 import { useAppDispatch, useAppSelector } from "@/stores/store";
-import { EachCategoryType } from "@/types/category.slice.types";
+import {
+  EachCategoryType,
+  ParentCategoryType,
+} from "@/types/category.slice.types";
 import { TableColumnTypes } from "@/types/table.types";
 import { ReactNode, useCallback, useState } from "react";
 import { CiEdit } from "react-icons/ci";
@@ -24,6 +28,8 @@ const EditCell = ({
   context: ContextType<EachCategoryType | unknown>;
 }) => {
   const dispatch = useAppDispatch();
+  const categories = useAppSelector((state) => state.categories.data);
+  const [parentCategory, setParentCategory] = useState("");
   const [inputValue, setInputValue] = useState(
     (context.item as EachCategoryType).name || ""
   );
@@ -35,12 +41,13 @@ const EditCell = ({
           createUpdateCategory({
             name: inputValue,
             id: (context.item as EachCategoryType).id,
+            parent: parentCategory,
           })
         );
         setInputValue("");
       } catch (error) {}
     })();
-  }, [context.item, dispatch, inputValue]);
+  }, [context.item, dispatch, inputValue, parentCategory]);
 
   return (
     <SuppressHydration>
@@ -52,6 +59,9 @@ const EditCell = ({
           </div>
         )}
         dialogTitle="Update category"
+        onCancel={() => {
+          setParentCategory("");
+        }}
         onContinue={handleUpdate}
         triggerChildren={
           <div className="text-green-700">
@@ -75,18 +85,28 @@ const EditCell = ({
           </div>
         }
       >
-        <Input
-          required
-          type="text"
-          id="category"
-          label="Category"
-          name="category"
-          onChange={(evt) => {
-            setInputValue(evt.target.value);
-          }}
-          value={inputValue}
-          placeholder="Category name"
-        />
+        <span className="flex flex-col gap-3">
+          <Input
+            required
+            type="text"
+            id="category"
+            label="Category"
+            name="category"
+            onChange={(evt) => {
+              setInputValue(evt.target.value);
+            }}
+            value={inputValue}
+            placeholder="Category name"
+          />
+          <CustomSelect<EachCategoryType>
+            options={categories}
+            value={parentCategory}
+            onChange={(val) => {
+              console.log("onChange called", val);
+              setParentCategory(val);
+            }}
+          />
+        </span>
       </CustomAlertDialog>
     </SuppressHydration>
   );
@@ -97,7 +117,7 @@ export const COLUMNS = [
     id: "checkbox",
     accessKey: "checkbox",
     headClasses: "flex items-center justify-center cursor-default",
-    className: "w-[5%] flex items-center justify-center",
+    className: "w-[5%] min-w-[30px] flex items-center justify-center",
     headCellLabel: tableLabelTextWrapper.call(
       { id: "checkbox", accessKey: "checkbox" },
       function (context: ContextType<EachCategoryType | unknown>): ReactNode {
@@ -137,12 +157,25 @@ export const COLUMNS = [
     accessKey: "name",
     headClasses:
       "py-1 text-sm text-[15px] text-slate-900/80 font-semibold cursor-default",
-    className: "w-[30%] text-[13px] text-slate-900/75 capitalize",
+    className: "w-[30%] min-w-[120px] text-[13px] text-slate-900/75 capitalize",
     headCellLabel: function () {
-      return "Category name";
+      return "Category";
     },
     bodyCellLabel: function ({ item }) {
       return item[this.accessKey];
+    },
+  },
+  {
+    id: "parent",
+    accessKey: "name",
+    headClasses:
+      "py-1 text-sm text-[15px] text-slate-900/80 font-semibold cursor-default",
+    className: "w-[30%] min-w-[120px] text-[13px] text-slate-900/75 capitalize",
+    headCellLabel: function () {
+      return "Parent category";
+    },
+    bodyCellLabel: function ({ item }) {
+      return item?.parent?.[this.accessKey as keyof ParentCategoryType];
     },
   },
   {
@@ -151,7 +184,7 @@ export const COLUMNS = [
     headClasses:
       "py-1 pr-2 text-[15px] text-slate-900/80 font-semibold cursor-default",
     className:
-      "w-[30%] flex items-center justify-center text-[13px] text-slate-900/75",
+      "w-[30%] min-w-[90px] flex items-center justify-center text-[13px] text-slate-900/75",
     headCellLabel: function () {
       return "Created At";
     },
@@ -165,7 +198,7 @@ export const COLUMNS = [
     headClasses:
       "py-1 text-[15px] text-slate-900/80 font-semibold cursor-default",
     className:
-      "w-[30%] flex items-center justify-center text-[13px] text-slate-900/75",
+      "w-[30%] min-w-[90px] flex items-center justify-center text-[13px] text-slate-900/75",
     headCellLabel: function () {
       return "Updated At";
     },

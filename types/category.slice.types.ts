@@ -1,3 +1,9 @@
+export interface ParentCategoryType {
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  _id: string;
+}
 export interface EachCategoryType {
   _id: string;
   id: string;
@@ -7,6 +13,7 @@ export interface EachCategoryType {
   isDeleting: boolean;
   isUpdating: boolean;
   isSelected?: boolean;
+  parent: ParentCategoryType;
 }
 
 export interface Category {
@@ -16,5 +23,6 @@ export interface Category {
 
 export interface CreateCategoryPayload {
   name: string;
+  parent?: string;
   id?: string;
 }

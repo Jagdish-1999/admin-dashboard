@@ -17,6 +17,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { cn } from "@/lib/utils";
 import { ImSpinner8 } from "react-icons/im";
 import { ContextType } from "@/lib/column-cell-label-wrapper";
+import { CustomSelect } from "@/common/custom-select";
 
 export interface CategporyInputType {
   name: { value: string; isError: boolean };
@@ -31,6 +32,7 @@ const Category = () => {
   const dispatch = useAppDispatch();
   const [categoryInput, setCategoryInput] =
     useState<CategporyInputType>(initialCategoryInput);
+  const [parentCategory, setParentCategory] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [isDeletingProducts, setIsDeletingProducts] = useState<boolean>(false);
 
@@ -50,11 +52,16 @@ const Category = () => {
   const handleCreate = useCallback(() => {
     (async () => {
       try {
-        dispatch(createUpdateCategory({ name: categoryInput.name.value }));
+        dispatch(
+          createUpdateCategory({
+            name: categoryInput.name.value,
+            parent: parentCategory,
+          })
+        );
         setCategoryInput(initialCategoryInput);
       } catch (error) {}
     })();
-  }, [categoryInput, dispatch]);
+  }, [categoryInput.name.value, dispatch, parentCategory]);
 
   // todo need to add delete functionality
   const deleteCategories = useCallback(() => {
@@ -99,6 +106,7 @@ const Category = () => {
               (context.methods as any).isChecked()?.checked,
               true
             );
+            setIsDeletingProducts(true);
           } else {
             onSelect(
               [context.item],
@@ -225,25 +233,37 @@ const Category = () => {
                 </div>
               )}
               dialogTitle="Create new category"
+              onCancel={() => {
+                setParentCategory("");
+              }}
               onContinue={handleCreate}
               triggerChildren={
-                <div className="flex items-center justify-center gap-1 p-2 text-sm border border-neutral-500/20 font-semibold rounded-sm h-full w-28 hover:bg-neutral-500/20 bg-neutral-500/15 text-neutral-900/80 hover:text-neutral-900/80 transition-all duration-150 font-afacad">
+                <div className="flex items-center justify-center gap-1 p-2 text-sm border border-neutral-500/20 font-semibold rounded-sm h-full w-32 hover:bg-neutral-500/20 bg-neutral-500/15 text-neutral-900/80 hover:text-neutral-900/80 transition-all duration-150 font-afacad">
                   <IoCreateOutline strokeWidth={2} className="w-5 h-5 " />
-                  Create
+                  Add category
                 </div>
               }
             >
-              <Input
-                required
-                type="text"
-                id="category"
-                label="Category"
-                name="category"
-                error={categoryInput.name.isError}
-                value={categoryInput.name.value}
-                placeholder="Category name"
-                onChange={handleChange}
-              />
+              <span className="flex flex-col gap-3">
+                <Input
+                  required
+                  type="text"
+                  id="category"
+                  label="Category"
+                  name="category"
+                  error={categoryInput.name.isError}
+                  value={categoryInput.name.value}
+                  placeholder="Category name"
+                  onChange={handleChange}
+                />
+                <CustomSelect
+                  options={categoriesList}
+                  value={parentCategory}
+                  onChange={(val) => {
+                    setParentCategory(val);
+                  }}
+                />
+              </span>
             </CustomAlertDialog>
           </div>
         </div>

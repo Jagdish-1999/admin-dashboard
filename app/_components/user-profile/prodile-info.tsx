@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { IoLogOutOutline } from "react-icons/io5";
 import { useAppDispatch, useAppSelector } from "@/stores/store";
 import ProfileAvatar from "./profile-avatar";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { logoutUser } from "@/slices/user.slice";
 import { useImagePreloader } from "@/lib/preload-image";
 
@@ -17,7 +17,8 @@ const ProfileInfo = () => {
 
   const logoutUserFun = useCallback(() => {
     dispatch(logoutUser());
-  }, [dispatch]);
+    router.push("/");
+  }, [dispatch, router]);
 
   return (
     <div className="flex flex-col w-full h-full gap-2 bg-neutral-200 rounded-sm backdrop-blur-md p-2">
