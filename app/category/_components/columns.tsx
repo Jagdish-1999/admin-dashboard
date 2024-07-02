@@ -37,7 +37,7 @@ const EditCell = ({
             id: (context.item as EachCategoryType).id,
           })
         );
-        setInputValue("initialCategoryInput");
+        setInputValue("");
       } catch (error) {}
     })();
   }, [context.item, dispatch, inputValue]);
@@ -51,7 +51,7 @@ const EditCell = ({
             Update
           </div>
         )}
-        dialogTitle="Create new category"
+        dialogTitle="Update category"
         onContinue={handleUpdate}
         triggerChildren={
           <div className="text-green-700">

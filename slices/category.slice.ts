@@ -52,7 +52,7 @@ export const createUpdateCategory = createAsyncThunk(
 
       let data = {} as ApiResponseTypes<EachCategoryType>;
       if (payload?.id) {
-        ({ data } = await axios.post("/api/v1/category/update", payload));
+        ({ data } = await axios.put("/api/v1/category/update", payload));
       } else {
         ({ data } = await axios.post("/api/v1/category/create", payload));
       }
