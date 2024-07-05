@@ -29,7 +29,7 @@ const Table = <T extends TableItem>({
   );
 
   return (
-    <div className="overflow-hidden h-full w-full rounded-sm rounded-ee-[3px] border border-neutral-500/20  bg-slate-300">
+    <div className="overflow-hidden h-full w-full rounded-sm rounded-ee-[3px] border border-neutral-500/20">
       <table
         className="table overflow-auto relative w-full h-full"
         style={{ width: "100%", height: "100%" }}
@@ -41,7 +41,7 @@ const Table = <T extends TableItem>({
         />
         <TableBody
           className="custom-scrollbar block w-full h-full overflow-auto font-dm-sans text-xs top-10"
-          style={{ height: "100%", display: "block", overflow: "auto" }}
+          style={{ height: "100%" }}
         >
           <TableRow className="p-4">
             <TableCell>
@@ -66,7 +66,7 @@ const Table = <T extends TableItem>({
                       key={column.id}
                       className={cn(
                         column.className,
-                        showWarnRows(item.id) && " text-red-500 opacity-85"
+                        showWarnRows(item.id) && " text-red-500"
                       )}
                     >
                       {column.bodyCellLabel({ item, onCellLabelClick })}
