@@ -8,16 +8,16 @@ import {
   deleteCategoryWithIds,
   fetchCategories,
 } from "@/slices/category.slice";
-import CustomAlertDialog from "@/app/_components/common/alert-dialog";
 import SuppressHydration from "@/lib/suppresh-hydration";
-import { Table } from "@/app/_components/common/table";
 import { EachCategoryType } from "@/types/category.slice.types";
 import { COLUMNS } from "./_components/columns";
-import { MdDeleteForever } from "react-icons/md";
+import { MdAdd, MdDeleteForever } from "react-icons/md";
 import { cn } from "@/lib/utils";
 import { ImSpinner8 } from "react-icons/im";
 import { ContextType } from "@/lib/column-cell-label-wrapper";
-import { CustomSelect } from "@/app/_components/common/custom-select";
+import CustomAlertDialog from "../_components/common/alert-dialog";
+import { CustomSelect } from "../_components/common/custom-select";
+import { Table } from "../_components/common/table";
 
 export interface CategporyInputType {
   name: { value: string; isError: boolean };
@@ -238,8 +238,8 @@ const Category = () => {
               }}
               onContinue={handleCreate}
               triggerChildren={
-                <div className="flex items-center justify-center gap-1 p-2 text-sm border border-neutral-500/20 font-semibold rounded-sm h-full w-32 hover:bg-neutral-500/20 bg-neutral-500/15 text-neutral-900/80 hover:text-neutral-900/80 transition-all duration-150 font-afacad">
-                  <IoCreateOutline strokeWidth={2} className="w-5 h-5 " />
+                <div className="flex items-center justify-center gap-1 text-sm border border-neutral-500/20 font-semibold rounded-sm h-full w-fit px-2 hover:bg-neutral-500/20 bg-neutral-500/15 text-neutral-900/80 hover:text-neutral-900/80 transition-all duration-150 font-afacad">
+                  <MdAdd className="w-5 h-5" />
                   Add category
                 </div>
               }
@@ -257,8 +257,10 @@ const Category = () => {
                   onChange={handleChange}
                 />
                 <CustomSelect
+                  required={false}
                   options={categoriesList}
                   value={parentCategory}
+                  label="Parent category"
                   onChange={(val) => {
                     setParentCategory(val);
                   }}

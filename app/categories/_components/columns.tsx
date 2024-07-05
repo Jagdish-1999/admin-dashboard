@@ -1,7 +1,7 @@
-import Input from "@/app/products/_components/Input";
 import CustomAlertDialog from "@/app/_components/common/alert-dialog";
 import { CreatedUpdatedAt } from "@/app/_components/common/created-updated";
 import { CustomSelect } from "@/app/_components/common/custom-select";
+import Input from "@/app/products/_components/Input";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   ContextType,
@@ -29,7 +29,9 @@ const EditCell = ({
 }) => {
   const dispatch = useAppDispatch();
   const categories = useAppSelector((state) => state.categories.data);
-  const [parentCategory, setParentCategory] = useState("");
+  const [parentCategory, setParentCategory] = useState(
+    (context.item as EachCategoryType)?.parent?._id
+  );
   const [inputValue, setInputValue] = useState(
     (context.item as EachCategoryType).name || ""
   );
@@ -53,8 +55,7 @@ const EditCell = ({
     <SuppressHydration>
       <CustomAlertDialog
         continueButtonText={() => (
-          <div className="flex gap-1 items-center justify-center text-neutral-900/90 hover:text-slaate-900/80 w-full h-full p-2 text-sm rounded-sm border border-neutral-500/50 bg-neutral-500/10 hover:bg-neutral-500/15 transition-all duration-150">
-            <IoCreateOutline strokeWidth={2} className="w-4 h-4" />
+          <div className="flex gap-1 items-center justify-center text-teal-700 border border-teal-600 bg-teal-100/40 hover:bg-teal-100/60 w-full h-full text-sm rounded-sm px-1 transition-all duration-150">
             Update
           </div>
         )}
@@ -99,10 +100,11 @@ const EditCell = ({
             placeholder="Category name"
           />
           <CustomSelect<EachCategoryType>
+            required={false}
             options={categories}
             value={parentCategory}
+            label="Parent category"
             onChange={(val) => {
-              console.log("onChange called", val);
               setParentCategory(val);
             }}
           />

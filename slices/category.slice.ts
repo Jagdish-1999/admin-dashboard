@@ -14,24 +14,21 @@ export const fetchCategories = createAsyncThunk("fetchCategories", async () => {
   try {
     const response = await axios.get("/api/v1/category");
 
-    if (response.status === 200) {
-      //   throw new Error("Error occur when fetching categories");
-      return response.data.data.map((category: EachCategoryType) => {
-        const createdAt = formatDate(category.createdAt);
-        const updatedAt = formatDate(category.updatedAt);
-        return {
-          ...category,
-          createdAt,
-          updatedAt,
-          isDeleting: false,
-          isUpdating: false,
-        };
-      });
-    } else {
-    }
+    return response.data.data.map((category: EachCategoryType) => {
+      const createdAt = formatDate(category.createdAt);
+      const updatedAt = formatDate(category.updatedAt);
+      return {
+        ...category,
+        createdAt,
+        updatedAt,
+        isDeleting: false,
+        isUpdating: false,
+      };
+    });
   } catch (error: any) {
     console.log("Error", error);
     toast.error(error?.message);
+    return [];
   }
 });
 

@@ -67,8 +67,6 @@ const Products = () => {
     }
   }, [dispatch, selectedProducts]);
 
-  console.log(selectedProducts);
-
   const onCellClick = useCallback((item: ProductsItemTypes) => {
     const { productName, description, price, _id, images, qty } = item;
     localStorage.setItem(

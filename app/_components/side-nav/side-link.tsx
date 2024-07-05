@@ -22,16 +22,16 @@ const LINKS: LinksTypes[] = [
     icon: <LuLayoutDashboard strokeWidth={3} />,
   },
   {
-    id: "categories",
-    href: "/categories",
-    label: "Categories",
-    icon: <MdCategory />,
-  },
-  {
     id: "products",
     href: "/products",
     label: "Products",
     icon: <AiFillProduct strokeWidth={3} />,
+  },
+  {
+    id: "categories",
+    href: "/categories",
+    label: "Categories",
+    icon: <MdCategory />,
   },
   {
     id: "orders",
