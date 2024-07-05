@@ -161,7 +161,7 @@ const Category = () => {
 
   return (
     <SuppressHydration>
-      <div className="flex flex-col gap-2 w-full h-full p-2 pt-0">
+      <div className="flex flex-col gap-3 w-full h-full p-2 pt-0">
         <div className="w-full h-fit flex gap-2 items-end  font-dm-sans">
           <div className="flex flex-grow"></div>
           <div className="flex gap-2">
@@ -227,8 +227,7 @@ const Category = () => {
             </div>
             <CustomAlertDialog
               continueButtonText={() => (
-                <div className="flex gap-1 items-center justify-center text-neutral-900/90 hover:text-slaate-900/80 w-full h-full p-2 text-sm rounded-sm border border-neutral-500/50 bg-neutral-500/10 hover:bg-neutral-500/15 transition-all duration-150">
-                  <IoCreateOutline strokeWidth={2} className="w-4 h-4" />
+                <div className="flex gap-1 items-center justify-center text-teal-700 w-full h-full p-2 text-sm rounded-sm border border-teal-600 bg-teal-100/20 hover:bg-teal-100/40 transition-all duration-150">
                   Create
                 </div>
               )}
@@ -238,7 +237,7 @@ const Category = () => {
               }}
               onContinue={handleCreate}
               triggerChildren={
-                <div className="flex items-center justify-center gap-1 text-sm border border-neutral-500/20 font-semibold rounded-sm h-full w-fit px-2 hover:bg-neutral-500/20 bg-neutral-500/15 text-neutral-900/80 hover:text-neutral-900/80 transition-all duration-150 font-afacad">
+                <div className="flex items-center justify-center gap-1 text-sm border border-teal-600 font-semibold rounded-sm h-full w-fit px-2 hover:bg-teal-100/40 bg-teal-100/20 text-teal-700 transition-all duration-150 font-afacad">
                   <MdAdd className="w-5 h-5" />
                   Add category
                 </div>

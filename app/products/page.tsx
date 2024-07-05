@@ -151,8 +151,8 @@ const Products = () => {
 
   return (
     <SuppressHydration>
-      <div className="flex flex-col gap-2 p-2 pt-0 w-full h-full">
-        <div className="flex justify-between items-center mb-1">
+      <div className="flex flex-col gap-3 p-2 pt-0 w-full h-full">
+        <div className="flex justify-between items-center">
           {/* //TODO  need to add search and filters in product list*/}
           <div className="underline italic"></div>
           <div className="flex w-fit h-full gap-2 items-center">
@@ -215,7 +215,7 @@ const Products = () => {
               </CustomAlertDialog>
             </div>
             <Link href="/products/new">
-              <div className="flex gap-1 items-center bg-neutral-500/10 hover:bg-neutral-500/20 border border-neutral-500/20 rounded-sm p-2 w-fit hover:border-neutral-500/20 transition-all duration-150 text-sm hover:text-slate-900/90 text-slate-900/80">
+              <div className="flex gap-1 items-center justify-center bg-teal-100/20 hover:bg-teal-100/40 border border-teal-600 rounded-sm h-full w-fit px-2 py-1.5 transition-all duration-150 text-sm text-teal-700">
                 <MdAdd className="w-5 h-5" />
                 Add product
               </div>

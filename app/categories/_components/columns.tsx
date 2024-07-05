@@ -16,10 +16,9 @@ import {
   ParentCategoryType,
 } from "@/types/category.slice.types";
 import { TableColumnTypes } from "@/types/table.types";
-import { ReactNode, useCallback, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { ImSpinner8 } from "react-icons/im";
-import { IoCreateOutline } from "react-icons/io5";
 import { MdDeleteForever } from "react-icons/md";
 
 const EditCell = ({
@@ -60,9 +59,6 @@ const EditCell = ({
           </div>
         )}
         dialogTitle="Update category"
-        onCancel={() => {
-          setParentCategory("");
-        }}
         onContinue={handleUpdate}
         triggerChildren={
           <div className="text-green-700">
@@ -79,7 +75,7 @@ const EditCell = ({
                   context.onCellLabelClick(context);
                 }}
                 className={cn(
-                  "min-w-8 min-h-8 w-8 h-8 hover:bg-green-500/15 transition-all duration-150 ease-linear p-2 rounded-full font-semibold opacity-100"
+                  "min-w-8 min-h-8 w-8 h-8 hover:bg-green-300/30 transition-all duration-150 ease-linear p-2 rounded-full font-semibold opacity-100"
                 )}
               />
             )}
@@ -261,7 +257,7 @@ export const COLUMNS = [
                     ) : (
                       <MdDeleteForever
                         className={cn(
-                          "min-w-8 min-h-8 w-8 h-8 text-red-600 hover:bg-red-500/20 transition-all duration-150 ease-in p-2 rounded-full font-semibold opacity-100"
+                          "min-w-8 min-h-8 w-8 h-8 text-red-600 hover:bg-red-300/30 transition-all duration-150 ease-in p-2 rounded-full font-semibold opacity-100"
                         )}
                       />
                     )}
