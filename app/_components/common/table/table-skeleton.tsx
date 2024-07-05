@@ -7,16 +7,14 @@ import { TableRow } from "./table-row";
 const TableSkeleton = <T,>({ columns }: TableSkeletonProps<T>) => {
   return (
     <>
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((_, idx) => (
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((i, idx) => (
         <TableRow
           key={idx}
-          className={cn(
-            "flex items-center justify-center gap-1 px-1 pt-1 border-none"
-          )}
+          className={cn("", idx % 2 !== 0 && "bg-neutral-100/50")}
         >
           {columns.map((column) => (
             <TableCell
-              key={column.id + idx + _}
+              key={column.id + idx + i}
               className={cn(
                 "flex items-center justify-center gap-1",
                 column.className
@@ -24,7 +22,7 @@ const TableSkeleton = <T,>({ columns }: TableSkeletonProps<T>) => {
             >
               <Skeleton
                 className={cn(
-                  "w-full h-[50px] p-4 rounded-sm bg-neutral-500/35",
+                  "w-full h-[50px] px-2 py-4 rounded-none bg-neutral-500/35",
                   idx % 2 === 0 && "animate-pulse"
                 )}
               >
