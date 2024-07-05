@@ -1,7 +1,7 @@
 import Input from "@/app/products/_components/Input";
-import CustomAlertDialog from "@/common/alert-dialog";
-import { CreatedUpdatedAt } from "@/common/created-updated";
-import { CustomSelect } from "@/common/custom-select";
+import CustomAlertDialog from "@/app/_components/common/alert-dialog";
+import { CreatedUpdatedAt } from "@/app/_components/common/created-updated";
+import { CustomSelect } from "@/app/_components/common/custom-select";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   ContextType,

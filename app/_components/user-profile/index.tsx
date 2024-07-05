@@ -1,5 +1,5 @@
 "use client";
-import { CustomPopover } from "@/common/popover";
+import { CustomPopover } from "@/app/_components/common/popover";
 import ProfileInfo from "./prodile-info";
 import { useAppSelector } from "@/stores/store";
 import ProfileAvatar from "./profile-avatar";

@@ -8,16 +8,16 @@ import {
   deleteCategoryWithIds,
   fetchCategories,
 } from "@/slices/category.slice";
-import CustomAlertDialog from "@/common/alert-dialog";
+import CustomAlertDialog from "@/app/_components/common/alert-dialog";
 import SuppressHydration from "@/lib/suppresh-hydration";
-import { Table } from "@/common/table";
+import { Table } from "@/app/_components/common/table";
 import { EachCategoryType } from "@/types/category.slice.types";
 import { COLUMNS } from "./_components/columns";
 import { MdDeleteForever } from "react-icons/md";
 import { cn } from "@/lib/utils";
 import { ImSpinner8 } from "react-icons/im";
 import { ContextType } from "@/lib/column-cell-label-wrapper";
-import { CustomSelect } from "@/common/custom-select";
+import { CustomSelect } from "@/app/_components/common/custom-select";
 
 export interface CategporyInputType {
   name: { value: string; isError: boolean };
