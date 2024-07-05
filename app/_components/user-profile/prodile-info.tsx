@@ -1,6 +1,5 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { IoLogOutOutline } from "react-icons/io5";
 import { useAppDispatch, useAppSelector } from "@/stores/store";
@@ -37,7 +36,7 @@ const ProfileInfo = () => {
           </div>
         </div>
       </div>
-      <Separator className="bg-neutral-500/20" />
+      <hr className="border-neutral-500/50" />
       <div className="px-3 py-2 w-full">
         {!isLogin ? (
           <Button

@@ -9,11 +9,12 @@ import { MdAdd, MdDeleteForever } from "react-icons/md";
 import { RootState, useAppSelector, useAppDispatch } from "@/stores/store";
 import { deleteProductWithIds, fetchProducts } from "@/slices/products.slice";
 import { ProductsItemTypes } from "@/types/products.slice.types";
-import CustomAlertDialog from "@/app/_components/common/alert-dialog";
-import { Table } from "@/app/_components/common/table";
+import CustomAlertDialog from "@/app/_components/common/alert/custom-alert-dialog";
+import { Table } from "@/app/_components/common/table/table";
 import { ContextType } from "@/lib/column-cell-label-wrapper";
 import SuppressHydration from "@/lib/suppresh-hydration";
 import { COLUMNS } from "./_components/columns";
+import { Button } from "@/components/ui/button";
 
 export interface ProductListProps {
   _id: string;

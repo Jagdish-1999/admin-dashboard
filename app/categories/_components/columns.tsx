@@ -1,6 +1,6 @@
-import CustomAlertDialog from "@/app/_components/common/alert-dialog";
+import CustomAlertDialog from "@/app/_components/common/alert/custom-alert-dialog";
 import { CreatedUpdatedAt } from "@/app/_components/common/created-updated";
-import { CustomSelect } from "@/app/_components/common/custom-select";
+import { CustomSelect } from "@/app/_components/common/select/custom-select";
 import Input from "@/app/products/_components/Input";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -115,7 +115,7 @@ export const COLUMNS = [
     id: "checkbox",
     accessKey: "checkbox",
     headClasses: "flex items-center justify-center cursor-default",
-    className: "w-[5%] min-w-[30px] flex items-center justify-center",
+    className: "w-[5%] min-w-[40px] flex items-center justify-center",
     headCellLabel: tableLabelTextWrapper.call(
       { id: "checkbox", accessKey: "checkbox" },
       function (context: ContextType<EachCategoryType | unknown>): ReactNode {
@@ -155,7 +155,7 @@ export const COLUMNS = [
     accessKey: "name",
     headClasses:
       "py-1 text-sm text-[15px] text-slate-900/80 font-semibold cursor-default",
-    className: "w-[30%] min-w-[120px] text-[13px] text-slate-900/75 capitalize",
+    className: "w-[25%] min-w-[120px] text-[13px] text-slate-900/75 capitalize",
     headCellLabel: function () {
       return "Category";
     },
@@ -168,7 +168,7 @@ export const COLUMNS = [
     accessKey: "name",
     headClasses:
       "py-1 text-sm text-[15px] text-slate-900/80 font-semibold cursor-default",
-    className: "w-[30%] min-w-[120px] text-[13px] text-slate-900/75 capitalize",
+    className: "w-[20%] min-w-[120px] text-[13px] text-slate-900/75 capitalize",
     headCellLabel: function () {
       return "Parent category";
     },
@@ -182,7 +182,7 @@ export const COLUMNS = [
     headClasses:
       "py-1 pr-2 text-[15px] text-slate-900/80 font-semibold cursor-default",
     className:
-      "w-[30%] min-w-[90px] flex items-center justify-center text-[13px] text-slate-900/75",
+      "w-[20%] min-w-[90px] flex items-center justify-center text-[13px] text-slate-900/75",
     headCellLabel: function () {
       return "Created At";
     },
@@ -196,7 +196,7 @@ export const COLUMNS = [
     headClasses:
       "py-1 text-[15px] text-slate-900/80 font-semibold cursor-default",
     className:
-      "w-[30%] min-w-[90px] flex items-center justify-center text-[13px] text-slate-900/75",
+      "w-[20%] min-w-[90px] flex items-center justify-center text-[13px] text-slate-900/75",
     headCellLabel: function () {
       return "Updated At";
     },

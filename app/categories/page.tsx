@@ -15,9 +15,10 @@ import { MdAdd, MdDeleteForever } from "react-icons/md";
 import { cn } from "@/lib/utils";
 import { ImSpinner8 } from "react-icons/im";
 import { ContextType } from "@/lib/column-cell-label-wrapper";
-import CustomAlertDialog from "../_components/common/alert-dialog";
-import { CustomSelect } from "../_components/common/custom-select";
-import { Table } from "../_components/common/table";
+import CustomAlertDialog from "../_components/common/alert/custom-alert-dialog";
+import { CustomSelect } from "../_components/common/select/custom-select";
+import { Table } from "../_components/common/table/table";
+import { Button } from "@/components/ui/button";
 
 export interface CategporyInputType {
   name: { value: string; isError: boolean };

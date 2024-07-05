@@ -1,5 +1,5 @@
 import { GrUserAdmin } from "react-icons/gr";
-import { UserProfile } from "./user-profile";
+import { UserProfile } from "./user-profile/user-profile";
 import Link from "next/link";
 
 export const Navbar = () => {

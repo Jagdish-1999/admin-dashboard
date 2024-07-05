@@ -3,10 +3,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ReactNode } from "react";
 
 export interface PopOverProps {
   children: React.ReactNode;
-  triggerChildren: any;
+  triggerChildren: ReactNode;
   align?: "start" | "center" | "end";
   side?: "left" | "right" | "top" | "bottom";
 }

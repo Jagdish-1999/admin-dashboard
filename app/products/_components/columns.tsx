@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import CustomAlertDialog from "@/app/_components/common/alert-dialog";
+import CustomAlertDialog from "@/app/_components/common/alert/custom-alert-dialog";
 import { CreatedUpdatedAt } from "@/app/_components/common/created-updated";
 import { Checkbox } from "@/components/ui/checkbox";
 import {

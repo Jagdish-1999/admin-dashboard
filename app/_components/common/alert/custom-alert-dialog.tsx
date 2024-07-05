@@ -9,7 +9,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { PopOverProps } from "./popover";
+import { PopOverProps } from "../popover/custom-popover";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface AlertDialogProps extends PopOverProps {
