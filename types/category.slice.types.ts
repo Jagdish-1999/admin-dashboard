@@ -1,3 +1,5 @@
+import { AddedPropertiesTypes } from "@/app/categories/_components/add-update-category";
+
 export interface ParentCategoryType {
   createdAt: string;
   updatedAt: string;
@@ -14,6 +16,7 @@ export interface EachCategoryType {
   isUpdating: boolean;
   isSelected?: boolean;
   parent: ParentCategoryType;
+  properties: { propertyName: string; propertyValue: string }[];
 }
 
 export interface Category {
@@ -24,6 +27,6 @@ export interface Category {
 export interface CreateCategoryPayload {
   name: string;
   parent?: string | null;
-  properties?: { [key: string]: string[] };
+  properties?: AddedPropertiesTypes[];
   id?: string;
 }

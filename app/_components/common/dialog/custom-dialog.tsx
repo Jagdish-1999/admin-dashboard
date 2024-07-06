@@ -15,6 +15,8 @@ interface CustomDialogProps extends PopOverProps {
   title?: string | ReactNode;
   description?: string | ReactNode;
   footerContent?: ReactNode;
+  open?: boolean;
+  onOpenChange?(val: boolean): void;
 }
 
 export function CustomDialog({
@@ -23,9 +25,11 @@ export function CustomDialog({
   children,
   description,
   footerContent,
+  open,
+  onOpenChange,
 }: CustomDialogProps) {
   return (
-    <Dialog>
+    <Dialog onOpenChange={(oopen) => onOpenChange?.(oopen)} open={open}>
       <DialogTrigger>{triggerChildren}</DialogTrigger>
       <DialogContent className="min-w-[28rem] w-fit h-fit max-h-[85vh] max-w-[75vw] bg-neutral-50">
         <DialogHeader>

@@ -132,6 +132,7 @@ const initialState: Category = {
   data: [],
   isLoading: false,
 };
+
 const categorySlice = createSlice({
   name: "category",
   initialState: initialState,

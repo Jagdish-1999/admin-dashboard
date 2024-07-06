@@ -20,95 +20,7 @@ import { ReactNode, useCallback, useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { ImSpinner8 } from "react-icons/im";
 import { MdDeleteForever } from "react-icons/md";
-
-const EditCell = ({
-  context,
-}: {
-  context: ContextType<EachCategoryType | unknown>;
-}) => {
-  const dispatch = useAppDispatch();
-  const categories = useAppSelector((state) => state.categories.data);
-  const [parentCategory, setParentCategory] = useState(
-    (context.item as EachCategoryType)?.parent?._id
-  );
-  const [inputValue, setInputValue] = useState(
-    (context.item as EachCategoryType).name || ""
-  );
-
-  const handleUpdate = useCallback(() => {
-    (async () => {
-      try {
-        dispatch(
-          createUpdateCategory({
-            name: inputValue,
-            id: (context.item as EachCategoryType).id,
-            parent: parentCategory,
-          })
-        );
-        setInputValue("");
-      } catch (error) {}
-    })();
-  }, [context.item, dispatch, inputValue, parentCategory]);
-
-  return (
-    <SuppressHydration>
-      <CustomAlertDialog
-        continueButtonText={() => (
-          <div className="flex gap-1 items-center justify-center text-teal-700 border border-teal-600 bg-teal-100/40 hover:bg-teal-100/60 w-full h-full text-sm rounded-sm px-1 transition-all duration-150">
-            Update
-          </div>
-        )}
-        dialogTitle="Update category"
-        onContinue={handleUpdate}
-        triggerChildren={
-          <div className="text-green-700">
-            {(context.item as EachCategoryType).isUpdating ? (
-              <ImSpinner8
-                className={cn(
-                  "min-w-8 min-h-8 w-8 h-8 text-green-700 transition-all animate-spin duration-700 ease-in p-2 font-semibold opacity-100"
-                )}
-              />
-            ) : (
-              <CiEdit
-                strokeWidth={1}
-                onClick={() => {
-                  context.onCellLabelClick(context);
-                }}
-                className={cn(
-                  "min-w-8 min-h-8 w-8 h-8 hover:bg-green-300/30 transition-all duration-150 ease-linear p-2 rounded-full font-semibold opacity-100"
-                )}
-              />
-            )}
-          </div>
-        }
-      >
-        <span className="flex flex-col gap-3">
-          <Input
-            required
-            type="text"
-            id="category"
-            label="Category"
-            name="category"
-            onChange={(evt) => {
-              setInputValue(evt.target.value);
-            }}
-            value={inputValue}
-            placeholder="Category name"
-          />
-          <CustomSelect<EachCategoryType>
-            required={false}
-            options={categories}
-            value={parentCategory}
-            label="Parent category"
-            onChange={(val) => {
-              setParentCategory(val);
-            }}
-          />
-        </span>
-      </CustomAlertDialog>
-    </SuppressHydration>
-  );
-};
+import { AddUpdateCategories } from "./add-update-category";
 
 export const COLUMNS = [
   {
@@ -213,7 +125,13 @@ export const COLUMNS = [
     bodyCellLabel: tableLabelTextWrapper.call(
       { id: "edit", accessKey: "edit" },
       function (context: ContextType<EachCategoryType | unknown>): ReactNode {
-        return <EditCell context={context} />;
+        // return <EditCell context={context} />;
+        return (
+          <AddUpdateCategories
+            category={context.item as EachCategoryType}
+            onCellLabelClick={context.onCellLabelClick}
+          />
+        );
       }
     ),
     headCellLabel: function () {
