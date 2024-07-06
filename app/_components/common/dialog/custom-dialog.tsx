@@ -32,7 +32,7 @@ export function CustomDialog({
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">{children}</div>
+        <div>{children}</div>
         <DialogFooter>{footerContent}</DialogFooter>
       </DialogContent>
     </Dialog>

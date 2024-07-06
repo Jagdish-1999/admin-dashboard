@@ -21,26 +21,26 @@ const AddProperties = ({
 }: AddPropertiesProps) => {
   return (
     <div className="flex items-end gap-3 mb-2 relative group/currentProperty">
-      {index}
       <Input
         required
         type="text"
-        id={`currentProperty-${index}`}
         label="Property name"
         name="propertyName"
-        placeholder="Property name"
-        onChange={(evt) => handlePropertyInputChange(evt, index)}
+        placeholder="Property name (Ex. RAM)"
+        id={`currentProperty-${index}`}
         value={currentProperty.propertyName}
+        onChange={(evt) => handlePropertyInputChange(evt, index)}
       />
       <Input
         required
         type="text"
-        id={`currentProperty-${index}`}
         label="Property value"
         name="propertyValue"
-        placeholder="Property value"
-        onChange={(evt) => handlePropertyInputChange(evt, index)}
+        placeholder="Values (Ex. 6GB,8GB)"
+        id={`currentProperty-${index}`}
         value={currentProperty.propertyValue}
+        disabled={!currentProperty.propertyName}
+        onChange={(evt) => handlePropertyInputChange(evt, index)}
       />
       <MdDeleteForever
         className="absolute right-0 hidden min-w-8 min-h-8 text-red-600 hover:bg-red-100 rounded-full mb-1.5 p-2 group-hover/currentProperty:inline-block cursor-pointer transition-all duration-200"

@@ -39,9 +39,9 @@ const CustomSelect = <T extends { id: string; name: string }>({
       <Select onValueChange={onChange} value={value}>
         <SelectTrigger
           className={cn(
-            "w-auto font-dm-sans p-3 rounded-sm text-xs text-[12px]",
+            "w-auto font-dm-sans p-3 rounded-sm text-xs text-[12px] border-neutral-900/90 bg-[#e7f0fe] text-neutral-900/70",
             className,
-            !value && "text-neutral-500/80"
+            !value && "text-neutral-500/80 border-neutral-400 bg-transparent"
           )}
         >
           <SelectValue placeholder={placeholder} />
@@ -51,6 +51,11 @@ const CustomSelect = <T extends { id: string; name: string }>({
           style={{ background: "#77777799", color: "#fff", maxHeight: "300px" }}
         >
           <div className="h-full w-full text-white">
+            {placeholder && (
+              <SelectItem value="null" defaultChecked>
+                {placeholder}
+              </SelectItem>
+            )}
             {options.map((eachOption) => (
               <SelectItem
                 value={eachOption.id}

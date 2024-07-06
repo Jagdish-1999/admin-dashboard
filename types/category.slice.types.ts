@@ -24,5 +24,6 @@ export interface Category {
 export interface CreateCategoryPayload {
   name: string;
   parent?: string;
+  properties?: { [key: string]: string[] };
   id?: string;
 }

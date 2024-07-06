@@ -33,7 +33,6 @@ export interface CategporyInputType {
 }
 
 export interface AddedPropertiesTypes {
-  index: number;
   propertyName: string;
   propertyValue: string;
 }
@@ -70,10 +69,9 @@ const Category = () => {
 
   const handlePropertyInputChange = useCallback(
     (evt: ChangeEvent<HTMLInputElement>, index: number) => {
-      console.log("EVT", evt.target.name, evt.target.value, index);
       setAdddedProperties((prev) =>
-        prev.map((eachInput) =>
-          eachInput.index === index
+        prev.map((eachInput, idx) =>
+          idx === index
             ? {
                 ...eachInput,
                 [evt.target.name]: evt.target.value,
@@ -86,33 +84,37 @@ const Category = () => {
   );
 
   const handleAddProperty = useCallback(() => {
-    setAddProperty((prev) => [prev.length + 1, ...prev]);
+    setAddProperty((prev) => [prev.length, ...prev]);
     setAdddedProperties((prev) => [
       ...prev,
-      { index: prev.length + 1, propertyName: "", propertyValue: "" },
+      { propertyName: "", propertyValue: "" },
     ]);
   }, []);
 
   const handleRemoveProperty = useCallback((index: number) => {
-    setAddProperty((prev) => prev.filter((idx) => idx !== index));
-    setAdddedProperties((prev) =>
-      prev.filter((property) => property.index !== index)
-    );
+    setAddProperty((prev) => prev.filter((_, idx) => idx !== index));
+    setAdddedProperties((prev) => prev.filter((_, idx) => idx !== index));
   }, []);
 
   const handleCreate = useCallback(() => {
-    (async () => {
-      try {
-        dispatch(
-          createUpdateCategory({
-            name: categoryInput.name.value,
-            parent: parentCategory,
-          })
-        );
-        setCategoryInput(initialCategoryInput);
-      } catch (error) {}
-    })();
-  }, [categoryInput.name.value, dispatch, parentCategory]);
+    const properties = addedProperties.reduce((acc, curr) => {
+      return curr.propertyValue && curr.propertyName
+        ? {
+            ...acc,
+            [curr.propertyName]: curr.propertyValue.split(","),
+          }
+        : acc;
+    }, {});
+    console.log("Properties", properties);
+    dispatch(
+      createUpdateCategory({
+        name: categoryInput.name.value,
+        parent: parentCategory,
+        properties,
+      })
+    );
+    setCategoryInput(initialCategoryInput);
+  }, [addedProperties, categoryInput.name.value, dispatch, parentCategory]);
 
   const deleteCategories = useCallback(() => {
     try {
@@ -275,47 +277,6 @@ const Category = () => {
                 </CustomAlertDialog>
               </div>
             </div>
-            {/* <CustomAlertDialog
-              continueButtonText={() => (
-                <div className="flex gap-1 items-center justify-center text-teal-700 w-full h-full p-2 text-sm rounded-sm border border-teal-600 bg-teal-100/20 hover:bg-teal-100/40 transition-all duration-150">
-                  Create
-                </div>
-              )}
-              dialogTitle="Create new category"
-              onCancel={() => {
-                setParentCategory("");
-              }}
-              onContinue={handleCreate}
-              triggerChildren={
-                <div className="flex items-center justify-center gap-1 text-sm border border-teal-600 font-semibold rounded-sm h-full w-fit px-2 hover:bg-teal-100/40 bg-teal-100/20 text-teal-700 transition-all duration-150 font-afacad">
-                  <MdAdd className="w-5 h-5" />
-                  Add category
-                </div>
-              }
-            >
-              <span className="flex flex-col gap-3">
-                <Input
-                  required
-                  type="text"
-                  id="category"
-                  label="Category"
-                  name="category"
-                  error={categoryInput.name.isError}
-                  value={categoryInput.name.value}
-                  placeholder="Category name"
-                  onChange={handleChange}
-                />
-                <CustomSelect
-                  required={false}
-                  options={categoriesList}
-                  value={parentCategory}
-                  label="Parent category"
-                  onChange={(val) => {
-                    setParentCategory(val);
-                  }}
-                />
-              </span>
-            </CustomAlertDialog> */}
             <CustomDialog
               title="Create new category"
               triggerChildren={
@@ -325,7 +286,9 @@ const Category = () => {
                 </div>
               }
               footerContent={
-                <div className="flex gap-2">
+                <div
+                  className={cn("flex gap-2", addProperty.length > 0 && "pr-2")}
+                >
                   <Button variant="outline" onClick={handleAddProperty}>
                     Add properties
                   </Button>
@@ -337,8 +300,8 @@ const Category = () => {
             >
               <div
                 className={cn(
-                  "flex flex-col gap-3 h-fit",
-                  addProperty.length > 0 && "flex-row w-full items-end"
+                  "flex flex-col gap-3 h-fit mb-1.5",
+                  addProperty.length > 0 && "flex-row w-full items-end  pr-2.5"
                 )}
               >
                 <Input
@@ -358,24 +321,23 @@ const Category = () => {
                   options={categoriesList}
                   value={parentCategory}
                   label="Parent category"
-                  onChange={(val) => {
-                    setParentCategory(val);
+                  onChange={(val: string) => {
+                    setParentCategory(val === "null" ? "" : val);
                   }}
                 />
               </div>
               {addProperty.length > 0 && (
                 <div
-                  className="max-h-[35vh] min-w-[50vw] overflow-auto custom-scrollbar pr-1"
+                  className="max-h-[45vh] min-w-[50vw] overflow-auto custom-scrollbar pr-2"
                   style={{ height: "100%" }}
                 >
-                  {addProperty.map((propertyIndex) => (
+                  {addProperty.map((_, index) => (
                     <AddProperties
-                      key={propertyIndex}
-                      index={propertyIndex}
+                      key={index}
+                      index={index}
                       currentProperty={
-                        addedProperties.find(
-                          (current) => current.index === propertyIndex
-                        ) || ({} as AddedPropertiesTypes)
+                        addedProperties.find((_, idx) => idx === index) ||
+                        ({} as AddedPropertiesTypes)
                       }
                       handleRemoveProperty={handleRemoveProperty}
                       handlePropertyInputChange={handlePropertyInputChange}

@@ -22,6 +22,7 @@ interface InputProps {
   productImages?: ProductImagesTypes[];
   setProductImages?: React.Dispatch<React.SetStateAction<ProductImagesTypes[]>>;
   className?: string;
+  disabled?: boolean;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -39,6 +40,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       productImages,
       setProductImages,
       className,
+      disabled = false,
     },
     ref
   ) => {
@@ -136,6 +138,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           </label>
         )}
         <input
+          disabled={disabled}
           id={id}
           ref={ref}
           name={name}
@@ -144,7 +147,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           placeholder={placeholder}
           onChange={onChange}
           className={cn(
-            "w-full h-full p-3 font-dm-sans bg-transparent outline-none border rounded-sm transition-all duration-150 ease-linear focus-visible:border-neutral-500 border-neutral-400 placeholder:text-[12px] placeholder:text-neutral-900/50 text-sm text-neutral-900/90",
+            "w-full h-full p-3 font-dm-sans bg-transparent outline-none border rounded-sm transition-all duration-150 ease-linear focus-visible:border-neutral-500 border-neutral-400 placeholder:text-[12px] placeholder:text-neutral-900/50 text-sm text-neutral-900/90 disabled:opacity-50",
             className,
             value &&
               "border-neutral-900/90 text-neutral-900/70 text-sm bg-[#e7f0fe]"
