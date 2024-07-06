@@ -1,7 +1,13 @@
 "use client";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Input from "../products/_components/Input";
-import { IoCreateOutline } from "react-icons/io5";
 import { useAppDispatch, useAppSelector } from "@/stores/store";
 import {
   createUpdateCategory,
@@ -19,9 +25,17 @@ import CustomAlertDialog from "../_components/common/alert/custom-alert-dialog";
 import { CustomSelect } from "../_components/common/select/custom-select";
 import { Table } from "../_components/common/table/table";
 import { Button } from "@/components/ui/button";
+import { CustomDialog } from "../_components/common/dialog/custom-dialog";
+import { AddProperties } from "./_components/add-properties";
 
 export interface CategporyInputType {
   name: { value: string; isError: boolean };
+}
+
+export interface AddedPropertiesTypes {
+  index: number;
+  propertyName: string;
+  propertyValue: string;
 }
 
 const initialCategoryInput: CategporyInputType = {
@@ -34,6 +48,10 @@ const Category = () => {
   const [categoryInput, setCategoryInput] =
     useState<CategporyInputType>(initialCategoryInput);
   const [parentCategory, setParentCategory] = useState("");
+  const [addProperty, setAddProperty] = useState<number[]>([]);
+  const [addedProperties, setAdddedProperties] = useState<
+    AddedPropertiesTypes[]
+  >([] as AddedPropertiesTypes[]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [isDeletingProducts, setIsDeletingProducts] = useState<boolean>(false);
 
@@ -50,6 +68,38 @@ const Category = () => {
     []
   );
 
+  const handlePropertyInputChange = useCallback(
+    (evt: ChangeEvent<HTMLInputElement>, index: number) => {
+      console.log("EVT", evt.target.name, evt.target.value, index);
+      setAdddedProperties((prev) =>
+        prev.map((eachInput) =>
+          eachInput.index === index
+            ? {
+                ...eachInput,
+                [evt.target.name]: evt.target.value,
+              }
+            : eachInput
+        )
+      );
+    },
+    []
+  );
+
+  const handleAddProperty = useCallback(() => {
+    setAddProperty((prev) => [prev.length + 1, ...prev]);
+    setAdddedProperties((prev) => [
+      ...prev,
+      { index: prev.length + 1, propertyName: "", propertyValue: "" },
+    ]);
+  }, []);
+
+  const handleRemoveProperty = useCallback((index: number) => {
+    setAddProperty((prev) => prev.filter((idx) => idx !== index));
+    setAdddedProperties((prev) =>
+      prev.filter((property) => property.index !== index)
+    );
+  }, []);
+
   const handleCreate = useCallback(() => {
     (async () => {
       try {
@@ -64,7 +114,6 @@ const Category = () => {
     })();
   }, [categoryInput.name.value, dispatch, parentCategory]);
 
-  // todo need to add delete functionality
   const deleteCategories = useCallback(() => {
     try {
       dispatch(deleteCategoryWithIds(selectedCategories));
@@ -166,7 +215,7 @@ const Category = () => {
         <div className="w-full h-fit flex gap-2 items-end  font-dm-sans">
           <div className="flex flex-grow"></div>
           <div className="flex gap-2">
-            <div className="">
+            <div>
               <div
                 className={cn(
                   "w-fit h-full flex transition-all duration-150 ease-linear cursor-pointer font-afacad",
@@ -226,7 +275,7 @@ const Category = () => {
                 </CustomAlertDialog>
               </div>
             </div>
-            <CustomAlertDialog
+            {/* <CustomAlertDialog
               continueButtonText={() => (
                 <div className="flex gap-1 items-center justify-center text-teal-700 w-full h-full p-2 text-sm rounded-sm border border-teal-600 bg-teal-100/20 hover:bg-teal-100/40 transition-all duration-150">
                   Create
@@ -266,7 +315,75 @@ const Category = () => {
                   }}
                 />
               </span>
-            </CustomAlertDialog>
+            </CustomAlertDialog> */}
+            <CustomDialog
+              title="Create new category"
+              triggerChildren={
+                <div className="flex items-center justify-center gap-1 text-sm border border-teal-600 font-semibold rounded-sm h-full w-fit px-2 hover:bg-teal-100/40 bg-teal-100/20 text-teal-700 transition-all duration-150 font-afacad">
+                  <MdAdd className="w-5 h-5" />
+                  Add category
+                </div>
+              }
+              footerContent={
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={handleAddProperty}>
+                    Add properties
+                  </Button>
+                  <Button variant="outline" onClick={handleCreate}>
+                    Create category
+                  </Button>
+                </div>
+              }
+            >
+              <div
+                className={cn(
+                  "flex flex-col gap-3 h-fit",
+                  addProperty.length > 0 && "flex-row w-full items-end"
+                )}
+              >
+                <Input
+                  required
+                  type="text"
+                  id="category"
+                  label="Category"
+                  name="category"
+                  error={categoryInput.name.isError}
+                  value={categoryInput.name.value}
+                  placeholder="Category name"
+                  onChange={handleChange}
+                />
+                <CustomSelect
+                  className="h-full"
+                  required={false}
+                  options={categoriesList}
+                  value={parentCategory}
+                  label="Parent category"
+                  onChange={(val) => {
+                    setParentCategory(val);
+                  }}
+                />
+              </div>
+              {addProperty.length > 0 && (
+                <div
+                  className="max-h-[35vh] min-w-[50vw] overflow-auto custom-scrollbar pr-1"
+                  style={{ height: "100%" }}
+                >
+                  {addProperty.map((propertyIndex) => (
+                    <AddProperties
+                      key={propertyIndex}
+                      index={propertyIndex}
+                      currentProperty={
+                        addedProperties.find(
+                          (current) => current.index === propertyIndex
+                        ) || ({} as AddedPropertiesTypes)
+                      }
+                      handleRemoveProperty={handleRemoveProperty}
+                      handlePropertyInputChange={handlePropertyInputChange}
+                    />
+                  ))}
+                </div>
+              )}
+            </CustomDialog>
           </div>
         </div>
 

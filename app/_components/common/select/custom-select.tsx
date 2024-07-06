@@ -26,10 +26,10 @@ const CustomSelect = <T extends { id: string; name: string }>({
   placeholder = "Select category",
 }: CustomSelectProps<T>) => {
   return (
-    <span className="flex flex-col w-full">
+    <span className="flex flex-col w-full gap-0.5">
       <label
         className={cn(
-          "select-none text-neutral-900/50 transition-all duration-150 text-xs mb-0.5",
+          "select-none text-neutral-900/50 transition-all duration-150 text-xs",
           value && "text-neutral-900/90"
         )}
       >
@@ -39,12 +39,12 @@ const CustomSelect = <T extends { id: string; name: string }>({
       <Select onValueChange={onChange} value={value}>
         <SelectTrigger
           className={cn(
-            "w-auto font-dm-sans p-3 rounded-sm text-xs",
+            "w-auto font-dm-sans p-3 rounded-sm text-xs text-[12px]",
             className,
             !value && "text-neutral-500/80"
           )}
         >
-          <SelectValue placeholder={placeholder} className="p-1" />
+          <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent
           className={cn("font-dm-sans absolute backdrop-blur-md")}
@@ -57,7 +57,7 @@ const CustomSelect = <T extends { id: string; name: string }>({
                 key={eachOption.id}
                 className={cn(
                   "cursor-pointer hover:text-black capitalize font-semibold",
-                  value === eachOption.id && "text-white"
+                  value === eachOption.id && "text-teal-950"
                 )}
               >
                 {eachOption.name}
