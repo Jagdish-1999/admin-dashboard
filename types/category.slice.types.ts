@@ -23,7 +23,7 @@ export interface Category {
 
 export interface CreateCategoryPayload {
   name: string;
-  parent?: string;
+  parent?: string | null;
   properties?: { [key: string]: string[] };
   id?: string;
 }

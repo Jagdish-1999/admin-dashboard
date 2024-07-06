@@ -101,7 +101,9 @@ const Category = () => {
       return curr.propertyValue && curr.propertyName
         ? {
             ...acc,
-            [curr.propertyName]: curr.propertyValue.split(","),
+            [curr.propertyName]: curr.propertyValue
+              .split(",")
+              .map((each) => each.trim()),
           }
         : acc;
     }, {});
@@ -109,11 +111,14 @@ const Category = () => {
     dispatch(
       createUpdateCategory({
         name: categoryInput.name.value,
-        parent: parentCategory,
+        parent: parentCategory.trim() !== "" ? parentCategory : null,
         properties,
       })
     );
     setCategoryInput(initialCategoryInput);
+    setAddProperty([]);
+    setAdddedProperties([]);
+    setParentCategory("");
   }, [addedProperties, categoryInput.name.value, dispatch, parentCategory]);
 
   const deleteCategories = useCallback(() => {
