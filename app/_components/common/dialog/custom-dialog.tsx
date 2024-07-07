@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { PopOverProps } from "../popover/custom-popover";
+import { cn } from "@/lib/utils";
 
 interface CustomDialogProps extends PopOverProps {
   title?: string | ReactNode;
@@ -17,6 +18,9 @@ interface CustomDialogProps extends PopOverProps {
   footerContent?: ReactNode;
   open?: boolean;
   onOpenChange?(val: boolean): void;
+  titleClasses?: string;
+  descriptionClasses?: string;
+  className?: string;
 }
 
 export function CustomDialog({
@@ -27,14 +31,26 @@ export function CustomDialog({
   footerContent,
   open,
   onOpenChange,
+  titleClasses,
+  descriptionClasses,
+  className,
 }: CustomDialogProps) {
   return (
     <Dialog onOpenChange={(oopen) => onOpenChange?.(oopen)} open={open}>
-      <DialogTrigger>{triggerChildren}</DialogTrigger>
-      <DialogContent className="min-w-[28rem] w-fit h-fit max-h-[85vh] max-w-[75vw] bg-neutral-50">
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
+      <DialogTrigger className="w-full h-full" asChild>
+        {triggerChildren}
+      </DialogTrigger>
+      <DialogContent
+        className={cn(
+          "min-w-[28rem] w-fit h-fit max-h-[85vh] max-w-[75vw] bg-neutral-50 gap-1",
+          className
+        )}
+      >
+        <DialogHeader hidden>
+          <DialogTitle className={cn(titleClasses)}>{title}</DialogTitle>
+          <DialogDescription className={cn(descriptionClasses)}>
+            {description}
+          </DialogDescription>
         </DialogHeader>
         <div>{children}</div>
         <DialogFooter>{footerContent}</DialogFooter>

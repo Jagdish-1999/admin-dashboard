@@ -7,6 +7,8 @@ import ProfileAvatar from "./profile-avatar";
 import { useCallback } from "react";
 import { logoutUser } from "@/slices/user.slice";
 import { useImagePreloader } from "@/lib/preload-image";
+import { CustomDialog } from "../common/dialog/custom-dialog";
+import Register from "../register";
 
 const ProfileInfo = () => {
   const router = useRouter();
@@ -37,18 +39,20 @@ const ProfileInfo = () => {
         </div>
       </div>
       <hr className="border-neutral-500/50" />
-      <div className="px-3 py-2 w-full">
+      <div className="w-full h-full">
         {!isLogin ? (
-          <Button
-            onClick={() => {
-              setTimeout(() => {
-                router.push("/register");
-              }, 300);
-            }}
-            className="bg-neutral-500/15 hover:bg-neutral-500/25 gap-2 w-full text-sm rounded-sm font-semibold"
+          <CustomDialog
+            descriptionClasses="hidden"
+            titleClasses="hidden"
+            className="gap-0"
+            triggerChildren={
+              <Button className="bg-neutral-500/15 hover:bg-neutral-400/30 w-full text-sm rounded-sm font-semibold border-neutral-400/50 transition-all duration-200">
+                Login
+              </Button>
+            }
           >
-            Login
-          </Button>
+            <Register />
+          </CustomDialog>
         ) : (
           <Button
             onClick={logoutUserFun}
