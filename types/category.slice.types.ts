@@ -16,7 +16,7 @@ export interface EachCategoryType {
   isUpdating: boolean;
   isSelected?: boolean;
   parent: ParentCategoryType;
-  properties: { propertyName: string; propertyValue: string }[];
+  properties: { name: string; values: string[] }[];
 }
 
 export interface Category {

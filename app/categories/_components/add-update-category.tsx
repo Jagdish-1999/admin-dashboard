@@ -42,8 +42,8 @@ const AddUpdateCategories = ({
   >(
     category
       ? category.properties.map((each) => ({
-          propertyName: each.propertyName,
-          propertyValue: each.propertyValue,
+          propertyName: each.name,
+          propertyValue: each.values?.join(","),
         }))
       : []
   );
@@ -91,7 +91,7 @@ const AddUpdateCategories = ({
       createUpdateCategory({
         id: category?.id,
         name: categoryName,
-        parent: parentCategory.trim() !== "" ? parentCategory : null,
+        parent: parentCategory.trim(),
         properties: addedProperties,
       })
     );
