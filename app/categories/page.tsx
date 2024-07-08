@@ -188,6 +188,7 @@ const Category = () => {
 
         <div className="w-full h-full relative">
           <Table<EachCategoryType>
+            noDataText="No category exists"
             data={data}
             columns={COLUMNS}
             isLoading={isLoading}

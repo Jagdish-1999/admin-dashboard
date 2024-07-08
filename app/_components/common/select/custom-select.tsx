@@ -27,15 +27,17 @@ const CustomSelect = <T extends { _id: string; name: string }>({
 }: CustomSelectProps<T>) => {
   return (
     <span className="flex flex-col w-full gap-0.5">
-      <label
-        className={cn(
-          "select-none text-neutral-900/50 transition-all duration-150 text-xs",
-          value && "text-neutral-900/90"
-        )}
-      >
-        {label || "Category"}
-        {required && <span className={cn(!value && "text-red-500")}> *</span>}
-      </label>
+      {label && (
+        <label
+          className={cn(
+            "select-none text-neutral-900/50 transition-all duration-150 text-xs",
+            value && "text-neutral-900/90"
+          )}
+        >
+          {label || "Category"}
+          {required && <span className={cn(!value && "text-red-500")}> *</span>}
+        </label>
+      )}
       <Select onValueChange={onChange} value={value}>
         <SelectTrigger
           className={cn(

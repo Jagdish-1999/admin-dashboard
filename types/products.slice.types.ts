@@ -1,3 +1,4 @@
+import { ProductPropertiesTypes } from "@/app/products/_components/add-update-product";
 import { ProductImagesTypes } from ".";
 
 export interface UpdateProductTypes {
@@ -13,6 +14,7 @@ export interface CreateUpdateProductTypes {
   price: number;
   quantity: number;
   category: string;
+  properties: ProductPropertiesTypes[];
   images: ProductImagesTypes[];
 }
 

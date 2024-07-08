@@ -12,14 +12,14 @@ import { EachCategoryType } from "@/types/category.slice.types";
 import { ImSpinner8 } from "react-icons/im";
 import { CiEdit } from "react-icons/ci";
 
-export interface AddedPropertiesTypes {
-  propertyName: string;
-  propertyValue: string;
-}
-
 interface AddUpdateCategoriesProps {
   category?: EachCategoryType;
   onCellLabelClick?(): void;
+}
+
+export interface PropertyInputTypes {
+  name: string;
+  value: string;
 }
 
 const AddUpdateCategories = ({
@@ -37,13 +37,11 @@ const AddUpdateCategories = ({
   const [addProperty, setAddProperty] = useState<number[]>(
     category ? category.properties.map((_, idx) => idx) : []
   );
-  const [addedProperties, setAdddedProperties] = useState<
-    AddedPropertiesTypes[]
-  >(
+  const [addedProperties, setAdddedProperties] = useState<PropertyInputTypes[]>(
     category
       ? category.properties.map((each) => ({
-          propertyName: each.name,
-          propertyValue: each.values?.join(","),
+          name: each.name,
+          value: each.values.join(","),
         }))
       : []
   );
@@ -75,10 +73,7 @@ const AddUpdateCategories = ({
 
   const handleAddProperty = useCallback(() => {
     setAddProperty((prev) => [prev.length, ...prev]);
-    setAdddedProperties((prev) => [
-      ...prev,
-      { propertyName: "", propertyValue: "" },
-    ]);
+    setAdddedProperties((prev) => [...prev, { name: "", value: "" }]);
   }, []);
 
   const handleRemoveProperty = useCallback((index: number) => {
@@ -91,15 +86,18 @@ const AddUpdateCategories = ({
       createUpdateCategory({
         _id: category?._id,
         name: categoryName,
-        parent: parentCategory.trim(),
-        properties: addedProperties,
+        parent: parentCategory?.trim(),
+        properties: addedProperties.map((eachProperty) => ({
+          name: eachProperty.name,
+          values: eachProperty.value.split(","),
+        })),
       })
     );
     if (!category?._id) {
-      setCategoryName("");
-      setAddProperty([]);
-      setAdddedProperties([]);
-      setParentCategory("");
+      // setCategoryName("");
+      // setAddProperty([]);
+      // setAdddedProperties([]);
+      // setParentCategory("");
     }
     setOpen(false);
   }, [addedProperties, category?._id, categoryName, dispatch, parentCategory]);
@@ -192,7 +190,7 @@ const AddUpdateCategories = ({
               index={index}
               currentProperty={
                 addedProperties.find((_, idx) => idx === index) ||
-                ({} as AddedPropertiesTypes)
+                ({} as PropertyInputTypes)
               }
               handleRemoveProperty={handleRemoveProperty}
               handlePropertyInputChange={handlePropertyInputChange}

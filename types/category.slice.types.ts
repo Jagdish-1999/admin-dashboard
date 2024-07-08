@@ -1,9 +1,12 @@
-import { AddedPropertiesTypes } from "@/app/categories/_components/add-update-category";
-
+export interface PropertiesTypes {
+  name: string;
+  values: string[];
+}
 export interface ParentCategoryType {
   createdAt: string;
   updatedAt: string;
   name: string;
+  properties: PropertiesTypes[];
   _id: string;
 }
 export interface EachCategoryType {
@@ -15,8 +18,10 @@ export interface EachCategoryType {
   isUpdating: boolean;
   isSelected?: boolean;
   parent: ParentCategoryType;
-  properties: { name: string; values: string[] }[];
+  properties: PropertiesTypes[];
 }
+
+export interface CategoryType {}
 
 export interface Category {
   data: EachCategoryType[];
@@ -26,6 +31,6 @@ export interface Category {
 export interface CreateCategoryPayload {
   name: string;
   parent?: string | null;
-  properties?: AddedPropertiesTypes[];
+  properties?: PropertiesTypes[];
   _id?: string;
 }

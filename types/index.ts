@@ -1,3 +1,4 @@
+import { ProductPropertiesTypes } from "@/app/products/_components/add-update-product";
 import { EachCategoryType } from "./category.slice.types";
 
 export interface ProductImagesTypes {
@@ -29,6 +30,7 @@ export interface ProductTypes {
   category: EachCategoryType;
   price: number;
   quantity: number;
+  properties: ProductPropertiesTypes[];
   _id: string;
   id: string;
 }

@@ -17,6 +17,7 @@ const Table = <T extends TableItem>({
   isLoading,
   warnRows,
   onCellLabelClick,
+  noDataText,
 }: TableProps<T>) => {
   const showWarnRows = useCallback(
     (itemId: string) => {
@@ -75,7 +76,9 @@ const Table = <T extends TableItem>({
                 </TableRow>
               );
             })}
-          {!data.length && !isLoading && <NoDataAvalable />}
+          {!data.length && !isLoading && (
+            <NoDataAvalable noDataText={noDataText} />
+          )}
           {data.length > 0 && !isLoading && (
             <TableCounter totalCount={data.length} currentCount={data.length} />
           )}

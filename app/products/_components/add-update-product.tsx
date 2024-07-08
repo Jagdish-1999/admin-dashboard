@@ -19,10 +19,16 @@ import { CustomDialog } from "@/app/_components/common/dialog/custom-dialog";
 import { CiEdit } from "react-icons/ci";
 import { CustomSelect } from "@/app/_components/common/select/custom-select";
 import { fetchCategories } from "@/slices/category.slice";
+import { PropertiesTypes } from "@/types/category.slice.types";
 
 interface AddUpdateProductProps {
   product?: ProductTypes;
   onCellLabelClick?(): void;
+}
+
+export interface ProductPropertiesTypes {
+  name: string;
+  value: string;
 }
 
 const initialProductInputData: ProductInputDataProps = {
@@ -52,7 +58,12 @@ const AddUpdateProduct = ({
           }
         : initialProductInputData
     );
-  const [category, setCategory] = useState(product ? product.category._id : "");
+  const [category, setCategory] = useState(
+    product ? product.category?._id : ""
+  );
+  const [selectProperties, setSelectProperties] = useState<
+    ProductPropertiesTypes[]
+  >(product ? product.properties : []);
 
   const isLoading = useAppSelector((state) => state.products.isLoading);
   const categories = useAppSelector((state) => state.categories.data);
@@ -64,6 +75,7 @@ const AddUpdateProduct = ({
       quantity: productInputData.quantity,
       price: productInputData.price,
       images: productImages,
+      properties: selectProperties,
       category,
     };
 
@@ -76,6 +88,7 @@ const AddUpdateProduct = ({
     productInputData.quantity,
     productInputData.price,
     productImages,
+    selectProperties,
     category,
     dispatch,
     product?._id,
@@ -103,7 +116,7 @@ const AddUpdateProduct = ({
   );
 
   useEffect(() => {
-    if (!categories.length && initialRef.current) {
+    if (initialRef.current) {
       dispatch(fetchCategories());
       initialRef.current = false;
     }
@@ -115,20 +128,64 @@ const AddUpdateProduct = ({
       !productInputData.description ||
       !productInputData.quantity ||
       !productInputData.price ||
+      !category ||
       !productImages.length
     ) {
       return true;
     }
-  }, [productInputData, productImages.length]);
+  }, [
+    productInputData.name,
+    productInputData.description,
+    productInputData.quantity,
+    productInputData.price,
+    category,
+    productImages.length,
+  ]);
 
   const categoryInfo = useMemo(() => {
+    let properties: PropertiesTypes[] = [];
     if (category && categories.length > 0) {
-      return categories.find((cat) => cat._id === category);
+      const selectedCategory = categories.find((cat) => cat._id === category);
+      properties =
+        selectedCategory?.properties?.map((eachProperty) => ({
+          name: eachProperty.name,
+          values: eachProperty.values,
+        })) || ([] as PropertiesTypes[]);
+      if (
+        selectedCategory?.parent &&
+        selectedCategory.parent.properties?.length
+      ) {
+        properties = [...properties, ...selectedCategory.parent.properties];
+      }
     }
-    return undefined;
+    return properties;
   }, [categories, category]);
 
-  console.log("categoryInfo", categoryInfo);
+  useEffect(() => {
+    const existingProperties = product?.properties;
+    const notInProduct = categoryInfo.map((cat) => ({
+      name: cat.name,
+      value: "",
+    }));
+
+    if (existingProperties?.length === notInProduct.length) {
+      setSelectProperties(existingProperties);
+    } else {
+      let arr: ProductPropertiesTypes[] = [];
+      const result = notInProduct.reduce((acc, curr) => {
+        const addTo = existingProperties?.find(
+          (each) => each.name === curr.name
+        );
+        if (addTo) {
+          acc = [...acc, addTo] as ProductPropertiesTypes[];
+        } else {
+          acc = [...acc, curr] as ProductPropertiesTypes[];
+        }
+        return acc;
+      }, arr);
+      setSelectProperties(result);
+    }
+  }, [categoryInfo, product]);
 
   return (
     <>
@@ -187,6 +244,48 @@ const AddUpdateProduct = ({
               }}
             />
           </div>
+          {categoryInfo.length > 0 && (
+            <div className="flex flex-col gap-4">
+              {categoryInfo.map((property) => (
+                <div className="flex gap-4" key={property.name}>
+                  <Input
+                    disabled
+                    id="property-name"
+                    name={property.name}
+                    className="uppercase"
+                    placeholder={property.name}
+                    value={property.name}
+                  />
+                  <CustomSelect
+                    required
+                    className="h-full"
+                    options={property.values?.map((eachProperty) => ({
+                      _id: eachProperty,
+                      name: eachProperty,
+                    }))}
+                    value={
+                      selectProperties.find((val) => val.name === property.name)
+                        ?.value || ""
+                    }
+                    placeholder={`Select ${property.name}`}
+                    onChange={(val: string) => {
+                      console.log("Value", val);
+                      setSelectProperties((prevProperty) =>
+                        prevProperty.map((eachProperty) =>
+                          eachProperty.name === property.name
+                            ? {
+                                ...eachProperty,
+                                value: val === "null" ? "" : val,
+                              }
+                            : eachProperty
+                        )
+                      );
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
           <div className="flex gap-4">
             <Input
               required
@@ -233,20 +332,21 @@ const AddUpdateProduct = ({
             error={!productImages.length}
             value={""}
           />
-          <h6
-            className={cn(
-              "text-[10px] indent-0.5 mt-2 text-red-500 opacity-100 transition-all duration-150",
-              !isErrorVisible && "opacity-0"
-            )}
-          >
-            All fields marked with{" "}
-            <span className="text-red-600 text-[14px]">*</span> are required!
-          </h6>
+          {isErrorVisible && (
+            <h6
+              className={cn(
+                "text-[10px] indent-0.5 mt-2 text-red-500 opacity-100 transition-all duration-150",
+                !isErrorVisible && "opacity-0"
+              )}
+            >
+              All fields marked with{" "}
+              <span className="text-red-600 text-[14px]">*</span> are required!
+            </h6>
+          )}
           <Button
+            disabled={isErrorVisible}
             className={cn(
-              "select-none border flex justify-center items-center gap-1.5 font-semibold text-neutral-900/80 hover:border-neutral-500/25 hover:text-neutral-900/90 border-neutral-500/15  transition-all duration-150 text-sm w-44 rounded-sm bg-neutral-500/15 hover:bg-neutral-500/25",
-              isErrorVisible &&
-                " border-neutral-500/10 text-neutral-600/70 hover:text-neutral-600 hover:border-neutral-500/10 hover:bg-neutral-500/15 cursor-not-allowed",
+              "select-none border flex justify-center items-center gap-1.5 font-semibold text-neutral-900/80 hover:border-neutral-500/25 hover:text-neutral-900/90 border-neutral-500/15  transition-all duration-150 text-sm w-44 mt-2 rounded-sm bg-neutral-500/15 hover:bg-neutral-500/25 disabled:border-neutral-500/10 disabled:text-neutral-600/70",
               isLoading && "bg-green-400/30"
             )}
             type="submit"

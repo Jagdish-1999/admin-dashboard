@@ -15,7 +15,7 @@ import { COLUMNS } from "./_components/columns";
 import { AddUpdateProduct } from "./_components/add-update-product";
 
 const Products = () => {
-  const initialRef = useRef(false);
+  const initialRef = useRef(true);
   const dispatch = useAppDispatch();
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [isDeletingProducts, setIsDeletingProducts] = useState<boolean>(false);
@@ -82,11 +82,11 @@ const Products = () => {
           try {
             (async () => {
               const res = await dispatch(
-                deleteProductWithIds([context.item.id])
+                deleteProductWithIds([context.item._id])
               );
               if (res.meta.requestStatus === "fulfilled") {
                 setSelectedProducts((prevIds) =>
-                  prevIds.filter((sid) => sid !== context.item.id)
+                  prevIds.filter((sid) => sid !== context.item._id)
                 );
               }
             })();
@@ -102,11 +102,11 @@ const Products = () => {
   );
 
   useEffect(() => {
-    if (productList.length === 0 && !initialRef.current) {
+    if (productList.length === 0 && initialRef.current) {
       try {
         dispatch(fetchProducts());
       } catch (error) {}
-      initialRef.current = true;
+      initialRef.current = false;
     }
   }, [dispatch, productList, productList.length]);
 
@@ -190,6 +190,7 @@ const Products = () => {
           </div>
         </div>
         <Table<ProductsItemTypes>
+          noDataText="No product exists"
           data={data}
           isLoading={isLoading}
           columns={COLUMNS}

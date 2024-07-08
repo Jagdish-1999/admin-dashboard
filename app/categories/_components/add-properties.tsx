@@ -1,7 +1,8 @@
 import Input from "@/app/products/_components/Input";
+import { PropertiesTypes } from "@/types/category.slice.types";
 import { ChangeEvent, useCallback } from "react";
 import { MdDeleteForever } from "react-icons/md";
-import { AddedPropertiesTypes } from "../page";
+import { PropertyInputTypes } from "./add-update-category";
 
 interface AddPropertiesProps {
   index: number;
@@ -10,7 +11,7 @@ interface AddPropertiesProps {
     evt: ChangeEvent<HTMLInputElement>,
     index: number
   ): void;
-  currentProperty: AddedPropertiesTypes;
+  currentProperty: PropertyInputTypes;
 }
 
 const AddProperties = ({
@@ -25,21 +26,22 @@ const AddProperties = ({
         required
         type="text"
         label="Property name"
-        name="propertyName"
+        name="name"
+        className="uppercase"
         placeholder="Property name (Ex. RAM)"
         id={`currentProperty-${index}`}
-        value={currentProperty.propertyName}
+        value={currentProperty.name}
         onChange={(evt) => handlePropertyInputChange(evt, index)}
       />
       <Input
         required
         type="text"
         label="Property value"
-        name="propertyValue"
+        name="value"
         placeholder="Values (Ex. 6GB,8GB)"
         id={`currentProperty-${index}`}
-        value={currentProperty.propertyValue}
-        disabled={!currentProperty.propertyName}
+        value={currentProperty.value}
+        disabled={!currentProperty.name}
         onChange={(evt) => handlePropertyInputChange(evt, index)}
       />
       <MdDeleteForever

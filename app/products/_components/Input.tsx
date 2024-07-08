@@ -9,7 +9,7 @@ import { IoIosEye } from "react-icons/io";
 import { LiaEyeSlash } from "react-icons/lia";
 
 interface InputProps {
-  type: string;
+  type?: string;
   id: string;
   ref?: Ref<HTMLInputElement>;
   name?: string;
@@ -18,7 +18,7 @@ interface InputProps {
   error?: boolean;
   required?: boolean;
   value: string | number;
-  onChange(evt: React.ChangeEvent<HTMLInputElement>): void;
+  onChange?(evt: React.ChangeEvent<HTMLInputElement>): void;
   productImages?: ProductImagesTypes[];
   setProductImages?: React.Dispatch<React.SetStateAction<ProductImagesTypes[]>>;
   className?: string;
