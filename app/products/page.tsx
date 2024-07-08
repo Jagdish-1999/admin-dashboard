@@ -14,14 +14,9 @@ import { Table } from "@/app/_components/common/table/table";
 import { ContextType } from "@/lib/column-cell-label-wrapper";
 import SuppressHydration from "@/lib/suppresh-hydration";
 import { COLUMNS } from "./_components/columns";
+import { CustomDialog } from "../_components/common/dialog/custom-dialog";
 import { Button } from "@/components/ui/button";
-
-export interface ProductListProps {
-  _id: string;
-  productName: string;
-  description: string;
-  price: string;
-}
+import { AddUpdateProduct } from "./_components/add-update-product";
 
 const Products = () => {
   const initialRef = useRef(false);
@@ -56,6 +51,7 @@ const Products = () => {
     },
     []
   );
+
   const deleteProducts = useCallback(async () => {
     setIsDeletingProducts(true);
     try {
@@ -68,20 +64,20 @@ const Products = () => {
     }
   }, [dispatch, selectedProducts]);
 
-  const onCellClick = useCallback((item: ProductsItemTypes) => {
-    const { productName, description, price, _id, images, qty } = item;
-    localStorage.setItem(
-      "edited-product",
-      JSON.stringify({
-        productName,
-        description,
-        images,
-        price,
-        qty,
-        id: _id,
-      })
-    );
-  }, []);
+  // const onCellClick = useCallback((item: ProductsItemTypes) => {
+  //   const { name, description, price, _id, images, quantity } = item;
+  //   localStorage.setItem(
+  //     "edited-product",
+  //     JSON.stringify({
+  //       name,
+  //       description,
+  //       images,
+  //       price,
+  //       quantity,
+  //       id: _id,
+  //     })
+  //   );
+  // }, []);
 
   const onCellLabelClick = useCallback(
     (context: ContextType<ProductsItemTypes>) => {
@@ -103,8 +99,9 @@ const Products = () => {
           break;
         }
         case "edit": {
-          onCellClick(context.item);
-          router.push("/products/edit");
+          console.log("[EDITED] ", context);
+          // onCellClick(context.item);
+          // router.push("/products/edit");
           break;
         }
         case "delete": {
@@ -127,7 +124,7 @@ const Products = () => {
         }
       }
     },
-    [dispatch, onCellClick, onSelect, productList, router]
+    [dispatch, onSelect, productList]
   );
 
   useEffect(() => {
@@ -155,7 +152,7 @@ const Products = () => {
       <div className="flex flex-col gap-3 p-2 pt-0 w-full h-full">
         <div className="flex justify-between items-center">
           {/* //TODO  need to add search and filters in product list*/}
-          <div className="underline italic"></div>
+          <div className="underline italic text-neutral-100">Todo</div>
           <div className="flex w-fit h-full gap-2 items-center">
             <div
               className={cn(
@@ -195,12 +192,12 @@ const Products = () => {
                     ) : (
                       <div
                         className={cn(
-                          "flex items-center justify-center w-full h-full"
+                          "flex items-center justify-center w-full h-full  transition-all duration-150 ease-in "
                         )}
                       >
                         <MdDeleteForever
                           className={cn(
-                            "min-w-8 min-h-8 w-8 h-8 text-red-700 transition-all duration-150 ease-in p-2 font-semibold opacity-100"
+                            "min-w-8 min-h-8 w-8 h-8 text-red-700 p-2 font-semibold opacity-100"
                           )}
                         />
                         <div className="flex pr-2 -ml-0.5">Delete all</div>
@@ -215,12 +212,7 @@ const Products = () => {
                 </span>
               </CustomAlertDialog>
             </div>
-            <Link href="/products/new">
-              <div className="flex gap-1 items-center justify-center bg-teal-100/20 hover:bg-teal-100/40 border border-teal-600 rounded-sm h-full w-fit px-2 py-1.5 transition-all duration-150 text-sm text-teal-700">
-                <MdAdd className="w-5 h-5" />
-                Add product
-              </div>
-            </Link>
+            <AddUpdateProduct />
           </div>
         </div>
         <Table<ProductsItemTypes>

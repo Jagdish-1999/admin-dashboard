@@ -51,7 +51,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         <div className="w-full">
           <h4
             className={cn(
-              "text-slate-900/70 text-xs -mb-1 w-fit",
+              "text-neutral-900/50 text-xs -mb-1 w-fit",
               productImages?.length && "text-slate-900/90"
             )}
           >
@@ -128,7 +128,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             htmlFor={id}
             className={cn(
               "select-none text-neutral-900/50 transition-all duration-150 text-xs",
-              value && "text-neutral-900/90"
+              value && "text-slate-900/90"
             )}
           >
             {label}

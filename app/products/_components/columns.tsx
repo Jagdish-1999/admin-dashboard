@@ -12,6 +12,10 @@ import { TableColumnTypes } from "@/types/table.types";
 import { CiEdit } from "react-icons/ci";
 import { ImSpinner8 } from "react-icons/im";
 import { MdDeleteForever } from "react-icons/md";
+import { CustomDialog } from "@/app/_components/common/dialog/custom-dialog";
+import { AddUpdateProduct } from "./add-update-product";
+import { ProductTypes } from "@/types";
+import { Button } from "@/components/ui/button";
 
 export const COLUMNS = [
   {
@@ -55,7 +59,7 @@ export const COLUMNS = [
   },
   {
     id: "product-name",
-    accessKey: "productName",
+    accessKey: "name",
     headClasses:
       "py-1 text-sm text-[15px] text-slate-900/80 font-semibold cursor-default",
     className: "w-[20%] min-w-[120px] text-[13px] text-slate-900/75",
@@ -86,13 +90,13 @@ export const COLUMNS = [
     },
   },
   {
-    id: "qty",
-    accessKey: "qty",
+    id: "Quantity",
+    accessKey: "quantity",
     headClasses:
       "py-1 text-[15px] text-slate-900/80 font-semibold cursor-default",
     className:
       "w-[10%] min-w-[80px] flex items-center justify-center text-[13px] text-slate-900/75",
-    headCellLabel: () => "Qty",
+    headCellLabel: () => "Quantity",
     bodyCellLabel: function ({ item }) {
       return item[this.accessKey];
     },
@@ -141,28 +145,15 @@ export const COLUMNS = [
     bodyCellLabel: tableLabelTextWrapper.call(
       { id: "edit", accessKey: "edit" },
       function (context: ContextType<ProductsItemTypes | unknown>): ReactNode {
-        return (
-          <CiEdit
-            strokeWidth={1}
-            onClick={() => {
-              context.onCellLabelClick(context);
-            }}
-            className={cn(
-              "min-w-8 min-h-8 w-8 h-8 hover:bg-green-500/20 text-green-700 transition-all duration-150 ease-linear p-2 rounded-full font-semibold opacity-100"
-            )}
-          />
-        );
+        return <AddUpdateProduct product={context.item as ProductTypes} />;
       }
     ),
-    headCellLabel: function () {
-      return "";
-    },
+    headCellLabel: () => "",
   },
   {
     id: "delete",
     accessKey: "delete",
     headClasses: "py-1 mr-1.5 cursor-default",
-    disableOnWarn: true,
     className:
       "flex items-center justify-center w-[5%] min-w-[5%] text-[13px] text-slate-900/90",
     bodyCellLabel: tableLabelTextWrapper.call(
@@ -186,9 +177,6 @@ export const COLUMNS = [
                   </div>
                 }
                 onContinue={async () => {
-                  const { id } = JSON.parse(
-                    localStorage.getItem("edited-product") || "{}"
-                  );
                   context.onCellLabelClick(context);
                 }}
                 triggerChildren={
@@ -209,8 +197,6 @@ export const COLUMNS = [
         );
       }
     ),
-    headCellLabel: function () {
-      return "";
-    },
+    headCellLabel: () => "",
   },
 ] as TableColumnTypes<ProductsItemTypes>[];

@@ -48,7 +48,7 @@ const AddUpdateCategories = ({
       : []
   );
 
-  const { data: categoriesList } = useAppSelector((state) => state.categories);
+  const categories = useAppSelector((state) => state.categories.data);
 
   const handleChange = useCallback(
     (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,16 +127,16 @@ const AddUpdateCategories = ({
                   onCellLabelClick?.(category);
                 }}
                 className={cn(
-                  "min-w-8 min-h-8 w-8 h-8 hover:bg-green-300/30 transition-all duration-150 ease-linear p-2 rounded-full font-semibold opacity-100"
+                  "min-w-8 min-h-8 w-8 h-8 hover:bg-green-500/20 transition-all duration-150 ease-linear p-2 rounded-full font-semibold opacity-100"
                 )}
               />
             )}
           </div>
         ) : (
-          <div className="flex items-center justify-center gap-1 text-sm border border-teal-600 font-semibold rounded-sm h-full w-fit px-2 hover:bg-teal-100/40 bg-teal-100/20 text-teal-700 transition-all duration-150 font-afacad">
+          <Button className="flex items-center justify-center gap-1 text-sm border border-teal-600 font-semibold rounded-sm h-full w-fit py-1.5 px-1.5 hover:bg-teal-100/40 bg-teal-100/20 text-teal-700 transition-all duration-150 font-afacad">
             <MdAdd className="w-5 h-5" />
             Add category
-          </div>
+          </Button>
         )
       }
       footerContent={
@@ -173,7 +173,7 @@ const AddUpdateCategories = ({
         <CustomSelect
           className="h-full"
           required={false}
-          options={categoriesList}
+          options={categories}
           value={parentCategory}
           label="Parent category"
           onChange={(val: string) => {

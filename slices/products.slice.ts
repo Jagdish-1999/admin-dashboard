@@ -10,7 +10,6 @@ import {
   ProductsTypes,
 } from "@/types/products.slice.types";
 import { formHeaders } from "@/lib/form.header";
-import { DESCRIPTION, PRICE, PRODUCT_NAME, QUANTITY } from "@/types";
 
 export const fetchProducts = createAsyncThunk(
   "fetchProducts",
@@ -41,11 +40,10 @@ export const createUpdateProduct = createAsyncThunk(
       id,
     }: {
       payload: CreateUpdateProductTypes;
-      id: string;
+      id?: string;
     },
     { getState }
   ): Promise<any> => {
-    //TODO need to handle errors
     const formData = new FormData();
     const existingImages: string[] = [];
 
@@ -53,17 +51,11 @@ export const createUpdateProduct = createAsyncThunk(
       if (files.file) formData.append("images", files.file);
       else if (files.id) existingImages.push(files.id);
     });
-    const body = {
-      [PRODUCT_NAME]: payload[PRODUCT_NAME],
-      [DESCRIPTION]: payload[DESCRIPTION],
-      [QUANTITY]: payload[QUANTITY],
-      [PRICE]: payload[PRICE],
-    };
 
     if (existingImages.length)
       formData.append("images", JSON.stringify(existingImages));
 
-    formData.append("payload", JSON.stringify(body));
+    formData.append("payload", JSON.stringify(payload));
 
     let data = {} as ApiResponseTypes<ProductsItemTypes>;
     if (id) {

@@ -1,25 +1,26 @@
 import { ProductImagesTypes } from ".";
 
 export interface UpdateProductTypes {
-  productName: "";
+  name: "";
   description: "";
-  price: number | null;
-  qty: number | null;
+  price: number;
+  quantity: number;
 }
 
 export interface CreateUpdateProductTypes {
-  productName: string;
+  name: string;
   description: string;
-  price: number | null;
-  qty: number | null;
+  price: number;
+  quantity: number;
+  category: string;
   images: ProductImagesTypes[];
 }
 
 export interface ProductsItemTypes {
   _id: string;
   id: string;
-  qty: number;
-  productName: string;
+  quantity: number;
+  name: string;
   description: string;
   price: number;
   createdAt: string;

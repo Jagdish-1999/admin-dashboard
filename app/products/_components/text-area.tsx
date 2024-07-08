@@ -27,7 +27,7 @@ const TextArea = ({
         htmlFor={id}
         className={cn(
           "select-none mb-0.5 text-neutral-900/50 text-xs",
-          value && "text-neutral-900/90"
+          value && "text-slate-900/90"
         )}
       >
         {label}
