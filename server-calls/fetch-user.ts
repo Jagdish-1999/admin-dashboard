@@ -15,7 +15,7 @@ const fetchUser = async () => {
     });
     return res.data.data;
   } catch (error: any) {
-    console.log("[Error] when fetch user on server: ", error);
+    console.log("[Error] when fetch user on server: ", error?.message);
     return null;
   }
 };

@@ -15,7 +15,8 @@ export const Navbar = () => {
           alt="logo"
           width={35}
           height={35}
-          loading="eager"
+          className="w-[35px] h-[35px]"
+          priority
         />
         Ecommerse Admin
       </Link>

@@ -9,11 +9,12 @@ import {
 } from "@/slices/user.slice";
 import { useAppDispatch, useAppSelector } from "@/stores/store";
 import Register from "@/app/_components/register";
+import Loading from "@/app/loading";
 
 const ServerCallsProvider = ({ children }: { children: React.ReactNode }) => {
   const initialRef = useRef(true);
   const dispatch = useAppDispatch();
-  const { isLogin } = useAppSelector((state) => state.userDetails);
+  const { isLogin, isLoading } = useAppSelector((state) => state.userDetails);
 
   useEffect(() => {
     if (initialRef.current && !isLogin) {
@@ -28,6 +29,10 @@ const ServerCallsProvider = ({ children }: { children: React.ReactNode }) => {
     }
     initialRef.current = false;
   }, [dispatch, isLogin]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   if (!isLogin)
     return (

@@ -10,6 +10,8 @@ import { cn } from "@/lib/utils";
 interface CustomSelectProps<T> {
   options: T[];
   onChange(val: string): void;
+  id?: string;
+  name?: string;
   value: string;
   className?: string;
   label?: string;
@@ -17,6 +19,8 @@ interface CustomSelectProps<T> {
   placeholder?: string;
 }
 const CustomSelect = <T extends { _id: string; name: string }>({
+  id,
+  name,
   options,
   onChange,
   value,
@@ -28,7 +32,7 @@ const CustomSelect = <T extends { _id: string; name: string }>({
   return (
     <span className="flex flex-col w-full gap-0.5">
       {label && (
-        <label
+        <div
           className={cn(
             "select-none text-neutral-900/50 transition-all duration-150 text-xs",
             value && "text-neutral-900/90"
@@ -36,9 +40,9 @@ const CustomSelect = <T extends { _id: string; name: string }>({
         >
           {label || "Category"}
           {required && <span className={cn(!value && "text-red-500")}> *</span>}
-        </label>
+        </div>
       )}
-      <Select onValueChange={onChange} value={value}>
+      <Select onValueChange={onChange} value={value} name={name}>
         <SelectTrigger
           className={cn(
             "w-auto font-dm-sans p-3 rounded-sm text-xs text-[12px] border-neutral-900/90 bg-[#e7f0fe] text-neutral-900/70",
@@ -49,6 +53,7 @@ const CustomSelect = <T extends { _id: string; name: string }>({
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent
+          id={id}
           className={cn("font-dm-sans absolute backdrop-blur-md")}
           style={{ background: "#77777799", color: "#fff", maxHeight: "300px" }}
         >

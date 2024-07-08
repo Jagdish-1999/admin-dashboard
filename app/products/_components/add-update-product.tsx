@@ -116,7 +116,7 @@ const AddUpdateProduct = ({
   );
 
   useEffect(() => {
-    if (initialRef.current) {
+    if (initialRef.current && !categories.length) {
       dispatch(fetchCategories());
       initialRef.current = false;
     }
@@ -234,6 +234,7 @@ const AddUpdateProduct = ({
               value={productInputData.name}
             />
             <CustomSelect
+              name="category"
               required
               className="h-full"
               options={categories}
@@ -250,13 +251,14 @@ const AddUpdateProduct = ({
                 <div className="flex gap-4" key={property.name}>
                   <Input
                     disabled
-                    id="property-name"
+                    id={property.name}
                     name={property.name}
                     className="uppercase"
                     placeholder={property.name}
                     value={property.name}
                   />
                   <CustomSelect
+                    name={property.name}
                     required
                     className="h-full"
                     options={property.values?.map((eachProperty) => ({
@@ -269,7 +271,6 @@ const AddUpdateProduct = ({
                     }
                     placeholder={`Select ${property.name}`}
                     onChange={(val: string) => {
-                      console.log("Value", val);
                       setSelectProperties((prevProperty) =>
                         prevProperty.map((eachProperty) =>
                           eachProperty.name === property.name
@@ -299,7 +300,7 @@ const AddUpdateProduct = ({
             />
             <Input
               required
-              id="qty"
+              id="quantity"
               type="number"
               label="Quantity"
               name="quantity"

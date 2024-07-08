@@ -142,6 +142,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           id={id}
           ref={ref}
           name={name}
+          autoComplete={`${name}`}
           value={value ?? ""}
           type={showPassword ? "text" : type || "text"}
           placeholder={placeholder}

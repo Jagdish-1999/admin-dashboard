@@ -62,7 +62,7 @@ export const logoutUser = createAsyncThunk(
 
 const initialState: UserType = {
   isLogin: false,
-  isLoading: false,
+  isLoading: true,
   user: null,
 };
 
