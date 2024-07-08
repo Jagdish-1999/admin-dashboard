@@ -1,6 +1,7 @@
 import { GrUserAdmin } from "react-icons/gr";
 import { UserProfile } from "./user-profile/user-profile";
 import Link from "next/link";
+import Image from "next/image";
 
 export const Navbar = () => {
   return (
@@ -9,7 +10,13 @@ export const Navbar = () => {
         href="/"
         className="flex gap-2 items-center select-none text-[17px]"
       >
-        <GrUserAdmin strokeWidth={3} />
+        <Image
+          src="/logo.svg"
+          alt="logo"
+          width={35}
+          height={35}
+          loading="eager"
+        />
         Ecommerse Admin
       </Link>
       <UserProfile />
