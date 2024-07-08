@@ -8,6 +8,7 @@ import {
   updateUserLoading,
 } from "@/slices/user.slice";
 import { useAppDispatch, useAppSelector } from "@/stores/store";
+import Register from "@/app/_components/register";
 
 const ServerCallsProvider = ({ children }: { children: React.ReactNode }) => {
   const initialRef = useRef(true);
@@ -27,6 +28,22 @@ const ServerCallsProvider = ({ children }: { children: React.ReactNode }) => {
     }
     initialRef.current = false;
   }, [dispatch, isLogin]);
+
+  if (!isLogin)
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <div
+          className="border border-neutral-300 p-6 rounded-md "
+          style={{
+            width: "32rem",
+            maxHeight: "fit-content",
+          }}
+        >
+          <Register />
+        </div>
+      </div>
+    );
+
   return <>{children}</>;
 };
 

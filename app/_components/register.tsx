@@ -131,7 +131,7 @@ const Register = ({}: RegiserPropTypes) => {
   return (
     <form
       className={cn(
-        "bg-inherit flex gap-2 w-full h-ful rounded-md backdrop-blur-md cursor-default transition-all duration-150",
+        "bg-inherit flex gap-2 w-full h-full items-center justify-center rounded-md cursor-default transition-all duration-150",
         isLoading &&
           "pointer-events-none select-none opacity-85 cursor-not-allowed"
       )}
