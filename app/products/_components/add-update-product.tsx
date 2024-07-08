@@ -22,7 +22,7 @@ import { fetchCategories } from "@/slices/category.slice";
 
 interface AddUpdateProductProps {
   product?: ProductTypes;
-  onCellLabelClick?(product: ProductTypes): void;
+  onCellLabelClick?(): void;
 }
 
 const initialProductInputData: ProductInputDataProps = {
@@ -53,12 +53,11 @@ const AddUpdateProduct = ({
         : initialProductInputData
     );
   const [category, setCategory] = useState(product ? product.category._id : "");
-  console.log("[Product] ", product);
 
   const isLoading = useAppSelector((state) => state.products.isLoading);
   const categories = useAppSelector((state) => state.categories.data);
 
-  const createUpdateProductProduct = useCallback(() => {
+  const createUpdateProductFun = useCallback(() => {
     const payload: CreateUpdateProductTypes = {
       name: productInputData.name,
       description: productInputData.description,
@@ -68,7 +67,7 @@ const AddUpdateProduct = ({
       category,
     };
 
-    dispatch(createUpdateProduct({ payload, id: product?.id }));
+    dispatch(createUpdateProduct({ payload, _id: product?._id }));
     // setProductImages([]);
     // setProductInputData(initialProductInputData);
   }, [
@@ -79,7 +78,7 @@ const AddUpdateProduct = ({
     productImages,
     category,
     dispatch,
-    product?.id,
+    product?._id,
   ]);
 
   const handleInputChange = useCallback(
@@ -122,6 +121,15 @@ const AddUpdateProduct = ({
     }
   }, [productInputData, productImages.length]);
 
+  const categoryInfo = useMemo(() => {
+    if (category && categories.length > 0) {
+      return categories.find((cat) => cat._id === category);
+    }
+    return undefined;
+  }, [categories, category]);
+
+  console.log("categoryInfo", categoryInfo);
+
   return (
     <>
       <CustomDialog
@@ -132,9 +140,7 @@ const AddUpdateProduct = ({
             <Button className="w-full h-full">
               <CiEdit
                 strokeWidth={1}
-                onClick={() => {
-                  onCellLabelClick?.(product);
-                }}
+                onClick={() => onCellLabelClick?.()}
                 className={cn(
                   "min-w-8 min-h-8 w-8 h-8 hover:bg-green-500/20 text-green-700 transition-all duration-150 ease-linear p-2 rounded-full font-semibold opacity-100"
                 )}
@@ -152,7 +158,7 @@ const AddUpdateProduct = ({
           onSubmit={(evt) => {
             evt.preventDefault();
             if (isErrorVisible) return;
-            createUpdateProductProduct();
+            createUpdateProductFun();
           }}
           className={cn(
             "custom-scrollbar font-dm-sans flex flex-col gap-3.5 rounded-sm p-2 bg-inherit w-full  max-h-[75vh] min-w-[50vw] max-w-[50vw] overflow-y-auto custom-scrollbar"

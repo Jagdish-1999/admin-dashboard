@@ -10,7 +10,7 @@ export interface ContextType<T> {
   id: string;
   accessKey: string;
   methods: Methods;
-  onCellLabelClick(context: T): void;
+  onCellLabelClick(): void;
 }
 
 const tableLabelTextWrapper = function <

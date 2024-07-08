@@ -33,7 +33,7 @@ export const COLUMNS = [
               (context.methods.isChecked = function () {
                 return { ...this, ...context, checked };
               }),
-                context.onCellLabelClick(checked);
+                context.onCellLabelClick();
             }}
           />
         );
@@ -50,7 +50,7 @@ export const COLUMNS = [
               (context.methods.isChecked = function () {
                 return { ...this, ...context, checked };
               }),
-                context.onCellLabelClick(checked);
+                context.onCellLabelClick();
             }}
           />
         );
@@ -145,7 +145,12 @@ export const COLUMNS = [
     bodyCellLabel: tableLabelTextWrapper.call(
       { id: "edit", accessKey: "edit" },
       function (context: ContextType<ProductsItemTypes | unknown>): ReactNode {
-        return <AddUpdateProduct product={context.item as ProductTypes} />;
+        return (
+          <AddUpdateProduct
+            product={context.item as ProductTypes}
+            onCellLabelClick={context.onCellLabelClick}
+          />
+        );
       }
     ),
     headCellLabel: () => "",
@@ -177,7 +182,7 @@ export const COLUMNS = [
                   </div>
                 }
                 onContinue={async () => {
-                  context.onCellLabelClick(context);
+                  context.onCellLabelClick();
                 }}
                 triggerChildren={
                   <MdDeleteForever

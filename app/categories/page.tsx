@@ -28,10 +28,12 @@ const Category = () => {
 
   const deleteCategories = useCallback(() => {
     try {
+      setIsDeletingProducts(true);
       dispatch(deleteCategoryWithIds(selectedCategories));
       setSelectedCategories([]);
+      setIsDeletingProducts(false);
     } catch (error) {
-      console.log("Error when deleting many categories ", selectedCategories);
+      console.log("[Error] when deleting many categories ", selectedCategories);
     }
   }, [dispatch, selectedCategories]);
 
@@ -42,16 +44,16 @@ const Category = () => {
       selectAll?: boolean
     ) => {
       setSelectedCategories((prevCategories) => {
-        if (prevCategories.includes(categories[0].id)) {
-          return prevCategories.filter((i) => i !== categories[0].id);
+        if (prevCategories.includes(categories[0]._id)) {
+          return prevCategories.filter((i) => i !== categories[0]._id);
         }
-        return [...prevCategories, categories[0].id];
+        return [...prevCategories, categories[0]._id];
       });
       if (selectAll) {
         setSelectedCategories(
           !isCheched
-            ? categories.filter((p) => p.isDeleting).map((i) => i.id)
-            : categories.map((i) => i.id)
+            ? categories.filter((p) => p.isDeleting).map((i) => i._id)
+            : categories.map((i) => i._id)
         );
       }
     },
@@ -68,7 +70,6 @@ const Category = () => {
               (context.methods as any).isChecked()?.checked,
               true
             );
-            setIsDeletingProducts(true);
           } else {
             onSelect(
               [context.item],
@@ -80,9 +81,7 @@ const Category = () => {
         }
         case "delete": {
           try {
-            dispatch(
-              deleteCategoryWithIds([(context.item as EachCategoryType).id])
-            );
+            dispatch(deleteCategoryWithIds([context.item._id]));
           } catch (error) {
             console.log(
               "Error when deleting category",
@@ -92,9 +91,7 @@ const Category = () => {
           break;
         }
         default: {
-          console.log(
-            "[Cell Clicked] Nothing is happining on cell click in category page"
-          );
+          console.log(`[Cell Clicked] ${context.id}`);
         }
       }
     },
@@ -113,7 +110,7 @@ const Category = () => {
   const data = useMemo(
     () =>
       categoriesList.map((p) => {
-        if (selectedCategories.includes(p.id)) {
+        if (selectedCategories.includes(p._id)) {
           return { ...p, isSelected: true };
         }
         return { ...p, isSelected: false };

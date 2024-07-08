@@ -53,11 +53,11 @@ const Table = <T extends TableItem>({
             data.map((item: T, idx) => {
               return (
                 <TableRow
-                  key={item.id}
+                  key={item._id}
                   className={cn(
                     idx % 2 !== 0 &&
                       "bg-neutral-500/10 transition-all duration-150",
-                    showWarnRows(item.id) && "bg-inherit",
+                    showWarnRows(item._id) && "bg-inherit",
                     item.isDeleting && "pointer-events-none select-none"
                   )}
                 >
@@ -66,7 +66,7 @@ const Table = <T extends TableItem>({
                       key={column.id}
                       className={cn(
                         column.className,
-                        showWarnRows(item.id) && " text-red-500"
+                        showWarnRows(item._id) && " text-red-500"
                       )}
                     >
                       {column.bodyCellLabel({ item, onCellLabelClick })}

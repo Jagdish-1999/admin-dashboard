@@ -14,7 +14,6 @@ import { formHeaders } from "@/lib/form.header";
 export const fetchProducts = createAsyncThunk(
   "fetchProducts",
   async (): Promise<any> => {
-    //TODO need to handle errors
     const { data } = await axios.get("/api/v1/products");
 
     const modifiedProducts = data.data.map((product: ProductsItemTypes) => {
@@ -25,7 +24,6 @@ export const fetchProducts = createAsyncThunk(
         createdAt,
         updatedAt,
         isDeleting: false,
-        id: product._id,
       };
     });
     return modifiedProducts;
@@ -37,10 +35,10 @@ export const createUpdateProduct = createAsyncThunk(
   async (
     {
       payload,
-      id,
+      _id,
     }: {
       payload: CreateUpdateProductTypes;
-      id?: string;
+      _id?: string;
     },
     { getState }
   ): Promise<any> => {
@@ -58,8 +56,8 @@ export const createUpdateProduct = createAsyncThunk(
     formData.append("payload", JSON.stringify(payload));
 
     let data = {} as ApiResponseTypes<ProductsItemTypes>;
-    if (id) {
-      ({ data } = await axios.put(`/api/v1/products/${id}`, formData, {
+    if (_id) {
+      ({ data } = await axios.put(`/api/v1/products/${_id}`, formData, {
         headers: formHeaders,
       }));
     } else {
@@ -77,7 +75,7 @@ export const createUpdateProduct = createAsyncThunk(
     }
 
     const list = (getState() as RootState).products.data.filter(
-      (p) => p._id !== id
+      (p) => p._id !== _id
     );
 
     const createdAt = formatDate(productResult.createdAt);

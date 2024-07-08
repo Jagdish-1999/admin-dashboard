@@ -73,6 +73,6 @@ export interface TableProps<T> {
 }
 
 export interface TableItem {
-  id: string;
+  _id: string;
   isDeleting: boolean;
 }

@@ -16,7 +16,7 @@ interface CustomSelectProps<T> {
   required?: boolean;
   placeholder?: string;
 }
-const CustomSelect = <T extends { id: string; name: string }>({
+const CustomSelect = <T extends { _id: string; name: string }>({
   options,
   onChange,
   value,
@@ -58,11 +58,11 @@ const CustomSelect = <T extends { id: string; name: string }>({
             )}
             {options.map((eachOption) => (
               <SelectItem
-                value={eachOption.id}
-                key={eachOption.id}
+                key={eachOption._id}
+                value={eachOption._id}
                 className={cn(
                   "cursor-pointer hover:text-black capitalize font-semibold",
-                  value === eachOption.id && "text-teal-950"
+                  value === eachOption._id && "text-teal-950"
                 )}
               >
                 {eachOption.name}

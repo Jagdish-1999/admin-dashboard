@@ -37,18 +37,18 @@ export const createUpdateCategory = createAsyncThunk(
   async (payload: CreateCategoryPayload, { getState, dispatch }) => {
     const categories = (getState() as RootState).categories.data;
     try {
-      if (payload?.id) {
+      if (payload?._id) {
         dispatch(
           updateCategories(
             categories.map((cat) =>
-              cat.id === payload.id ? { ...cat, isUpdating: true } : cat
+              cat._id === payload._id ? { ...cat, isUpdating: true } : cat
             )
           )
         );
       }
 
       let data = {} as ApiResponseTypes<EachCategoryType>;
-      if (payload?.id) {
+      if (payload?._id) {
         ({ data } = await axios.put("/api/v1/category/update", payload));
       } else {
         ({ data } = await axios.post("/api/v1/category/create", payload));
@@ -61,7 +61,7 @@ export const createUpdateCategory = createAsyncThunk(
         toast.error(data.message);
       }
 
-      const list = categories.filter((c) => c.id !== payload?.id);
+      const list = categories.filter((c) => c._id !== payload?._id);
 
       const createdAt = formatDate(categoryResult.createdAt);
       const updatedAt = formatDate(categoryResult.updatedAt);
@@ -72,7 +72,6 @@ export const createUpdateCategory = createAsyncThunk(
           isUpdating: false,
           createdAt,
           updatedAt,
-          id: categoryResult._id,
         },
         ...list,
       ];
@@ -81,7 +80,7 @@ export const createUpdateCategory = createAsyncThunk(
         toast.error("Category name is required");
       }
       const list = categories.map((c) =>
-        c.id === payload?.id ? { ...c, isUpdating: false } : c
+        c._id === payload?._id ? { ...c, isUpdating: false } : c
       );
       return list;
     }
@@ -96,7 +95,7 @@ export const deleteCategoryWithIds = createAsyncThunk(
     dispatch(
       updateCategories(
         categories.map((cat) =>
-          categoryIds.includes(cat.id) ? { ...cat, isDeleting: true } : cat
+          categoryIds.includes(cat._id) ? { ...cat, isDeleting: true } : cat
         )
       )
     );
@@ -110,14 +109,16 @@ export const deleteCategoryWithIds = createAsyncThunk(
         toast.success(response.data.message);
         dispatch(
           updateCategories(
-            categories.filter((cat) => !categoryIds.includes(cat.id))
+            categories.filter((cat) => !categoryIds.includes(cat._id))
           )
         );
       } else {
         dispatch(
           updateCategories(
             categories.map((cat) =>
-              categoryIds.includes(cat.id) ? { ...cat, isDeleting: false } : cat
+              categoryIds.includes(cat._id)
+                ? { ...cat, isDeleting: false }
+                : cat
             )
           )
         );

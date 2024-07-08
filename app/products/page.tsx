@@ -1,10 +1,8 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
 import { ImSpinner8 } from "react-icons/im";
-import { MdAdd, MdDeleteForever } from "react-icons/md";
+import { MdDeleteForever } from "react-icons/md";
 
 import { RootState, useAppSelector, useAppDispatch } from "@/stores/store";
 import { deleteProductWithIds, fetchProducts } from "@/slices/products.slice";
@@ -14,13 +12,10 @@ import { Table } from "@/app/_components/common/table/table";
 import { ContextType } from "@/lib/column-cell-label-wrapper";
 import SuppressHydration from "@/lib/suppresh-hydration";
 import { COLUMNS } from "./_components/columns";
-import { CustomDialog } from "../_components/common/dialog/custom-dialog";
-import { Button } from "@/components/ui/button";
 import { AddUpdateProduct } from "./_components/add-update-product";
 
 const Products = () => {
   const initialRef = useRef(false);
-  const router = useRouter();
   const dispatch = useAppDispatch();
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [isDeletingProducts, setIsDeletingProducts] = useState<boolean>(false);
@@ -64,21 +59,6 @@ const Products = () => {
     }
   }, [dispatch, selectedProducts]);
 
-  // const onCellClick = useCallback((item: ProductsItemTypes) => {
-  //   const { name, description, price, _id, images, quantity } = item;
-  //   localStorage.setItem(
-  //     "edited-product",
-  //     JSON.stringify({
-  //       name,
-  //       description,
-  //       images,
-  //       price,
-  //       quantity,
-  //       id: _id,
-  //     })
-  //   );
-  // }, []);
-
   const onCellLabelClick = useCallback(
     (context: ContextType<ProductsItemTypes>) => {
       switch (context.id) {
@@ -98,12 +78,6 @@ const Products = () => {
           }
           break;
         }
-        case "edit": {
-          console.log("[EDITED] ", context);
-          // onCellClick(context.item);
-          // router.push("/products/edit");
-          break;
-        }
         case "delete": {
           try {
             (async () => {
@@ -120,7 +94,7 @@ const Products = () => {
           break;
         }
         default: {
-          console.log("[Cell Clicked] Nothing is happining on cell click");
+          console.log(`[Cell Clicked] ${context.id}`);
         }
       }
     },

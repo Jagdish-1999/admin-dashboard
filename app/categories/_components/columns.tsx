@@ -38,7 +38,7 @@ export const COLUMNS = [
               (context.methods.isChecked = function () {
                 return { ...this, ...context, checked };
               }),
-                context.onCellLabelClick(checked);
+                context.onCellLabelClick();
             }}
           />
         );
@@ -55,7 +55,7 @@ export const COLUMNS = [
               (context.methods.isChecked = function () {
                 return { ...this, ...context, checked };
               }),
-                context.onCellLabelClick(checked);
+                context.onCellLabelClick();
             }}
           />
         );
@@ -125,7 +125,6 @@ export const COLUMNS = [
     bodyCellLabel: tableLabelTextWrapper.call(
       { id: "edit", accessKey: "edit" },
       function (context: ContextType<EachCategoryType | unknown>): ReactNode {
-        // return <EditCell context={context} />;
         return (
           <AddUpdateCategories
             category={context.item as EachCategoryType}
@@ -166,7 +165,7 @@ export const COLUMNS = [
                   </div>
                 }
                 onContinue={async () => {
-                  context.onCellLabelClick(context);
+                  context.onCellLabelClick();
                 }}
                 triggerChildren={
                   <>

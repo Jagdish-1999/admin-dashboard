@@ -19,7 +19,7 @@ export interface AddedPropertiesTypes {
 
 interface AddUpdateCategoriesProps {
   category?: EachCategoryType;
-  onCellLabelClick?(category: EachCategoryType): void;
+  onCellLabelClick?(): void;
 }
 
 const AddUpdateCategories = ({
@@ -89,20 +89,20 @@ const AddUpdateCategories = ({
   const handleCreateUpdate = useCallback(() => {
     dispatch(
       createUpdateCategory({
-        id: category?.id,
+        _id: category?._id,
         name: categoryName,
         parent: parentCategory.trim(),
         properties: addedProperties,
       })
     );
-    if (!category?.id) {
+    if (!category?._id) {
       setCategoryName("");
       setAddProperty([]);
       setAdddedProperties([]);
       setParentCategory("");
     }
     setOpen(false);
-  }, [addedProperties, category?.id, categoryName, dispatch, parentCategory]);
+  }, [addedProperties, category?._id, categoryName, dispatch, parentCategory]);
 
   return (
     <CustomDialog
@@ -124,7 +124,7 @@ const AddUpdateCategories = ({
               <CiEdit
                 strokeWidth={1}
                 onClick={() => {
-                  onCellLabelClick?.(category);
+                  onCellLabelClick?.();
                 }}
                 className={cn(
                   "min-w-8 min-h-8 w-8 h-8 hover:bg-green-500/20 transition-all duration-150 ease-linear p-2 rounded-full font-semibold opacity-100"

@@ -8,7 +8,6 @@ export interface ParentCategoryType {
 }
 export interface EachCategoryType {
   _id: string;
-  id: string;
   name: string;
   createdAt: string;
   updatedAt: string;
@@ -28,5 +27,5 @@ export interface CreateCategoryPayload {
   name: string;
   parent?: string | null;
   properties?: AddedPropertiesTypes[];
-  id?: string;
+  _id?: string;
 }
