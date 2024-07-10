@@ -6,7 +6,7 @@ import { Navbar } from "./_components/navbar";
 import { SideNav } from "./_components/side-nav";
 import ReduxStoreProvider from "@/providers/redux-store-provider";
 import { cn } from "@/lib/utils";
-import UserProvider from "@/providers/server-calls-provider";
+import { UserLoggedIn } from "./_components/user-logged-in";
 
 export const metadata: Metadata = {
   title: "Admin dashboard",
@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en" className={cn("no-scrollbar")}>
       <body suppressHydrationWarning>
         <ReduxStoreProvider>
-          <UserProvider>
+          <UserLoggedIn>
             <Navbar />
             <SideNav>{children}</SideNav>
             <Toaster
@@ -33,7 +33,7 @@ export default function RootLayout({
               theme="system"
               duration={1500}
             />
-          </UserProvider>
+          </UserLoggedIn>
         </ReduxStoreProvider>
       </body>
     </html>
