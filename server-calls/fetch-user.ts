@@ -2,13 +2,13 @@
 import { cookies } from "next/headers";
 import axios from "axios";
 
-const fetchUser = async () => {
+const fetchUserOnServer = async () => {
   const accessToken = cookies().get("accessToken")?.value;
   try {
     if (!accessToken) {
       throw new Error("No access token found");
     }
-    const res = await axios.get(`${process.env.APP_URL}/api/v1/user`, {
+    const res = await axios.get(`${process.env.APP_URL}/api/v1/users`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -19,4 +19,4 @@ const fetchUser = async () => {
     return null;
   }
 };
-export { fetchUser };
+export { fetchUserOnServer };

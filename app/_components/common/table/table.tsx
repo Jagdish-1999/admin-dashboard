@@ -17,6 +17,7 @@ const Table = <T extends TableItem>({
   isLoading,
   warnRows,
   onCellLabelClick,
+  onRowClick,
   noDataText,
 }: TableProps<T>) => {
   const showWarnRows = useCallback(
@@ -59,8 +60,12 @@ const Table = <T extends TableItem>({
                     idx % 2 !== 0 &&
                       "bg-neutral-500/10 transition-all duration-150",
                     showWarnRows(item._id) && "bg-inherit",
-                    item.isDeleting && "pointer-events-none select-none"
+                    item.isDeleting && "pointer-events-none select-none",
+                    onRowClick && "cursor-pointer"
                   )}
+                  onClick={() => {
+                    onRowClick?.(item);
+                  }}
                 >
                   {columns.map((column) => (
                     <TableCell<T>

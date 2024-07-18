@@ -70,12 +70,13 @@ export interface TableProps<T> {
   columns: TableColumnTypes<T>[];
   warnRows?: string[];
   onCellLabelClick?(context: ContextType<T>): void;
+  onRowClick?(item: T): void;
   noDataText?: string;
 }
 
 export interface TableItem {
   _id: string;
-  isDeleting: boolean;
+  isDeleting?: boolean;
 }
 
 export interface NoDataProps {

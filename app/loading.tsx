@@ -2,8 +2,9 @@ import { ImSpinner8 } from "react-icons/im";
 
 const Loading = () => {
   return (
-    <div className="flex w-full h-full items-center justify-center bg-neutral-200">
-      <ImSpinner8 className="w-8 h-8 text-neutral-500 animate-spin duration-1000 transition-all ease-in" />
+    <div className="flex flex-col gap-3 w-full h-full items-center justify-center bg-transparent ">
+      <ImSpinner8 className="w-6 h-6 text-slate-600 animate-spin duration-1000 transition-all ease-in" />
+      <div className="text-slate-500">Loading</div>
     </div>
   );
 };

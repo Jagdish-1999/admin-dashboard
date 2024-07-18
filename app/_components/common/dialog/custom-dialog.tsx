@@ -52,7 +52,7 @@ export function CustomDialog({
             {description}
           </DialogDescription>
         </DialogHeader>
-        <div>{children}</div>
+        {children}
         <DialogFooter>{footerContent}</DialogFooter>
       </DialogContent>
     </Dialog>

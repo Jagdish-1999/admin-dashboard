@@ -52,7 +52,7 @@ export const SideLink = () => {
   const pathname = new URL(url || "").pathname;
 
   return (
-    <div className="w-[200px] h-full flex flex-col gap-2 rounded-e-sm pt-2 px-2 bg-neutral-500/20">
+    <div className="w-[200px] h-full flex flex-col gap-2 rounded-e-sm pt-2 px-2 bg-white">
       {LINKS.map((link) => (
         <Links link={link} key={link.id} />
       ))}

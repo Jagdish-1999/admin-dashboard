@@ -27,7 +27,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  background-color: #fff;
+  background-color: rgba(115, 115, 115, 0.2);
   color: #000;
   font-weight: 600;
   font-family: "Afacad";
@@ -49,7 +49,6 @@ body {
 
 .custom-scrollbar {
   scrollbar-width: 4px;
-  height: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {

@@ -7,7 +7,7 @@ import { TableRow } from "./table-row";
 const TableSkeleton = <T,>({ columns }: TableSkeletonProps<T>) => {
   return (
     <>
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((i, idx) => (
+      {Array.from({ length: 13 }, (_, i) => i + 1).map((i, idx) => (
         <TableRow
           key={idx}
           className={cn("", idx % 2 !== 0 && "bg-neutral-100/50")}

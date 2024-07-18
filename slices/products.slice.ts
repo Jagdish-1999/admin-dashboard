@@ -17,12 +17,10 @@ export const fetchProducts = createAsyncThunk(
     const { data } = await axios.get("/api/v1/products");
 
     const modifiedProducts = data.data.map((product: ProductsItemTypes) => {
-      const createdAt = formatDate(product.createdAt);
-      const updatedAt = formatDate(product.updatedAt);
+      // const createdAt = formatDate(product.createdAt);
+      // const updatedAt = formatDate(product.updatedAt);
       return {
         ...product,
-        createdAt,
-        updatedAt,
         isDeleting: false,
       };
     });

@@ -1,23 +1,17 @@
 import CustomAlertDialog from "@/app/_components/common/alert/custom-alert-dialog";
 import { CreatedUpdatedAt } from "@/app/_components/common/created-updated";
-import { CustomSelect } from "@/app/_components/common/select/custom-select";
-import Input from "@/app/products/_components/Input";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   ContextType,
   tableLabelTextWrapper,
 } from "@/lib/column-cell-label-wrapper";
-import SuppressHydration from "@/lib/suppresh-hydration";
 import { cn } from "@/lib/utils";
-import { createUpdateCategory } from "@/slices/category.slice";
-import { useAppDispatch, useAppSelector } from "@/stores/store";
 import {
   EachCategoryType,
   ParentCategoryType,
 } from "@/types/category.slice.types";
 import { TableColumnTypes } from "@/types/table.types";
-import { ReactNode, useCallback, useEffect, useState } from "react";
-import { CiEdit } from "react-icons/ci";
+import { ReactNode } from "react";
 import { ImSpinner8 } from "react-icons/im";
 import { MdDeleteForever } from "react-icons/md";
 import { AddUpdateCategories } from "./add-update-category";
@@ -66,8 +60,9 @@ export const COLUMNS = [
     id: "name",
     accessKey: "name",
     headClasses:
-      "py-1 text-sm text-[15px] text-slate-900/80 font-semibold cursor-default",
-    className: "w-[25%] min-w-[120px] text-[13px] text-slate-900/75 capitalize",
+      "py-1 text-sm text-[15px] text-slate-900/80 font-semibold cursor-default select-none",
+    className:
+      "w-[25%] min-w-[120px] text-[13px] text-slate-900/75 capitalize cursor-default",
     headCellLabel: function () {
       return "Category";
     },
@@ -79,8 +74,9 @@ export const COLUMNS = [
     id: "parent",
     accessKey: "name",
     headClasses:
-      "py-1 text-sm text-[15px] text-slate-900/80 font-semibold cursor-default",
-    className: "w-[20%] min-w-[120px] text-[13px] text-slate-900/75 capitalize",
+      "py-1 text-sm text-[15px] text-slate-900/80 font-semibold cursor-default select-none",
+    className:
+      "w-[20%] min-w-[120px] text-[13px] text-slate-900/75 capitalize cursor-default",
     headCellLabel: function () {
       return "Parent category";
     },
@@ -92,9 +88,9 @@ export const COLUMNS = [
     id: "createdAt",
     accessKey: "createdAt",
     headClasses:
-      "py-1 pr-2 text-[15px] text-slate-900/80 font-semibold cursor-default",
+      "py-1 pr-2 text-[15px] text-slate-900/80 font-semibold cursor-default select-none",
     className:
-      "w-[20%] min-w-[90px] flex items-center justify-center text-[13px] text-slate-900/75",
+      "w-[20%] min-w-[90px] flex items-center justify-center text-[13px] text-slate-900/75 cursor-default",
     headCellLabel: function () {
       return "Created At";
     },
@@ -106,9 +102,9 @@ export const COLUMNS = [
     id: "updatedAt",
     accessKey: "updatedAt",
     headClasses:
-      "py-1 text-[15px] text-slate-900/80 font-semibold cursor-default",
+      "py-1 text-[15px] text-slate-900/80 font-semibold cursor-default select-none",
     className:
-      "w-[20%] min-w-[90px] flex items-center justify-center text-[13px] text-slate-900/75",
+      "w-[20%] min-w-[90px] flex items-center justify-center text-[13px] text-slate-900/75 cursor-default",
     headCellLabel: function () {
       return "Updated At";
     },

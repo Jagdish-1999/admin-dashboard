@@ -20,6 +20,7 @@ import { CiEdit } from "react-icons/ci";
 import { CustomSelect } from "@/app/_components/common/select/custom-select";
 import { fetchCategories } from "@/slices/category.slice";
 import { PropertiesTypes } from "@/types/category.slice.types";
+import Loading from "@/app/loading";
 
 interface AddUpdateProductProps {
   product?: ProductTypes;
@@ -66,7 +67,9 @@ const AddUpdateProduct = ({
   >(product ? product.properties : []);
 
   const isLoading = useAppSelector((state) => state.products.isLoading);
-  const categories = useAppSelector((state) => state.categories.data);
+  const { data: categories, isLoading: isCategoriesLoading } = useAppSelector(
+    (state) => state.categories
+  );
 
   const createUpdateProductFun = useCallback(() => {
     const payload: CreateUpdateProductTypes = {
@@ -115,12 +118,13 @@ const AddUpdateProduct = ({
     []
   );
 
-  useEffect(() => {
-    if (initialRef.current && !categories.length) {
-      dispatch(fetchCategories());
-      initialRef.current = false;
-    }
-  }, [categories.length, dispatch]);
+  // useEffect(() => {
+  //   if (initialRef.current && !categories.length) {
+  //     console.log(initialRef, categories.length);
+  //     dispatch(fetchCategories());
+  //     initialRef.current = false;
+  //   }
+  // }, [categories.length, dispatch]);
 
   const isErrorVisible = useMemo(() => {
     if (
@@ -197,7 +201,10 @@ const AddUpdateProduct = ({
             <Button className="w-full h-full">
               <CiEdit
                 strokeWidth={1}
-                onClick={() => onCellLabelClick?.()}
+                onClick={() => {
+                  onCellLabelClick?.();
+                  if (!categories.length) dispatch(fetchCategories());
+                }}
                 className={cn(
                   "min-w-8 min-h-8 w-8 h-8 hover:bg-green-500/20 text-green-700 transition-all duration-150 ease-linear p-2 rounded-full font-semibold opacity-100"
                 )}
@@ -245,7 +252,7 @@ const AddUpdateProduct = ({
               }}
             />
           </div>
-          {categoryInfo.length > 0 && (
+          {categoryInfo.length > 0 && !isCategoriesLoading ? (
             <div className="flex flex-col gap-4">
               {categoryInfo.map((property) => (
                 <div className="flex gap-4" key={property.name}>
@@ -286,6 +293,8 @@ const AddUpdateProduct = ({
                 </div>
               ))}
             </div>
+          ) : (
+            <Loading />
           )}
           <div className="flex gap-4">
             <Input

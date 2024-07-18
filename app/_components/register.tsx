@@ -36,7 +36,7 @@ interface RegiserPropTypes {}
 const Register = ({}: RegiserPropTypes) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { isLoading } = useAppSelector((state) => state.userDetails);
+  const isLoading = useAppSelector((state) => state.userDetails.isLoading);
   const [isLoginPage, setIsLoginPage] = useState<boolean>(true);
   const [avatarLogo, setAvatarLogo] = useState<ProductImagesTypes[]>([]);
   const [formValues, setFormValues] =

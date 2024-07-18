@@ -12,7 +12,7 @@ import { toast } from "sonner";
 
 export const fetchCategories = createAsyncThunk("fetchCategories", async () => {
   try {
-    const response = await axios.get("/api/v1/category");
+    const response = await axios.get("/api/v1/categories");
 
     return response.data.data.map((category: EachCategoryType) => {
       const createdAt = formatDate(category.createdAt);
@@ -49,9 +49,9 @@ export const createUpdateCategory = createAsyncThunk(
 
       let data = {} as ApiResponseTypes<EachCategoryType>;
       if (payload?._id) {
-        ({ data } = await axios.put("/api/v1/category/update", payload));
+        ({ data } = await axios.put("/api/v1/categories/update", payload));
       } else {
-        ({ data } = await axios.post("/api/v1/category/create", payload));
+        ({ data } = await axios.post("/api/v1/categories/create", payload));
       }
 
       let categoryResult: EachCategoryType | null = data.data;
@@ -101,7 +101,7 @@ export const deleteCategoryWithIds = createAsyncThunk(
     );
 
     try {
-      const response = await axios.delete("/api/v1/category/delete", {
+      const response = await axios.delete("/api/v1/categories/delete", {
         data: categoryIds,
       });
 
@@ -135,7 +135,7 @@ const initialState: Category = {
 };
 
 const categorySlice = createSlice({
-  name: "category",
+  name: "categories",
   initialState: initialState,
   reducers: {
     updateCategories: (state, action) => {

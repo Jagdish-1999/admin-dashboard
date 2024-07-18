@@ -1,4 +1,5 @@
 import { formHeaders } from "@/lib/form.header";
+import { fetchUserOnServer } from "@/server-calls/fetch-user";
 import {
   LoginUserTypes,
   RegisterUserPayload,
@@ -9,12 +10,17 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "sonner";
 
-export const registerUser = createAsyncThunk(
+const fetchUser = createAsyncThunk("fetchUser", async () => {
+  const user = await fetchUserOnServer();
+  return user;
+});
+
+const registerUser = createAsyncThunk(
   "registerUser",
   async (payload: RegisterUserPayload) => {
     //! need to handle error
     try {
-      const response = await axios.post("/api/v1/user/register", payload, {
+      const response = await axios.post("/api/v1/users/register", payload, {
         headers: formHeaders,
       });
       if (response.status === 201) {
@@ -30,10 +36,10 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-export const loginUser = createAsyncThunk(
+const loginUser = createAsyncThunk(
   "loginUser",
   async (payload: LoginUserTypes, { dispatch }) => {
-    const response = await axios.post("/api/v1/user/login", payload);
+    const response = await axios.post("/api/v1/users/login", payload);
 
     if (response.status === 200) {
       dispatch(updateUserIsLogin(true));
@@ -47,18 +53,15 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-export const logoutUser = createAsyncThunk(
-  "logoutUser",
-  async (_, { dispatch }) => {
-    const res = await axios.get("/api/v1/user/logout");
-    if (res.statusText !== "OK") {
-      throw new Error("User not logged out");
-    }
-    dispatch(updateUser(null));
-    dispatch(updateUserIsLogin(false));
-    toast.success(res.data.message);
+const logoutUser = createAsyncThunk("logoutUser", async (_, { dispatch }) => {
+  const res = await axios.get("/api/v1/users/logout");
+  if (res.statusText !== "OK") {
+    throw new Error("User not logged out");
   }
-);
+  dispatch(updateUser(null));
+  dispatch(updateUserIsLogin(false));
+  toast.success(res.data.message);
+});
 
 const initialState: UserType = {
   isLogin: false,
@@ -81,6 +84,23 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(fetchUser.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(
+      fetchUser.fulfilled,
+      (state, action: PayloadAction<User>) => {
+        state.user = action.payload;
+        state.isLoading = false;
+        if (action.payload) {
+          state.isLogin = true;
+        }
+      }
+    );
+    builder.addCase(fetchUser.rejected, (state) => {
+      state.isLoading = false;
+      state.isLogin = false;
+    });
     builder.addCase(registerUser.pending, (state) => {
       state.isLoading = true;
     });
@@ -116,6 +136,8 @@ const userSlice = createSlice({
     );
   },
 });
+
+export { fetchUser, registerUser, loginUser, logoutUser };
 
 export const { updateUser, updateUserLoading, updateUserIsLogin } =
   userSlice.actions;

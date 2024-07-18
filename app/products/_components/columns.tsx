@@ -9,13 +9,12 @@ import {
 } from "@/lib/column-cell-label-wrapper";
 import { ProductsItemTypes } from "@/types/products.slice.types";
 import { TableColumnTypes } from "@/types/table.types";
-import { CiEdit } from "react-icons/ci";
 import { ImSpinner8 } from "react-icons/im";
 import { MdDeleteForever } from "react-icons/md";
-import { CustomDialog } from "@/app/_components/common/dialog/custom-dialog";
 import { AddUpdateProduct } from "./add-update-product";
 import { ProductTypes } from "@/types";
 import { Button } from "@/components/ui/button";
+import { formatDate } from "@/lib/format-date";
 
 export const COLUMNS = [
   {
@@ -61,8 +60,9 @@ export const COLUMNS = [
     id: "product-name",
     accessKey: "name",
     headClasses:
-      "py-1 text-sm text-[15px] text-slate-900/80 font-semibold cursor-default",
-    className: "w-[20%] min-w-[120px] text-[13px] text-slate-900/75",
+      "py-1 text-sm text-[15px] text-slate-900/80 font-semibold cursor-default select-none",
+    className:
+      "w-[20%] min-w-[120px] text-[13px] text-slate-900/75 cursor-default",
     headCellLabel: function () {
       return "Product Name";
     },
@@ -78,8 +78,9 @@ export const COLUMNS = [
     id: "description",
     accessKey: "description",
     headClasses:
-      "py-1 text-[15px] text-slate-900/80 font-semibold cursor-default",
-    className: "w-[30%] min-w-[150px] text-[13px] text-slate-900/75",
+      "py-1 text-[15px] text-slate-900/80 font-semibold cursor-default select-none",
+    className:
+      "w-[30%] min-w-[150px] text-[13px] text-slate-900/75 cursor-default",
     headCellLabel: () => "Description",
     bodyCellLabel: function ({ item }) {
       return (
@@ -93,9 +94,9 @@ export const COLUMNS = [
     id: "Quantity",
     accessKey: "quantity",
     headClasses:
-      "py-1 text-[15px] text-slate-900/80 font-semibold cursor-default",
+      "py-1 text-[15px] text-slate-900/80 font-semibold cursor-default select-none",
     className:
-      "w-[10%] min-w-[80px] flex items-center justify-center text-[13px] text-slate-900/75",
+      "w-[10%] min-w-[80px] flex items-center justify-center text-[13px] text-slate-900/75 cursor-default",
     headCellLabel: () => "Quantity",
     bodyCellLabel: function ({ item }) {
       return item[this.accessKey];
@@ -105,22 +106,34 @@ export const COLUMNS = [
     id: "createdAt",
     accessKey: "createdAt",
     headClasses:
-      "py-1 pr-0 text-[15px] text-slate-900/80 font-semibold cursor-default",
+      "py-1 pr-0 text-[15px] text-slate-900/80 font-semibold cursor-default select-none",
     className:
-      "w-[10%] min-w-[80px] flex items-center justify-center text-[13px] text-slate-900/75",
+      "w-[10%] min-w-[80px] flex items-center justify-center text-[13px] text-slate-900/75 cursor-default",
     bodyCellLabel: function ({ item }) {
-      return <CreatedUpdatedAt item={item} accessKey={this.accessKey} />;
+      const createdAt = formatDate(item.createdAt);
+      return (
+        <CreatedUpdatedAt
+          item={{ ...item, createdAt }}
+          accessKey={this.accessKey}
+        />
+      );
     },
     headCellLabel: () => "Created At",
   },
   {
     id: "updatedAt",
     accessKey: "updatedAt",
-    headClasses: "py-1 text-[15px] text-slate-900/80 font-semibold",
+    headClasses: "py-1 text-[15px] text-slate-900/80 font-semibold select-none",
     className:
-      "w-[10%] min-w-[80px] flex items-center justify-center text-[13px] text-slate-900/75",
+      "w-[10%] min-w-[80px] flex items-center justify-center text-[13px] text-slate-900/75 cursor-default",
     bodyCellLabel: function ({ item }) {
-      return <CreatedUpdatedAt item={item} accessKey={this.accessKey} />;
+      const updatedAt = formatDate(item.updatedAt);
+      return (
+        <CreatedUpdatedAt
+          item={{ ...item, updatedAt }}
+          accessKey={this.accessKey}
+        />
+      );
     },
     headCellLabel: () => "Updated At",
   },
@@ -128,9 +141,9 @@ export const COLUMNS = [
     id: "price",
     accessKey: "price",
     headClasses:
-      "py-1 text-[15px] text-slate-900/80 font-semibold cursor-default",
+      "py-1 text-[15px] text-slate-900/80 font-semibold cursor-default select-none",
     className:
-      "w-[11%] min-w-[80px] flex items-center justify-center text-[13px] text-slate-900/75",
+      "w-[11%] min-w-[80px] flex items-center justify-center text-[13px] text-slate-900/75 cursor-default",
     bodyCellLabel: function ({ item }) {
       return item[this.accessKey];
     },
@@ -139,7 +152,7 @@ export const COLUMNS = [
   {
     id: "edit",
     accessKey: "edit",
-    headClasses: "py-1 cursor-default",
+    headClasses: "py-1 cursor-default select-none",
     className:
       "flex items-center justify-center w-[5%] min-w-[5%] text-[13px] text-slate-900/90",
     bodyCellLabel: tableLabelTextWrapper.call(
@@ -158,7 +171,7 @@ export const COLUMNS = [
   {
     id: "delete",
     accessKey: "delete",
-    headClasses: "py-1 mr-1.5 cursor-default",
+    headClasses: "py-1 mr-1.5 cursor-default select-none",
     className:
       "flex items-center justify-center w-[5%] min-w-[5%] text-[13px] text-slate-900/90",
     bodyCellLabel: tableLabelTextWrapper.call(

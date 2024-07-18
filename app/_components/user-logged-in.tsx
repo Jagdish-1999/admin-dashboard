@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { fetchUser } from "@/server-calls/fetch-user";
 import {
+  fetchUser,
   updateUser,
   updateUserIsLogin,
   updateUserLoading,
@@ -16,38 +16,25 @@ const UserLoggedIn = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const initialRef = useRef(true);
   const dispatch = useAppDispatch();
-  const { isLogin, isLoading } = useAppSelector((state) => state.userDetails);
+  const { isLogin, isLoading, user } = useAppSelector(
+    (state) => state.userDetails
+  );
 
   useEffect(() => {
     if (initialRef.current && !isLogin) {
-      (async () => {
-        const user = await fetchUser();
-        if (user) {
-          dispatch(updateUser(user));
-          dispatch(updateUserIsLogin(true));
-        } else {
-          router.replace("/");
-        }
-      })();
-      dispatch(updateUserLoading(false));
+      dispatch(fetchUser());
     }
     initialRef.current = false;
-  }, [dispatch, isLogin, router]);
+  }, [dispatch, isLogin]);
 
   if (isLoading) {
     return <Loading />;
   }
 
-  if (!isLogin && isLoading)
+  if (!isLogin)
     return (
-      <div className="w-full h-full flex items-center justify-center bg-neutral-200">
-        <div
-          className="border border-neutral-300 p-6 rounded-md bg-opacity-50 bg-neutral-50"
-          style={{
-            width: "32rem",
-            maxHeight: "fit-content",
-          }}
-        >
+      <div className="w-full h-full flex items-center justify-center bg-inherit">
+        <div className="border w-[32rem] max-h-fit border-neutral-300 p-6 rounded-md bg-white">
           <Register />
         </div>
       </div>

@@ -10,7 +10,6 @@ const CreatedUpdatedAt = <T,>({
   accessKey,
 }: CreatedUpdatedAtProps<T>) => {
   const [date, time] = (item[accessKey] as string).split(" ");
-
   return (
     // ? py-2 gives height to every row excepting table header
     <div className="w-fit leading-4 py-2 m-auto">
